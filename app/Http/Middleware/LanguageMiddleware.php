@@ -55,11 +55,11 @@ class LanguageMiddleware
        $preferredLanguage = strtok($languages[0], ';');
     }
  
-     $languages = ['fr','nl','s','n','pl','en','de'];
+     $languages = ['IT','de','fr','nl','S','N','PL','en'];
          if(in_array($preferredLanguage, $languages)){
              $lang = $preferredLanguage; 
          }else{
-             $lang = 'EN';
+             $lang = 'en';
          }
      // echo $lang; die();
      $language = Language::where('code',$lang)->first();

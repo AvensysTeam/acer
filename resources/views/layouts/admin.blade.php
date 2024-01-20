@@ -30,23 +30,23 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @yield('styles')
     <style>
-    
-    .check{
-       display:flex;
-    } 
-    .raw{ 
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .rowcontant{
-        display:flex;
-        justify-content:space-between;
-        margin-left:-15px;
-        align-items: center;
-    }
+        
+        .check{
+            display:flex;
+        } 
+        .raw{ 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .rowcontant{
+            display:flex;
+            justify-content:space-between;
+            margin-left:-15px;
+            align-items: center;
+        }
 
-.dropbtn { 
+        .dropbtn { 
             background-color: white; 
             color: black; 
             padding: 5px 12px 4px 12px; 
@@ -62,7 +62,7 @@
             display: inline-block;
             
         } 
-  
+
         .dropdown-content { 
             display: none; 
             position: absolute; 
@@ -80,18 +80,18 @@
         } 
 
         .dropdown-content::-webkit-scrollbar {
-    width: 1px;
-}
+            width: 1px;
+        }
 
-.dropdown-content::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0); 
-    border-radius: 5px;
-}
+        .dropdown-content::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0); 
+            border-radius: 5px;
+        }
 
-.dropdown-content::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0); 
-}
+        .dropdown-content::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0); 
+        }
   
         .dropdown-content a { 
             color: black; 
@@ -155,7 +155,7 @@
            margin-right: 116px;
         }
         
-</style>
+    </style>
 </head>
 <!-- <style>
     
@@ -184,133 +184,138 @@
                      @endif
                 </div>
                 
-                
-                    @if(request()->is('admin/projects/detail*'))
-                    <div class="d-inline-block mr-3 backnext">
-                        <!-- <a href="{{route('admin.projects.profile')}}/{{$pid}}/{{$cid}}/{{$uid}}" class="btn  button-boxed" style="">
-                           
-                            <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" style="transform: rotate(180deg) "/>
+            
+                @if(request()->is('admin/projects/detail*'))
+                <div class="d-inline-block mr-3 backnext">
+                    <!-- <a href="{{route('admin.projects.profile')}}/{{$pid}}/{{$cid}}/{{$uid}}" class="btn  button-boxed" style="">
+                        
+                        <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" style="transform: rotate(180deg) "/>
 
-                        </a>
-                        <a class="btn  button-boxed btn-first-unit-next" onclick="onNewUnit()" style="display: none; padding: 0px;">
+                    </a>
+                    <a class="btn  button-boxed btn-first-unit-next" onclick="onNewUnit()" style="display: none; padding: 0px;">
+                        
+                        <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/>
+    
+                    </a> -->
+                    <a class="btn-preview" onclick="Email_sending()" style="display: none;">
+                        <small>Send to mail</small>
+                    </a>
+                    <a class="btn  button-boxed btn-preview" onclick="preview2PDF()" style="display: none;">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                        <small>@lang('Preview')</small>
+                    </a>
+                    <a class="btn btn-outline-success button-boxed btn-unit-save" onclick="onSaveUnit()" style="display: none;">
+                        <i class="fa fa-save"></i>
+                        <small>@lang('Save')</small>
+                    </a>
+                    <a class="btn btn-outline-info button-boxed btn-offer-save" onclick="showMultipleModal()" style="display: none;">
+                        <i class="fa fa-save"></i>
+                        <small>@lang('Save Offer')</small>
+                    </a>
+                    <a href="#" class="btn btn-outline-primary button-boxed btn-report" onclick="pdfReport()" style="display: none;">
+                        <i class="fa fa-book"></i>
+                        <small>@lang('PDF Report')</small>
+                    </a>
+                </div>
+                @endif
+                @if(request()->is('admin/projects'))
+                <div class="d-inline-block mr-3">
+                    <!-- <a href="{{route('admin.projects.profile')}}" class="btn btn-outline-success button-boxed">
+                        <i class="fa fa-plus"></i>
+                        <small>@lang('New')</small>
+                    </a> 
+                    <a class="btn btn-outline-success button-boxed" onclick="modify()">
+                        <i class="fa fa-edit"></i>
+                        <small>@lang('Modify')</small>
+                    </a>
+                    <a class="btn btn-outline-info button-boxed" onclick="duplicate()">
+                        <i class="fa fa-paste"></i>
+                        <small>@lang('Duplicate')</small>
+                    </a>
+                    <a class="btn btn-outline-danger button-boxed" onclick="del()">
+                        <i class="fa fa-trash"></i>
+                        <small>@lang('Delete')</small>
+                    </a> -->
+                </div>
+                @endif
+                @if(request()->is('admin/customer') || request()->is('admin/projects/profile*'))
+                <!-- <div class="d-inline-block mr-3">
+                    <div id="customer_manager_company_buttons">
+                        <h5 class="d-inline-block mr-2">Company</h5>
+                        <div class="d-inline-block mr-3">
+                            <a class="btn btn-outline-success button-boxed" onclick="newCompany()">
+                                <i class="fa fa-plus"></i>
+                                <small>@lang('New')</small>
+                            </a>
+                            <a class="btn btn-outline-success button-boxed" onclick="editCompany()">
+                                <i class="fa fa-edit"></i>
+                                <small>@lang('Modify')</small>
+                            </a>
+                            <a class="btn btn-outline-danger button-boxed mr-3" onclick="deleteCompany()">
+                                <i class="fa fa-trash"></i>
+                                <small>@lang('Delete')</small>
+                            </a>
+                        </div>
+                    </div> -->
+                    <!-- <div id="customer_manager_contact_buttons" style="display: none;">
+                        <h5 class="d-inline-block mr-2">Contact</h5>
+                        <div class="d-inline-block mr-3">
+                            <a href="#" class="btn btn-outline-success button-boxed" onclick="newContact()">
+                                <i class="fa fa-plus"></i>
+                                <small>@lang('New')</small>
+                            </a>
+                            <a href="#" class="btn btn-outline-success button-boxed" onclick="updateContact()">
+                                <i class="fa fa-edit"></i>
+                                <small>@lang('Modify')</small>
+                            </a>
+                            <a href="#" class="btn btn-outline-danger button-boxed" onclick="deleteContact()">
+                                <i class="fa fa-trash"></i>
+                                <small>@lang('Delete')</small>
+                            </a>                    
+                        </div>
+                    </div> -->
+                <!-- </div> -->
+                
+                    @if(request()->is('admin/projects/profile*'))
+                    <!-- <a href="{{route('admin.projects')}}" class="btn btn-outline-danger button-boxed">
+                        <i class="fa fa-reply"></i>
+                        <small>@lang('Back')</small>
+                    </a> -->
+                    <!-- <a class="btn btn-outline-success button-boxed" onclick="goToDetail()">
+                        <i class="fa fa-check"></i>
+                        <small>@lang('Next')</small>
+                    </a> -->
+                    @endif
+                @endif
+                <!-- <select class="language langSel" style="width:75px">
+                    @foreach($languagelists as $item)
+                        <option value="{{ $item->code }}" @if(session('lang') == $item->code) selected @endif>
+                            {{ $item->name }}
                             
-                            <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/>
-        
-                        </a> -->
-                        <a class="btn-preview" onclick="Email_sending()" style="display: none;">
-                            <small>Send to mail</small>
-                        </a>
-                        <a class="btn  button-boxed btn-preview" onclick="preview2PDF()" style="display: none;">
-                            <i class="fa fa-eye" aria-hidden="true"></i>
-                            <small>@lang('Preview')</small>
-                        </a>
-                        <a class="btn btn-outline-success button-boxed btn-unit-save" onclick="onSaveUnit()" style="display: none;">
-                            <i class="fa fa-save"></i>
-                            <small>@lang('Save')</small>
-                        </a>
-                        <a class="btn btn-outline-info button-boxed btn-offer-save" onclick="showMultipleModal()" style="display: none;">
-                            <i class="fa fa-save"></i>
-                            <small>@lang('Save Offer')</small>
-                        </a>
-                        <a href="#" class="btn btn-outline-primary button-boxed btn-report" onclick="pdfReport()" style="display: none;">
-                            <i class="fa fa-book"></i>
-                            <small>@lang('PDF Report')</small>
-                        </a>
-                    </div>
-                    @endif
-                    @if(request()->is('admin/projects'))
-                    <div class="d-inline-block mr-3">
-                        <!-- <a href="{{route('admin.projects.profile')}}" class="btn btn-outline-success button-boxed">
-                            <i class="fa fa-plus"></i>
-                            <small>@lang('New')</small>
-                        </a> 
-                        <a class="btn btn-outline-success button-boxed" onclick="modify()">
-                            <i class="fa fa-edit"></i>
-                            <small>@lang('Modify')</small>
-                        </a>
-                        <a class="btn btn-outline-info button-boxed" onclick="duplicate()">
-                            <i class="fa fa-paste"></i>
-                            <small>@lang('Duplicate')</small>
-                        </a>
-                        <a class="btn btn-outline-danger button-boxed" onclick="del()">
-                            <i class="fa fa-trash"></i>
-                            <small>@lang('Delete')</small>
-                        </a> -->
-                    </div>
-                    @endif
-                    @if(request()->is('admin/customer') || request()->is('admin/projects/profile*'))
-                    <!-- <div class="d-inline-block mr-3">
-                        <div id="customer_manager_company_buttons">
-                            <h5 class="d-inline-block mr-2">Company</h5>
-                            <div class="d-inline-block mr-3">
-                                <a class="btn btn-outline-success button-boxed" onclick="newCompany()">
-                                    <i class="fa fa-plus"></i>
-                                    <small>@lang('New')</small>
-                                </a>
-                                <a class="btn btn-outline-success button-boxed" onclick="editCompany()">
-                                    <i class="fa fa-edit"></i>
-                                    <small>@lang('Modify')</small>
-                                </a>
-                                <a class="btn btn-outline-danger button-boxed mr-3" onclick="deleteCompany()">
-                                    <i class="fa fa-trash"></i>
-                                    <small>@lang('Delete')</small>
-                                </a>
-                            </div>
-                        </div> -->
-                        <!-- <div id="customer_manager_contact_buttons" style="display: none;">
-                            <h5 class="d-inline-block mr-2">Contact</h5>
-                            <div class="d-inline-block mr-3">
-                                <a href="#" class="btn btn-outline-success button-boxed" onclick="newContact()">
-                                    <i class="fa fa-plus"></i>
-                                    <small>@lang('New')</small>
-                                </a>
-                                <a href="#" class="btn btn-outline-success button-boxed" onclick="updateContact()">
-                                    <i class="fa fa-edit"></i>
-                                    <small>@lang('Modify')</small>
-                                </a>
-                                <a href="#" class="btn btn-outline-danger button-boxed" onclick="deleteContact()">
-                                    <i class="fa fa-trash"></i>
-                                    <small>@lang('Delete')</small>
-                                </a>                    
-                            </div>
-                        </div> -->
-                    <!-- </div> -->
-                    
-                        @if(request()->is('admin/projects/profile*'))
-                        <!-- <a href="{{route('admin.projects')}}" class="btn btn-outline-danger button-boxed">
-                            <i class="fa fa-reply"></i>
-                            <small>@lang('Back')</small>
-                        </a> -->
-                        <!-- <a class="btn btn-outline-success button-boxed" onclick="goToDetail()">
-                            <i class="fa fa-check"></i>
-                            <small>@lang('Next')</small>
-                        </a> -->
-                        @endif
-                    @endif
-                    <!-- <select class="language langSel" style="width:75px">
-                        @foreach($languagelists as $item)
-                            <option value="{{ $item->code }}" @if(session('lang') == $item->code) selected @endif>
-                                {{ $item->name }}
-                              
-                            </option>
-                        @endforeach
-                    </select> -->
-                
+                        </option>
+                    @endforeach
+                </select> -->
+            
 
-        <div class="dropdown"> 
-            <button class="dropbtn"> 
-            @foreach($languagelists as $item)
-                <a href="javascript:void(0)" > @if(session('lang') == $item->code) <span class="flag-icon flag-icon-{{ strtolower($item->country_flag) }}"></span> @endif</a>
-            @endforeach 
-            </button> 
-              
-            <div class="dropdown-content"> 
-            @foreach($languagelists as $item)
-                <a href="javascript:void(0)" class="langSel" data-code="{{$item->code}}"@if(session('lang') == $item->code) id="selected-lang" @endif ><span class="flag-icon flag-icon-{{ strtolower($item->country_flag) }}"></span></a> 
-            @endforeach
-            </div> 
-        </div>
+                <div class="dropdown"> 
+                    <button class="dropbtn"> 
+                    @foreach($languagelists as $item)
+                        <a href="javascript:void(0)" > @if(session('lang') == $item->code) <span class="flag-icon flag-icon-{{ strtolower($item->country_flag) }}"></span> @endif</a>
+                    @endforeach 
+                    </button> 
                     
+                    <div class="dropdown-content"> 
+                    @foreach($languagelists as $item)
+                        <a href="javascript:void(0)" class="langSel" data-code="{{$item->code}}" @if(session('lang') == $item->code) id="selected-lang" @endif ><span class="flag-icon flag-icon-{{ strtolower($item->country_flag) }}"></span></a> 
+                    @endforeach
+                    </div> 
+                </div>
+
+                <!-- @php 
+                    echo count($languagelists);
+                    echo session('lang');
+                @endphp
+                             -->
 
                 @if(count(config('panel.available_languages', [])) > 1)
                     <div class="flex items-center">

@@ -22,6 +22,7 @@ class Language extends Model
         'name',
         'code',
         'is_default',
+        'country_code',
     ];
 
     protected function serializeDate(DateTimeInterface $date)

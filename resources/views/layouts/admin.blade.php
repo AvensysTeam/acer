@@ -197,7 +197,7 @@
                         <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/>
     
                     </a> -->
-                    <a class="btn-preview" onclick="Email_sending()" style="display: none;">
+                    {{-- <a class="btn-preview" onclick="Email_sending()" style="display: none;">
                         <small>Send to mail</small>
                     </a>
                     <a class="btn  button-boxed btn-preview" onclick="preview2PDF()" style="display: none;">
@@ -215,7 +215,7 @@
                     <a href="#" class="btn btn-outline-primary button-boxed btn-report" onclick="pdfReport()" style="display: none;">
                         <i class="fa fa-book"></i>
                         <small>@lang('PDF Report')</small>
-                    </a>
+                    </a> --}}
                 </div>
                 @endif
                 @if(request()->is('admin/projects'))
@@ -456,7 +456,93 @@ $(document).click(function(event) {
 
  })
 
+
+
+
+ 
     </script>
+    
+
+
+    {{-- <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: 'https://ipinfo.io',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var lan = ['DE', 'FR', 'NL', 'S', 'N', 'PL', 'EN'];
+                    var changeUrl;
+    
+                    if (array_in(lan, data.country)) {
+                        changeUrl = "{{ route('admin.home') }}/languages/change/" + data.country;
+                    } else {
+                        changeUrl = "{{ route('admin.home') }}/languages/change/EN";
+                    }
+    
+                    window.location.href = changeUrl;
+    
+                    console.log('Success:', data.country);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', status, error);
+                }
+            });
+        });
+    </script> --}}
+
+
+    <script>
+        $(document).ready(function() {
+            // Check if the AJAX request has already been made in this session
+            var isFirstTime = sessionStorage.getItem('isFirstTime');
+    
+            // If it's the first time, make the AJAX request
+            if (isFirstTime !== 'false') {
+                var apiKey = '0c19028b4312f1';
+    
+                $.ajax({
+                    url: 'https://ipinfo.io/',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        token: apiKey,
+                        timestamp: new Date().getTime()
+                    },
+                    success: function(data) {
+                        var lan = ['DE', 'FR', 'NL', 'S', 'N', 'PL', 'EN'];
+                        var changeUrl;
+    
+                        if (lan.indexOf(data.country) !== -1) {
+                            changeUrl = "{{ route('admin.home') }}/languages/change/" + data.country;
+                        } else {
+                            changeUrl = "{{ route('admin.home') }}/languages/change/EN";
+                        }
+    
+                        window.location.href = changeUrl;
+    
+                        console.log('Success:', data.country);
+    
+                        // Set isFirstTime to false to indicate that the AJAX request has been made
+                        sessionStorage.setItem('isFirstTime', 'false');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', status, error);
+                    }
+                });
+            }
+        });
+    </script>
+
+
+
+
+
+
+<script>
+    var APP_URL = {!! json_encode(url('/')) !!};
+ </script>
+
 </body>
 
 </html>

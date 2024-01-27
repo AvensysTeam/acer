@@ -75,7 +75,6 @@
                             <?php
                             if(isset($company_list)) {
                                 foreach($company_list as $company) {
-                        
                                         $companydetail = $company->name.'$$'.$company->address.'$$'.$company->phone.'$$'.$company->VAT.'$$'.$company->description;
                                     ?>
                             <tr data-id="{{$company->id}}" class="jsselected">
@@ -111,7 +110,7 @@
             <div class="header" style="font-size:18px;">
                 @lang('Contact list')
                 <a href="#!" onclick="newContact()"><img class="new"
-src="{{ asset('assets/icons/plus-circle-icon-original.svg') }}" width="30px"/></a>
+                src="{{ asset('assets/icons/plus-circle-icon-original.svg') }}" width="30px"/></a>
             </div>
             <div class="body " >
                 <div class="w-full" style="overflow: auto;">
@@ -228,6 +227,27 @@ src="{{ asset('assets/icons/plus-circle-icon-original.svg') }}" width="30px"/></
 </div>
 @endsection
 @section('scripts')
+
+
+
+<script>
+    function select_row(id) {
+        // Get the total number of rows in the table
+        var total_rows = $("#DataTables_Table_1 tr").length;
+        // Iterate through each row
+        for (var i = 0; i < total_rows; i++) {
+            // Check if the current row does not have the specified id
+            if (i !== id) {
+                // Hide the row
+                $('#DataTables_Table_1 tbody tr#row_' + i).hide();
+            }
+        }
+    }
+</script>
+
+
+
+
     @parent
     <script>
         var table1, table2;
@@ -294,8 +314,8 @@ src="{{ asset('assets/icons/plus-circle-icon-original.svg') }}" width="30px"/></
                 table2.rows().remove();
                 for(var i=0;i<res.result.length;i++) {      
                      var contactdetail = res.result[i].id+'$$'+res.result[i].firstname+'$$'+res.result[i].mobile+'$$'+res.result[i].email+'$$'+res.result[i].job_position+'$$'+res.result[i].company_id;                      
-                    var $tr = $(`<tr data-id="${res.result[i].id}">\
-                    <td>${res.result[i].firstname}</td>\
+                    var $tr = $(`<tr data-id="${res.result[i].id}" id='row_${i}' onclick=select_row(${i}); >\
+                    <td  >${res.result[i].firstname}</td>\
                     
                     <td>${res.result[i].mobile}</td>\
                     <td>${res.result[i].email}</td>\
@@ -486,8 +506,6 @@ input.addEventListener('blur', () => {
 // on keyup / change flag: reset
 input.addEventListener('change', reset);
 input.addEventListener('keyup', reset);
-
-
         function saveContact(thisatt) { 
     
             //alert(thisatt);
@@ -545,9 +563,6 @@ input.addEventListener('keyup', reset);
                 //location.reload();
             });
         }
-
-
-        
 
         function deleteContact(contact_id,company_id) {
             /*var company_id = $(table1.row({selected: true}).node()).data('id');
@@ -703,4 +718,5 @@ input.addEventListener('keyup', reset);
         $('.firstrow').hide();
 
     </script>
-@endsection
+
+    @endsection

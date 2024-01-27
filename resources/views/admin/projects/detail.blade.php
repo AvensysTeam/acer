@@ -5,6 +5,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
 <style>
     .chart-tab-active {
         display: block !important;
@@ -63,6 +64,11 @@
         position: relative;
         left: 20px;
     }
+
+    body.no-scroll {
+      overflow: hidden;
+    }
+
 </style>
 <?php
     $units_list = json_decode($units);
@@ -117,19 +123,28 @@
                 <div class="form-group row">
                     <label for="unit_name" class="col-md-3 col-form-label">@lang('Unit Name')</label>
                     <div class="col-md-8" style="display:flex;">
-                    <input type="text" class="form-control" id="unit_name" name="uname" placeholder="Unit Name" value="" disabled="disabled">
-                    <a class="btn compatiblewithuname button-right" data-value="1" onclick="onSaveDeliveryTime()" style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a>
-                    <a class="btn compatiblewithoutuname button-right" data-value="0"onclick="" style="margin-top: -4px;" ><img class="new mb-2" src="{{asset('assets/icons/caret-circle-double-right-icon-original.png')}}" width="45px" height="45px"/></a>
+                    <input type="text" class="form-control" id="unit_name" name="uname" placeholder="Unit Name" value="">
+                         <a class="btn  button-right" data-value="1" onclick="onSaveDeliveryTime()"  style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a>
+                    {{-- <a class="btn compatiblewithuname button-right" data-value="1" onclick="onSaveDeliveryTime()" style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a> --}}
+                    {{-- <a class="btn compatiblewithoutuname button-right" data-value="0"onclick="" style="margin-top: -4px;" ><img class="new mb-2" src="{{asset('assets/icons/caret-circle-double-right-icon-original.png')}}" width="45px" height="45px"/></a> --}}
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-5 d-none" id="preview_a_tag" style=" text-align: end;">
+                <a class="btn  button-boxed btn-preview" onclick="preview2PDF()">
+                    <i class="fa fa-eye" aria-hidden="true"></i>
+                    <small>@lang('Preview')</small>
+                </a>
+            </div>
+            
         </div>
 
         <div class="w-full">
             <div class="tabs tabs-primary">
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item" role="presentation">               
-                        <a class="nav-link  active" href="#tab0" data-title1="Project reference" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('PROJECT REFERENCE')</a>
+                        <a class="nav-link  active"  id="tab_unit_home" href="#tab0" data-title1="Project reference" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('PROJECT REFERENCE')</a>
                     </li>
                     <li class="nav-item" role="presentation">               
                         <a class="nav-link  @if($option == "")disabled @endif" id="tab_unit_selection" data-title1="Unit selection" href="#tab1" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('UNIT SELECTION')</a>
@@ -143,7 +158,7 @@
                         <div class="border border-dark rounded px-5 py-1 row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="project_name" class="text-xs">@lang('Project Name')(*)</label>
+                                    <label for="project_name" class="text-xs">@lang('Project Name') <span style="color: red;">(*)</span></label>
                                     <input type="text" id="project_name" name="project_name" class="form-control" value="{{$project->name ?? ''}}">
                                 </div>
                                 <div class="form-group">
@@ -228,6 +243,8 @@
                             </div>
                     </div>
                     <div id="tab1" class="tab-pane pt-3 px-3" role="tabpanel">
+                        
+
                         <div class="row">
                             <div class="col-lg-12 col-xl-5 box1">
                                 <div class="box border border-dark rounded px-3 mt-3">
@@ -686,6 +703,31 @@
     </div>
 </div>
 
+
+
+<div class="modal" id="pdf_on_iframe_model">
+    <div class="modal-dialog modal-xl " role="document">
+      <div class="modal-content">
+        {{-- <div class="modal-header">
+          <h5 class="modal-title">PDF Preview </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onchange="close_model()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div> --}}
+        <div class="modal-body" style="height: 32rem;">
+            <iframe id="pdf_on_iframe" src="" height="100%" width="100%"></iframe>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class=""        id="btn-continue" data-toggle="tooltip" data-placement="top" title="Continue"   onclick="preview_pdf_model('continue');"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="25px" height="25px"></button>
+          <button type="button" class="" id="btn-download"  data-toggle="tooltip" data-placement="top" title="Download"   onclick="preview_pdf_model('download');"><img class="new mb-2" src="{{asset('/assets/icons/download-simple-icon-original.svg')}}" width="25px" height="25px"></button>
+          <button type="button" class="" id="btn-sendemail" data-toggle="tooltip" data-placement="top" title="Send Mail"  onclick="preview_pdf_model('sendemail');" ><img class="new mb-2" src="{{asset('/assets/icons/stack-icon-original.svg')}}" width="25px" height="25px"></button>
+          <button type="button" class=""        id="btn-edit"     data-toggle="tooltip" data-placement="top" title="Edit"       onclick="preview_pdf_model('edit');"><img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 <input type="hidden" id="read_only" value="{{$option}}">
 <input type="hidden" id="project_count" value="{{ $project_count }}">
 @foreach($contact_email as $mail)
@@ -698,6 +740,51 @@
 @endsection
 @section('scripts')
     @parent
+
+
+    
+    <script>
+
+
+        $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+        })
+
+        function close_model(){
+            $("#pdf_on_iframe_model").modal('hide');
+
+        }
+
+        function preview_pdf_model(action){
+            if(action == 'continue'){
+                $("#btn-continue").addClass('d-none');
+                $("#btn-edit").addClass('d-none');
+
+                $("#btn-download").removeClass('d-none');
+                $("#btn-sendemail").removeClass('d-none');
+
+            }else if(action == 'download'){
+                download_pdf();
+                close_model();
+            }else if(action == 'sendemail'){
+                Email_sending();
+            }else if(action == 'edit'){
+
+                $("#preview_a_tag").addClass('d-none');
+                $("#tab_unit_selection").addClass('active');
+                $("#tab1").addClass('active');
+                $("#tab_results_table").removeClass('active');
+                $("#tab2").removeClass('active');
+                
+
+                tab1
+
+                close_model();
+            }
+        }
+
+    </script>
+
     <script>
         let table = null;
         var airflow = null;
@@ -776,6 +863,9 @@
         }
  
         function display_compatible_models(callback, showLoading = true) {
+
+           
+
             $('.heading').html('');
             $('.heading').html('/'+' '+'unit features');
             var compatiblewithoutuname = $('.compatiblewithoutuname').data('value');
@@ -881,8 +971,40 @@
                     swal.close();
             });
 
-            $('.main-header h3').text("@lang('Project'): " + $('#project_name').val().trim() + ' ' + $('#project_reference').val());
+
+            if($('#project_name').val() == "" || $('#project_name').val() == null){
+                var project_name = generateRandomNumber();
+                $('.main-header h3').text("@lang('Project'): " + project_name + ' ' + $('#project_reference').val());
+                $('#project_name').val(project_name);
+
+            }else{
+
+                $('.main-header h3').text("@lang('Project'): " + $('#project_name').val().trim() + ' ' + $('#project_reference').val());
+            }
         }
+
+       
+        function generateRandomNumber() {
+            // Generate a 5-digit random number
+            var randomNumber = Math.floor(10000 + Math.random() * 90000);
+            // Get the current year and take the last two digits
+            var currentYearLastTwoDigits = new Date().getFullYear().toString().slice(-2);
+            // Combine the random number and current year digits
+            return parseInt(randomNumber.toString() + currentYearLastTwoDigits);
+        }
+
+
+        function tab1_active(){
+            if ($('#tab1').hasClass('active')) {
+                // $('html, body').animate({ scrollTop: $('#tab1').offset().top }, 'slow');
+                $('main').css('overflow', 'hidden');
+                $(".w-full.my-3").remove();
+            }else{
+                $('main').css('overflow', '');
+            }
+
+        }
+
 
         function clickandshow(){
             var model = $(this).find('td:first-child').text();
@@ -914,7 +1036,7 @@
                 </table>`);
             $('.models-tbl-container').html($dt);
             for(var i=0;i<Object.keys(data).length;i++) {
-                var $row = $('<tr class="uname"></tr>');
+                var $row = $('<tr class="uname" id=row_'+i+' onclick="select_row(' + i + ');"></tr>');
                 var model = Object.keys(data)[i];
                 $row.append('<td data-id="' + data[model]["id"] +'">' + model + '</td>');
                 $row.append('<td>' + data[model]["Airflow"] + '</td>');
@@ -973,6 +1095,25 @@
             
         }
 
+
+
+
+        function select_row(id) {
+        // Get the total number of rows in the table
+            var total_rows = $("#DataTables_Table_0 tr").length;
+            // Iterate through each row
+            for (var i = 0; i < total_rows; i++) {
+                // Check if the current row does not have the specified id
+                if (i !== id) {
+                    // Hide the row
+                    $('#DataTables_Table_0 tbody tr#row_' + i).hide();
+                }
+            }
+            $("#preview_a_tag").removeClass('d-none');
+    }
+
+   
+
         function initPriceTable(id, price_id = 0, callback) {
             if (id == null){
                 id = 0;
@@ -1020,7 +1161,7 @@
                             if (pos != -1) {
                                 temprow.append('<td>' + row.image + '</td>');
                             } else {
-                                temprow.append('<td><img class="m-auto" src="' + window.location.origin + '/uploads/price/'+ row.image + '" width="50" height="50"></td>');
+                                temprow.append('<td><img class="m-auto" src="' + APP_URL + '/uploads/price/'+ row.image + '" width="50" height="50"></td>');
                             }
                             temprow.append('<td>' + row.itemcode + '</td>');
                             temprow.append('<td>' + row.description + '</td>');
@@ -1110,7 +1251,7 @@
             var psfp_graph_data = [mergeArr(data.Max_PSFP_af, data.Max_PSFP),mergeArr(data.Regulate_PSFP_af, data.Regulate_PSFP), mergeArr([data.Airflow], [data.Unit_SEL])];
             var efficiency_graph_data = [mergeArr(data.Max_Airflows, data.ThermodynamicData.Efficiencies),  mergeArr([data.Airflow], [data.ThermodynamicData.efficiency])];
 
-            document.getElementById('render').src = window.location.origin + '/uploads/price/' + data.IND_VarHor_Ceiling_Img;
+            document.getElementById('render').src = APP_URL + '/uploads/price/' + data.IND_VarHor_Ceiling_Img;
             renderImgData = null;
             var render_img = new Image();
 
@@ -1355,6 +1496,16 @@
         }
 
         function preview2PDF() {
+
+
+            $("#btn-continue").removeClass('d-none');
+            $("#btn-edit").removeClass('d-none');
+
+            $("#btn-download").addClass('d-none');
+            $("#btn-sendemail").addClass('d-none');
+
+        
+
             var selectedModel = $(dTable.row({selected: true}).data());
             var valueZero = selectedModel[0];
            
@@ -1570,15 +1721,47 @@
                 h3 = drawGraphOnPDF(doc1, 'g_noise6', 20 + 105 / 4 * 3 + 150 * 2, nextY);
                 nextY = Math.max(h1, h2, h3) + nextY + 10;
                 doc1.rect(20, tempy, 595 - 40, nextY - tempy);
+                // let circleRadius = 10
+                // doc1.circle(300, nextY + circleRadius + 5, circleRadius, 'S');
+                
+
+                // console.log(doc1);
+                
+
+
+
+                // const text = "Click here to visit Example.com";
+                // const url = "https://www.example.com";
+                // // Simulate a link appearance
+                // doc1.textWithLink(text, 10, 20, {url});
+
+
 
                 var filename = 'PREVIEW_REPORT_' + (new Date()).getTime() + '.pdf';
                 savedPreviewDoc = {
                     'filename': filename,
                     'doc': doc1
                 };
-                savedPreviewDoc.doc.save(savedPreviewDoc.filename);
+
                 $('.chart-tab-content .tab-pane.chart-tab-active').removeClass('chart-tab-active');
                 swal.close();
+                // Open the PDF in a new window/tab
+                let pdfB64String = doc1.output('dataurlstring', savedPreviewDoc.filename);
+                // console.log(pdfB64String);
+                $("#pdf_on_iframe").attr("src",pdfB64String);
+                $('#pdf_on_iframe_model').modal('show');
+                // aaaaaaaaaaaa
+
+
+
+
+
+                // Create a new window and set its content to the PDF data
+                // var newWindow = window.open();
+                // newWindow.document.write('<iframe width="100%" height="100%" src="' + pdfOutput + '" frameborder="0" allowfullscreen></iframe>');
+                // savedPreviewDoc.doc.save(savedPreviewDoc.filename);
+                // $('.chart-tab-content .tab-pane.chart-tab-active').removeClass('chart-tab-active');
+                // swal.close();
             }, 100);
         }
 
@@ -1838,6 +2021,241 @@
             const creation_date = $('#create_date').val().trim();
             const modify_date = $('#modify_date').val().trim();
         }
+
+
+
+        function download_pdf(){
+            var selectedModel = $(dTable.row({selected: true}).data());
+            var valueZero = selectedModel[0];
+           
+            showSwalLoading();
+            $('.chart-tab-content .tab-pane').addClass('chart-tab-active');
+            setTimeout(() => {
+                const project_name = $('#project_name').val().trim();
+                const project_desc = $('#project_desc').val().trim();
+                const project_refer = $('#project_reference').val().trim();
+                const creation_date = $('#create_date').val().trim();
+                const modify_date = $('#modify_date').val().trim();
+
+                if (project_name === ''){
+                    document.querySelector('.nav-link[href="#tab0"]').click();
+                    alert("@lang('Please type Project Name')");
+                    $('#project_name').focus();
+                    return;
+                }
+                // if (project_refer === ''){
+                //     document.querySelector('.nav-link[href="#tab0"]').click();
+                //     alert("@lang('Please type Project Reference')");
+                //     $('#project_reference').focus();
+                //     return;
+                // }
+                
+                var doc1 = new jsPDF('p', 'pt', [595, 842], true); // A4 Size
+                var x = 20;
+                var y = 20;
+
+                doc1.addImage(logoImgData.dataURL, 'PNG', 30, y, logoImgData.width * 30 / logoImgData.height, 30, '', 'FAST');
+                y += 30;
+
+                doc1.setFontSize(7);
+                doc1.setFontStyle('normal');
+                y += 10;
+
+                doc1.rect(20, y, 595 - 40, 25);
+                y += 10;
+                doc1.text("@lang('Project') : " + project_name  + ' - ' + project_desc, 30, y);
+                doc1.text("@lang('Project reference') : " + project_refer, 595 / 3 + 10, y);
+                doc1.text("@lang('Creation date') : " + creation_date, 595 * 2 / 3 + 10, y);
+                y += 10;
+                doc1.text("@lang('Last revistion') : " + modify_date, 30, y);
+                doc1.text("@lang('SSW version') : {{$version ?? ''}}", 595 / 3 + 10, y);
+                y += 10;
+
+                var temp_y = y;
+
+                doc1.rect(20, y, 595 - 40 - 350, 150);
+                y += 10;
+                doc1.setFontSize(10);
+                doc1.setFontStyle('bold');
+                doc1.text("@lang('SELECTED UNIT'): " + valueZero, 20 + (595 - 40 - 350) / 2, y, {align: 'center'});
+                y += 5;
+                doc1.line(20,  y, 595 - 20 - 350, y);
+                doc1.setFontSize(7);
+                doc1.setFontStyle('normal');
+                var temp_price = $('input[name="price"]:checked').parents('tr').children('td');
+                if (temp_price.length != 0){
+                    y += 10;
+                    doc1.text("@lang('Itemcode'):    " + temp_price[2].innerHTML, 30, y);
+                    y += 10;
+                    doc1.text("@lang('Description'): " + temp_price[3].innerHTML + (temp_price[4].innerHTML != '' ? ( ' - ' + temp_price[4].innerHTML) : ''), 30, y);
+                }
+                y += 10;
+                doc1.addImage(renderImgData.dataURL, 'PNG', 20 + (595 - 40 - 350 - renderImgData.width / renderImgData.height * 100) / 2, y,  renderImgData.width / renderImgData.height * 100, 100, '', 'FAST');
+                y += 110;
+
+                
+                doc1.rect(20, y, 595 - 40 - 350, 60);
+                y += 10;
+                doc1.setFontSize(10);
+                doc1.setFontStyle('bold');
+                doc1.text("@lang('WORKING POINT')", 20 + (595 - 40 - 350) / 2, y, {align: 'center'});
+                y += 3;
+                doc1.line(20, y, 595 - 20 - 350, y);
+                // set font size to 10
+
+                y += 10;
+                doc1.setFontSize(8);
+                doc1.setFontStyle('bold');
+                doc1.text("@lang('Airflow data')", 30, y);
+                y += 10;
+                doc1.setFontSize(7);
+                doc1.setFontStyle('normal');
+                doc1.text("@lang('Airflow rate') : " + airflow +' [m³/h]', 30, y);
+                doc1.text("@lang('Airflow pressure') : " + pressure +  ' [Pa]', 130, y);
+                y += 10;
+                doc1.setFontSize(7);
+                doc1.setFontStyle('normal');
+                doc1.text("@lang('Power consumption') : " + powerconsumption +' [W]', 30, y);
+                doc1.text("@lang('Regulation') : " + regulation +  ' [%]', 130, y);
+                y += 10;
+                doc1.setFontSize(7);
+                doc1.setFontStyle('normal');
+                doc1.text("@lang('Unit SEL') : " + unitsel +' [J/m3]', 30, y);
+                doc1.text("@lang('PSFP') : " + psfp +  ' [J/m3]', 130, y);
+
+
+                doc1.rect(595 - 20 - 340, temp_y, 340, 180);
+                temp_y += 10;
+                doc1.setFontSize(10);
+                doc1.setFontStyle('bold');
+                doc1.text("@lang('THERMAL PERFORMANCE')", 595 - 20 - 340 / 2, temp_y, {align: 'center'});
+                temp_y += 5;
+                doc1.line(595 - 20 - 340, temp_y, 595 - 20, temp_y);
+
+                // set font size to 10
+
+                var drawGridText = (pdf, arrText, y) => {
+                    var x0 = 245, x1 = 345, x2 = 365, x3 = 405, x4 = 505, x5 = 525;
+                    pdf.text(arrText[0], x0, y);
+                    pdf.text(arrText[1], x1, y);
+                    pdf.text(arrText[2], x2, y);
+                    pdf.text(arrText[3], x3, y);
+                    pdf.text(arrText[4], x4, y);
+                    pdf.text(arrText[5], x5, y);
+                };
+
+                temp_y += 10;
+                doc1.setFontSize(7);
+                doc1.setFontStyle('bold');
+                doc1.text("@lang('WINTER OPERATION')", 595 - 20 - 340 + 10, temp_y);
+                doc1.text(`@lang('imbalance ratio') : 90 %`, 595 - 20 - 340 + 100, temp_y);
+
+                doc1.setFontStyle('normal');
+                temp_y += 10;
+                drawGridText(doc1, ["@lang('Supply Temperature')", $('#TI-0').val(), '[°C]', "@lang('Fresh Temperature')", $('#TI-7').val(), '[°C]'], temp_y);
+                temp_y += 10;
+                drawGridText(doc1, ["@lang('Supply Humidity')", $('#TI-1').val(), '[%]', "@lang('Fresh Humidity')", $('#TI-8').val(), '[%]'], temp_y);
+                temp_y += 10;
+                drawGridText(doc1, ["@lang('Exhaust Temperature')", $('#TI-2').val(), '[°C]', "@lang('Efficiency')", $('#TI-9').val(), '[%]'], temp_y);
+                temp_y += 10;
+                drawGridText(doc1, ["@lang('Exahust Humidity')", $('#TI-3').val(), '[%]', "@lang('Heat Recovery')", $('#TI-10').val(), '[W]'], temp_y);
+                temp_y += 10;
+                drawGridText(doc1, ["@lang('Water produced')", $('#TI-4').val(), '[l/h]', "@lang('Sensible Heat')", $('#TI-11').val(), '[W]'], temp_y);
+                temp_y += 10;
+                drawGridText(doc1, ["@lang('Return Temperature')", $('#TI-5').val(), '[°C]', "@lang('Latent Heat')", $('#TI-12').val(), '[W]'], temp_y);
+                temp_y += 10;
+                drawGridText(doc1, ["@lang('Return Humidity')", $('#TI-6').val(), '[%]', '', '', ''], temp_y);
+
+                temp_y += 10;
+                doc1.setFontSize(7);
+                doc1.setFontStyle('bold');
+                doc1.text("@lang('SUMMER OPERATION')", 595 - 20 - 340 + 10, temp_y);
+                doc1.text(`@lang('imbalance ratio') : 70 %`, 595 - 20 - 340 + 100, temp_y);
+
+                doc1.setFontStyle('normal');
+                temp_y += 10;
+                drawGridText(doc1, ["@lang('Supply Temperature')", '', '[°C]', "@lang('Fresh Temperature')", '', '[°C]'], temp_y);
+                temp_y += 10;
+                drawGridText(doc1, ["@lang('Supply Humidity')", '', '[%]', "@lang('Fresh Humidity')", '', '[%]'], temp_y);
+                temp_y += 10;
+                drawGridText(doc1, ["@lang('Exhaust Temperature')", '', '[°C]', "@lang('Efficiency')", '', '[%]'], temp_y);
+                temp_y += 10;
+                drawGridText(doc1, ["@lang('Exahust Humidity')", '', '[%]', "@lang('Heat Recovery')", '', '[W]'], temp_y);
+                temp_y += 10;
+                drawGridText(doc1, ["@lang('Water produced')", '', '[l/h]', "@lang('Sensible Heat')", '', '[W]'], temp_y);
+                temp_y += 10;
+                drawGridText(doc1, ["@lang('Return Temperature')", '', '[°C]', "@lang('Latent Heat')", '', '[W]'], temp_y);
+                temp_y += 10;
+                drawGridText(doc1, ["@lang('Return Humidity')", '', '[%]', '', '', ''], temp_y);
+
+                temp_y = y;
+
+                y += 10;
+                var _y = y;
+                y += 20;
+                doc1.line(20, y, 595 - 20, y);
+                doc1.setFontSize(10);
+                doc1.setFontStyle('bold');
+                doc1.text("@lang('PERFORMANCE CURVES')", 30, y - 7);
+
+                y += 10;
+                var drawGraphOnPDF = (pdf, id, x, y) => {                    
+                    var canvas = document.getElementById(id);
+                    canvas.getContext('2d');
+                    var image = canvas.toDataURL('image/png', 1.0);
+                    var cw = 150;
+                    var cy = cw * canvas.height / canvas.width;
+                    
+                    pdf.addImage(image, 'PNG', x, y, cw, cy, '', 'FAST');
+                    return cy;
+                }
+                h1 = drawGraphOnPDF(doc1, 'pressure_graph', 105, y);
+                h2 = drawGraphOnPDF(doc1, 'power_graph', 340, y);
+                y = Math.max(h1, h2) + y + 10;
+
+                h1 = drawGraphOnPDF(doc1, 'efficiency_graph', 105, y);
+                h2 = drawGraphOnPDF(doc1, 'psfp_graph', 340, y);
+                y = Math.max(h1, h2) + y + 10;
+                
+                doc1.rect(20, _y, 595 - 40, y - _y);
+
+                y += 25;
+
+                tempy = y - 15;
+
+                doc1.line(20, y, 595 - 20, y);
+
+                // set font size to 10
+                doc1.setFontSize(10);
+                doc1.setFontStyle('bold');
+                doc1.text("@lang('ACOUSTIC CHARACTERISTICS')", 30, y - 3);
+                y += 10;
+                var h1 = drawGraphOnPDF(doc1, 'g_noise1', 20 + 105 / 4, y);
+                var h2 = drawGraphOnPDF(doc1, 'g_noise2', 20 + 105 / 2 + 150, y);
+                var h3 = drawGraphOnPDF(doc1, 'g_noise3', 20 + 105 / 4 * 3 + 150 * 2, y);
+                var nextY = Math.max(h1, h2, h3) + y + 10;
+
+                h1 = drawGraphOnPDF(doc1, 'g_noise4', 20 + 105 / 4, nextY);
+                h2 = drawGraphOnPDF(doc1, 'g_noise5', 20 + 105 / 2 + 150, nextY);
+                h3 = drawGraphOnPDF(doc1, 'g_noise6', 20 + 105 / 4 * 3 + 150 * 2, nextY);
+                nextY = Math.max(h1, h2, h3) + nextY + 10;
+                doc1.rect(20, tempy, 595 - 40, nextY - tempy);
+
+                var filename = 'PREVIEW_REPORT_' + (new Date()).getTime() + '.pdf';
+                savedPreviewDoc = {
+                    'filename': filename,
+                    'doc': doc1
+                };
+
+                savedPreviewDoc.doc.save(savedPreviewDoc.filename);
+                $('.chart-tab-content .tab-pane.chart-tab-active').removeClass('chart-tab-active');
+                swal.close();
+            }, 100);
+
+        }
+
+
+        
 
         function export2PDF(final = false) {
             $('.chart-tab-content .tab-pane').addClass('chart-tab-active');
@@ -2388,6 +2806,7 @@
             $('#p_w_Hrin').val(60);
             $('#p_w_Tfin').val(-10);
             $('#p_w_Hfin').val(80);
+            tab1_active();
         }
 
         function onViewUnit(unit_name){

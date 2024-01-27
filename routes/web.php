@@ -3,7 +3,12 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/login');
+// Route::redirect('/', '/login');
+
+
+Route::get('/',function(){
+   return redirect('/login');
+});
 
 Route::get('/home', 'Admin\HomeController@home')->name('pub_home');
 

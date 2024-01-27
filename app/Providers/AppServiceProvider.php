@@ -26,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+
+        // Language::whereIn('country_flag', ['DE','GB'])->get();
+
         $viewShare['languagelists'] = Language::all();
 
         view()->share($viewShare);

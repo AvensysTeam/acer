@@ -52,6 +52,8 @@ class ProjectsController extends Controller
             'cid' => $cid,
             'uid' => $uid,
         ]);
+
+        
     }
 
     // public function contactlist(Request $request,$pid=0, $cid=0, $uid=0)

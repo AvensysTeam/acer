@@ -133,8 +133,10 @@
 
             <div class="col-md-5 d-none" id="preview_a_tag" style=" text-align: end;">
                 <a class="btn  button-boxed btn-preview" onclick="preview2PDF()">
-                    <i class="fa fa-eye" aria-hidden="true"></i>
-                    <small>@lang('Preview')</small>
+                    <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
+                   
+                    {{-- <i class="fa fa-eye" aria-hidden="true"></i> --}}
+                    {{-- <small>@lang('Preview')</small> --}}
                 </a>
             </div>
             
@@ -718,9 +720,9 @@
             <iframe id="pdf_on_iframe" src="" height="100%" width="100%"></iframe>
         </div>
         <div class="modal-footer">
-          <button type="button" class=""        id="btn-continue" data-toggle="tooltip" data-placement="top" title="Continue"   onclick="preview_pdf_model('continue');"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="25px" height="25px"></button>
+          <button type="button" class=""        id="btn-continue" data-toggle="tooltip" data-placement="top" title="Continue"   onclick="preview_pdf_model('continue');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/check-circle-icon-original.svg')}}" width="25px" height="25px"></button>
           <button type="button" class="" id="btn-download"  data-toggle="tooltip" data-placement="top" title="Download"   onclick="preview_pdf_model('download');"><img class="new mb-2" src="{{asset('/assets/icons/download-simple-icon-original.svg')}}" width="25px" height="25px"></button>
-          <button type="button" class="" id="btn-sendemail" data-toggle="tooltip" data-placement="top" title="Send Mail"  onclick="preview_pdf_model('sendemail');" ><img class="new mb-2" src="{{asset('/assets/icons/stack-icon-original.svg')}}" width="25px" height="25px"></button>
+          <button type="button" class="" id="btn-sendemail" data-toggle="tooltip" data-placement="top" title="Send Mail"  onclick="preview_pdf_model('sendemail');" ><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/share-network-icon-original.svg')}}" width="25px" height="25px"></button>
           <button type="button" class=""        id="btn-edit"     data-toggle="tooltip" data-placement="top" title="Edit"       onclick="preview_pdf_model('edit');"><img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"></button>
         </div>
       </div>

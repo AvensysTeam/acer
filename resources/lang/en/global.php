@@ -347,4 +347,7 @@ return [
         'noise_level' => 'NOISE LEVEL',
         'technical_info' => 'TECHNICAL INFORMATION',
     ],
+    'utilities' => [
+        "utilities" => "Utilities"
+    ]
 ];

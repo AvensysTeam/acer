@@ -41,6 +41,7 @@
                                 {{ $role->title ?? '' }}
                             </td>
                             <td align="center">
+                                <!-- @include('admin.roles.permissionGroup', ['isView' => 1]) -->
                                 @foreach($role->permissions as $key => $item)
                                     <span class="badge blue">{{ $item->display }}</span>
                                 @endforeach

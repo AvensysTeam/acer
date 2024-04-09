@@ -128,9 +128,15 @@
         @endcan
         @can('projects_access')                        
             <a class="nav-link border-success{{ request()->is('admin/projects*') ? ' active' : '' }}" href="{{ route('admin.projects') }}">
-                <i class="fas fa-fw fa-folder"></i>
+                <i class="fas fa-fw fa-toolbox"></i>
                 <span class="mx-4">@lang('Offer tool')</span>
             </a>
+        @endcan
+        @can('utilities_access')
+        <a class="nav-link border-success{{ request()->is('admin/utilities*') ? ' active' : '' }}" href="{{ route('admin.utilities') }}">
+            <i class="fas fa-fw fa-fire"></i>
+            <span class="mx-4">@lang('Utilities')</span>
+        </a>
         @endcan
         @can('customer_access')
             <a class="nav-link border-success{{ request()->is('admin/customer*') ? ' active' : '' }}" href="{{ route('admin.customer') }}">

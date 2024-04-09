@@ -23,14 +23,10 @@
             <div class="mb-3">
                 <label class="text-xs required" for="permissions">{{ trans('cruds.role.fields.permissions') }}</label>
                 <div style="padding-bottom: 4px">
-                    <span class="btn-sm btn-indigo select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
-                    <span class="btn-sm btn-indigo deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
+                    <span class="btn-sm btn-indigo chk-select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
+                    <span class="btn-sm btn-indigo chk-deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
                 </div>
-                <select class="select2{{ $errors->has('users') ? ' is-invalid' : '' }}" name="permissions[]" id="permissions" multiple required>
-                    @foreach($permissions as $id => $permissions)
-                        <option value="{{ $id }}" {{ (in_array($id, old('permissions', [])) || $role->permissions->contains($id)) ? 'selected' : '' }}>{{ $permissions }}</option>
-                    @endforeach
-                </select>
+                @include('admin.roles.permissionGroup', ['isView' => 0])
                 @if($errors->has('permissions'))
                     <p class="invalid-feedback">{{ $errors->first('permissions') }}</p>
                 @endif
@@ -43,4 +39,18 @@
         </div>
     </form>
 </div>
+@endsection
+@section('scripts')
+@parent
+<script>
+    $(document).ready(function() {
+        $('.chk-select-all').click(function() {
+            $('.permissionChk').attr('checked', true)
+        })
+
+        $('.chk-deselect-all').click(function() {
+            $('.permissionChk').attr('checked', false)
+        })
+    })
+</script>
 @endsection

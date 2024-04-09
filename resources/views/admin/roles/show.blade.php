@@ -34,9 +34,7 @@
                         {{ trans('cruds.role.fields.permissions') }}
                     </th>
                     <td>
-                        @foreach($role->permissions as $key => $permissions)
-                            <span class="label label-info">{{ $permissions->display }}</span>
-                        @endforeach
+                        @include('admin.roles.permissionGroup', ['isView' => 1])
                     </td>
                 </tr>
             </tbody>

@@ -69,24 +69,7 @@
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">SALE</h4>
-            <ul>
-                <li><a href="#" >@lang('news')</a>
-                    <ul class="ml-3">
-                        <li><a href="#">@lang('forum')</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#" >@lang('tools')</a>
-                    <ul class="ml-3">
-                        <li><a href="https://www.avensys-srl.com//ftproot/DOCUMENTS/tools/KTS_virtual/KTS_AV_2_32.zip" >@lang('KTS')</a></li>
-                        <li><a href="https://dev-ktp-web-new.onrender.com" >@lang('KTP')</a></li>
-                        <li><a href="#!" >@lang('smart')</a></li>
-                        <li><a href="#" >@lang('sum')</a></li>
-                        <li><a href="#" >@lang('upgrade')</a></li>
-                    </ul>
-                </li>
-                <li><a href="#" >@lang('services')</a></li>
-            </ul>
+            <ul id="utilties_sale_tree"></ul>
         </div>
     </div>
     <div class="card">
@@ -102,10 +85,10 @@
         <div class="card-body">
             <h4 class="card-title">@lang('MAINTENANCE AND SERVICE')</h4>
             <ul>
-                <li><a href="#" >@lang('contracts')</a></li>                
-                <li><a href="#" >@lang('agreements')</a></li>
-                <li><a href="#" >@lang('Configuration App')</a></li>
-                <li><a href="#" >@lang('Service App')</a></li>
+                <li><a href="#">@lang('contracts')</a></li>                
+                <li><a href="#">@lang('agreements')</a></li>
+                <li><a href="#">@lang('Configuration App')</a></li>
+                <li><a href="#">@lang('Service App')</a></li>
             </ul>
         </div>
     </div>
@@ -119,3 +102,63 @@
 
 @endsection
 
+@section('scripts')
+<script>
+    function buildTree(items = [], mainUl) {
+        for (const item of items) {
+            if (item.parent_folder_id === null) {
+                const li = createListItem(item);
+                mainUl.append(li);
+            } else if (mainUl.find("li").find(`a#${item.parent_folder_id}`).length) {
+                const chaildUl = mainUl.find("li").find(`a#${item.parent_folder_id}`);
+                const li = createListItem(item);
+                chaildUl.siblings("ul").append(li);
+            }
+        }
+    }
+
+    function createListItem(item) {
+        const li = $("<li>");
+        const link = $("<a>");
+        link.text(item.title).attr("id", item.id);
+        if (item.is_folder) {
+            const arrow = $("<span>").addClass("arrow").text("•");
+            li.append(arrow, link);
+            const sublist = $("<ul class='ml-4'>").addClass("open");
+            li.append(sublist);
+        } else {
+            const arrow = $("<span>").addClass("arrow").text("◦");
+            link.attr("href", item.link);
+            li.append(arrow, link);
+        }
+        return li;
+    }
+
+
+$(document).ready(function() {
+    const $utilitiesSale = <?php echo json_encode($utilitiesSale); ?>;
+    const directoryTree = $("#utilties_sale_tree"); // Target the element for the tree
+    buildTree($utilitiesSale, directoryTree);
+    
+    removeEmptyTag(directoryTree)
+})
+
+
+function removeEmptyTag(element) {
+    if(element.find('ul.ml-4.open')?.length){
+        element.find('ul.ml-4.open').map((i, e) => {
+            if ($(e).is(':empty')){
+                if($(e).closest('li').parent('ul.ml-4.open')?.length){
+                    let ele = $(e).closest('li').parent('ul.ml-4.open').closest('li')
+                    
+                    if(ele?.length) $(e).closest('li').remove(); removeEmptyTag(ele)
+                } else {
+                    $(e).closest('li').remove()
+                }
+            }
+        })
+    }
+}
+
+</script>
+@endsection

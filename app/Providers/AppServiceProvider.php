@@ -30,7 +30,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Language::whereIn('country_flag', ['DE','GB'])->get();
 
-        $viewShare['languagelists'] = Language::all();
+        $viewShare['languagelists'] = Language::whereIn('code', ['EN', 'DE', 'FR', 'IT', 'NL', 'N', 'S', 'PL', 'LT'])
+        ->orderByRaw("FIELD(code, 'EN', 'DE', 'FR', 'IT', 'NL', 'N', 'S', 'PL', 'LT')")
+        ->get();
 
         view()->share($viewShare);
 

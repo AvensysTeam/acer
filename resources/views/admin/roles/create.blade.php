@@ -25,11 +25,7 @@
                     <span class="btn-sm btn-indigo select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
                     <span class="btn-sm btn-indigo deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
                 </div>
-                <select class="select2{{ $errors->has('users') ? ' is-invalid' : '' }}" name="permissions[]" id="permissions" multiple required>
-                    @foreach($permissions as $id => $permissions)
-                        <option value="{{ $id }}" {{ in_array($id, old('permissions', [])) ? 'selected' : '' }}>{{ $permissions }}</option>
-                    @endforeach
-                </select>
+                @include('admin.roles.permissionGroup', ['isView' => 0])
                 @if($errors->has('permissions'))
                     <p class="invalid-feedback">{{ $errors->first('permissions') }}</p>
                 @endif

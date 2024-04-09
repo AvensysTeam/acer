@@ -114,6 +114,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('projects/job/delete', 'ProjectsController@delete_job')->name('projects.delete.job');
     Route::get('projects/job-test/{uid?}', 'ProjectsController@jobTest')->name('projects.job-test');
     Route::post('/getpdf','ProjectsController@get_pdf')->name('getpdf');
+
+    // Utilities routes
+    Route::get('utilities','UtilitiesSaleController@index')->name('utilities');
+    Route::post('utilities/sale/create', 'UtilitiesSaleController@create')->name('utilities.sale.create');
+    Route::post('utilities/sale/update/{id}', 'UtilitiesSaleController@update')->name('utilities.sale.update');
+    Route::delete('utilities/sale/delete/{id}', 'UtilitiesSaleController@delete')->name('utilities.sale.delete');
+    Route::get('utilities/sale/show/{id}', 'UtilitiesSaleController@show')->name('utilities.sale.show');
+
+
     // Customer Manager routes
     Route::get('customer', 'CustomerController@index')->name('customer');
     Route::get('customer/get/contactlist', 'CustomerController@get_contact_list')->name('customer.get.contactlist');

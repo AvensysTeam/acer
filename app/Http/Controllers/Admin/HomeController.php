@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Scooter;
 use App\ScooterStatus;
+use App\UtilitiesSale;
 use DB;
+use Illuminate\Database\Eloquent\Builder;
 
 class HomeController
 {
@@ -40,16 +42,29 @@ class HomeController
             file_put_contents(public_path('settings.json'), json_encode($setting_info));
         }
         $date = DB::table('project')->latest()->first();
+        $formattedDate = null;
         if ($date) {
             $formattedDate = date('Y-m-d', strtotime($date->created_at));
             
         }
 
+        $user = auth()->user();
+        $roles = $user->roles->toArray();
+        $utilitiesSale = UtilitiesSale::where(function (Builder $query) use ($roles) {
+            $query->where('is_folder', 1)->orWhere(function (Builder $query) use ($roles) {
+                $query->where('is_folder', 0)->whereHas('salePermissionRole', function (Builder $query1) use ($roles) {
+                    if (!in_array(1, array_column($roles, 'id'))) {
+                        $query1->whereIn('role_id', auth()->user()->roles()->pluck('id')->toArray());
+                    }
+                });
+            });
+        })->get();
+
         // return view('home', compact('ready_scooters', 'working_scooters'));
         return view('home', [
             '_page_title' => "Software version $version",
-            'Latest_date' => date('Y-m-d', strtotime($formattedDate))
-            
+            'Latest_date' => date('Y-m-d', strtotime($formattedDate)),
+            'utilitiesSale' => $utilitiesSale
         ]);
     }
 

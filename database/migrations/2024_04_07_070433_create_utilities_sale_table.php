@@ -26,7 +26,7 @@ class CreateUtilitiesSaleTable extends Migration
         Schema::create('utilities_sale_user_permission', function (Blueprint $table) {
             $table->increments('id');
             $table->bigInteger('utilities_sale_id');
-            $table->bigInteger('role_id');
+            $table->bigInteger('user_id');
             $table->timestamps();
             $table->softDeletes();
         });

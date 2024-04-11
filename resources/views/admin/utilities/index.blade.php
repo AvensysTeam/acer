@@ -22,18 +22,27 @@
                         <th>@lang('Title')</th>
                         <th>@lang('Link')</th>
                         <th>@lang('Parent')</th>
-                        <th>@lang('Role')</th>
+                        <th>@lang('Users')</th>
                         @canany(['utilities_sale_edit', 'utilities_sale_delete']) <th>Action</th> @endcan
                     </tr>
                 </thead>
                 <tbody>
                     @if($utilities_sale->count())
                     @foreach ($utilities_sale as $tool)
+                        @php
+                        $userArr = $tool->saleUserPermission->pluck('user.name')->toArray();
+                        if($userArr && count($userArr) > 3){
+                            $userNames = implode(', ', collect($userArr)->take(3)->toArray());
+                            $userNames .= '...more';
+                        }else{
+                            $userNames = implode(', ', $userArr) ?? '-';
+                        }
+                        @endphp
                         <tr>
                             <td class="nowrap">{{$tool->title}}</td>
                             <td class="nowrap">{{$tool->link ?? '-'}}</td>
                             <td class="nowrap">{{$tool->parent_folder_id ? (collect($parentUtilities)->where('id', $tool->parent_folder_id)->first()['title'] ?? '-') : '-'}}</td>
-                            <td class="nowrap"> {{ $tool->salePermissionRole->pluck('role.title')->implode(', ') ?? '-' }}</td>
+                            <td class="nowrap"> {{ $userNames }}</td>
                             @canany(['utilities_sale_edit', 'utilities_sale_delete']) 
                             <td class="action_btn" style="display: flex;">
                                 @can('utilities_sale_edit')
@@ -118,14 +127,14 @@
                             <input type="text" class="form-control" name="link" id="link">
                             <div class="validationAlert" id="link_alert"></div>
                         </div>
-                        <div id="role-form-control" class="col-md-12 form-group">
-                            <label for="role" class="form-label">Role</label>
-                            <select class="form-control select2" name="roles[]" id="role" placeholder="Select Role" multiple>
-                                @foreach($roles as $roleId => $name)
-                                    <option value="{{ $roleId }}">{{ $name }}</option>
+                        <div id="user-form-control" class="col-md-12 form-group">
+                            <label for="user" class="form-label">Users</label>
+                            <select class="form-control select2" name="users[]" id="user" placeholder="Select User" multiple>
+                                @foreach($users as $userId => $name)
+                                    <option value="{{ $userId }}">{{ $name }}</option>
                                 @endforeach
                             </select>
-                            <div class="validationAlert" id="role_alert"></div>
+                            <div class="validationAlert" id="user_alert"></div>
                         </div>
                         <div class="col-md-12 text-right">
                             <input type="hidden" class="form-control" name="id" id="id">
@@ -161,11 +170,11 @@
             if($(this).is(":checked")) {
                 $("label[for=link]").removeClass("required");
                 $('#link').val("").attr("disabled", true);
-                $('#role-form-control').hide();
+                $('#user-form-control').hide();
             } else {
                 $("label[for=link]").addClass("required")
                 $('#link').val("").attr("disabled", false);
-                $('#role-form-control').show();
+                $('#user-form-control').show();
             }
         })
 
@@ -173,7 +182,7 @@
             $('#utilityForm')[0].reset()
             modal.find(`.validationAlert`).empty().hide()
             $('#parent').find('option').show()
-            $('#role').val(null).change()
+            $('#user').val(null).change()
         })
 
         $('#parent').change(function() {
@@ -197,10 +206,10 @@
                 else
                     inputs[field.name] = field.value;
             })
-            if($(this).find('#role').val()?.length){
-                inputs['roles'] = []
-                $(this).find('#role').val()?.map((v, i) => {
-                    inputs['roles'][i] = v 
+            if($(this).find('#user').val()?.length){
+                inputs['users'] = []
+                $(this).find('#user').val()?.map((v, i) => {
+                    inputs['users'][i] = v 
                 })
             }
             let id = inputs?.id;
@@ -242,9 +251,9 @@
                                 $('#parent').find(`option[value="${id}"]`).hide()
                                 $('#parent').val(dt[key]).change()
                             }
-                            if(key === 'sale_permission_role' && dt[key] && dt[key]?.length){
-                                let rolesIds = dt[key].map(r => r.role_id)
-                                if(rolesIds?.length) $('#role').val(rolesIds).change()
+                            if(key === 'sale_user_permission' && dt[key] && dt[key]?.length){
+                                let userIds = dt[key].map(r => r.user_id)
+                                if(userIds?.length) $('#user').val(userIds).change()
                             }
                             modal.find(`#${key}`).val(dt[key])
                         })

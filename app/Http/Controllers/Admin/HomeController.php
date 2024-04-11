@@ -48,13 +48,11 @@ class HomeController
             
         }
 
-        $user = auth()->user();
-        $roles = $user->roles->toArray();
-        $utilitiesSale = UtilitiesSale::where(function (Builder $query) use ($roles) {
-            $query->where('is_folder', 1)->orWhere(function (Builder $query) use ($roles) {
-                $query->where('is_folder', 0)->whereHas('salePermissionRole', function (Builder $query1) use ($roles) {
-                    if (!in_array(1, array_column($roles, 'id'))) {
-                        $query1->whereIn('role_id', auth()->user()->roles()->pluck('id')->toArray());
+        $utilitiesSale = UtilitiesSale::where(function (Builder $query) {
+            $query->where('is_folder', 1)->orWhere(function (Builder $query) {
+                $query->where('is_folder', 0)->whereHas('saleUserPermission', function (Builder $query1) {
+                    if (!in_array(1, auth()->user()->roles->pluck('id')->toArray())) {
+                        $query1->where('user_id', auth()->user()->id);
                     }
                 });
             });

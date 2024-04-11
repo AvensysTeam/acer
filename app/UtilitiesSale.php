@@ -31,7 +31,7 @@ class UtilitiesSale extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function salePermissionRole()  {
+    public function saleUserPermission()  {
         return $this->hasMany(UtilitiesSaleUserPermission::class, 'utilities_sale_id', 'id');
     }
 

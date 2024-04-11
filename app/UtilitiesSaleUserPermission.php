@@ -15,7 +15,7 @@ class UtilitiesSaleUserPermission extends Model
 
     protected $fillable = [
         'utilities_sale_id',
-        'role_id'
+        'user_id'
     ];
 
     protected $dates = [
@@ -29,7 +29,7 @@ class UtilitiesSaleUserPermission extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function role()  {
-        return $this->hasOne(Role::class, 'id', 'role_id');
+    public function user()  {
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }

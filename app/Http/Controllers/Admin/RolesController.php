@@ -8,6 +8,7 @@ use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Permission;
 use App\Role;
+use App\User;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,7 +68,11 @@ class RolesController extends Controller
 
         $role->load('permissions');
 
-        return view('admin.roles.edit', compact('permissions', 'role'));
+        $customers = User::whereHas('roles' , function($qry){
+            $qry->where('title', 'not like', '%Admin%');
+        })->get()->pluck('name', 'id');
+
+        return view('admin.roles.edit', compact('permissions', 'role', 'customers'));
     }
 
     public function update(UpdateRoleRequest $request, Role $role)

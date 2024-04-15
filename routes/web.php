@@ -44,6 +44,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('test-users', 'UsersController@userTest')->name('users.test');
     Route::get('users-test/{uid?}', 'UsersController@indexTest')->name('users-test');
     Route::get('users/verify-test/{uid?}', 'UsersController@verifyTest')->name('users.verify-test');
+    Route::get('user/permission/{id}', 'UsersController@fetchPermission');
 
     // Scooters
     Route::delete('scooters/destroy', 'ScootersController@massDestroy')->name('scooters.massDestroy');

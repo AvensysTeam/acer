@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 use Session;
 use App\DeliveryAddress;
 use App\DeliveryCondition;
+use App\Permission;
+use Exception;
 
 class UsersController extends Controller
 {
@@ -400,5 +402,20 @@ class UsersController extends Controller
         $users = User::where('id', '<>', $uid)
             ->get();
         return view('admin.users.verify-test', compact('users'));
+    }
+
+    public function fetchPermission($id) {
+        try{
+            $user = User::where('id', $id)->first();
+            $permissions = ($user->roles && $user->roles->first()) ? $user->roles->first()->permissions : null;
+            if(!$permissions){
+                throw new Exception('The user permission not found.');
+            }else{
+                $permissions = $permissions ? $permissions->pluck('id') : null;
+            }
+            return response()->json(['success' => true, 'permissions' => $permissions]);
+        }catch(\Exception $e){
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 }

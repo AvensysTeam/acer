@@ -39,7 +39,7 @@ class UsersController extends Controller
         $n = count($users);
         for ($i = 0; $i < $n ; $i++) {
             $users[$i]->roles = DB::table('role_user')
-                ->select('roles.title')
+                ->select('roles.title', 'roles.id')
                 ->leftJoin('roles', 'role_user.role_id', '=', 'roles.id')
                 ->where('role_user.user_id', $users[$i]->id)
                 ->get();

@@ -80,7 +80,7 @@
                                 {{ $user->id ?? '' }}
                             </td>
                             <td align="center">
-                                {{ $user->name ?? '' }}
+                                <a href="/admin/users/{{ $user->id ?? '' }}/edit">{{ $user->name ?? '' }}</a>
                             </td>
                             <td align="center">
                                 {{ $user->email ?? '' }}
@@ -90,7 +90,7 @@
                             </td>
                             <td align="center">
                                 @foreach($user->roles as $key => $item)
-                                    <span class="badge blue">{{ $item->title }}</span>
+                                    <a href="/admin/roles/{{ $user->roles[0]->id ?? '' }}/edit"><span class="badge blue">{{ $item->title }}</span></a>
                                 @endforeach
                             </td>
                             <td align="center">

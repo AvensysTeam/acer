@@ -295,7 +295,13 @@
                         </option>
                     @endforeach
                 </select> -->
-            
+
+                <!-- username for edit role page -->
+                @if(isset($role->title))
+                <div style="font-weight: bold;">
+                    {{ $role->title }}
+                </div>
+                @endif
 
                 <div class="dropdown"> 
                     <button class="dropbtn"> 

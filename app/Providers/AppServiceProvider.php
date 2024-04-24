@@ -30,8 +30,8 @@ class AppServiceProvider extends ServiceProvider
 
         // Language::whereIn('country_flag', ['DE','GB'])->get();
 
-        $viewShare['languagelists'] = Language::whereIn('code', ['EN', 'DE', 'FR', 'IT', 'NL', 'N', 'S', 'PL', 'LT'])
-        ->orderByRaw("FIELD(code, 'EN', 'DE', 'FR', 'IT', 'NL', 'N', 'S', 'PL', 'LT')")
+        $viewShare['languagelists'] = Language::whereIn('code', ['EN', 'DE', 'FR', 'IT', 'NL', 'DA', 'S', 'PL', 'LT'])
+        ->orderByRaw("FIELD(code, 'EN', 'DE', 'FR', 'IT', 'NL', 'DA', 'S', 'PL', 'LT')")  
         ->get();
 
         view()->share($viewShare);
@@ -42,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
             $pricetypes = DB::table('pricetypes')
                 ->select('id', 'name')
                 ->whereNull('deleted_at')
-                ->get();
+                ->get(); 
             $pricetypes_array = array();
             foreach ($pricetypes as $row) {
                 $pricetypes_array[$row->id] = $row->name;

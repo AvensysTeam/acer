@@ -19,6 +19,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
+    @yield('script')
     @yield('styles')
 </head>
 

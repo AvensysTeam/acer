@@ -127,6 +127,19 @@
         _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         sendcode();
     });
+
+    $(document).ready(function() {
+        $("#otp_code").keyup(function(event) {
+            if (event.which === 13) {
+                $("#verify_btn").click();
+           }
+        });
+ 
+        $("#verify_btn").click(function() {
+           // alert('You clicked an enter button!');
+        })
+    });
+
     $(document).on('click', '#verify_btn', () => {
         if (timeout) {
             sendcode();

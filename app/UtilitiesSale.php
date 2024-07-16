@@ -18,6 +18,7 @@ class UtilitiesSale extends Model
         'link',
         'is_folder',
         'parent_folder_id',
+        'file_path', 
     ];
 
     protected $dates = [

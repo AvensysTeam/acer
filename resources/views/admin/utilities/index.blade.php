@@ -7,6 +7,9 @@
             @can('utilities_sale_create')
             <div class="col-sm-12 mb-2">
                 <div class="add-new text-right flex justify-end">
+                    <a class="btn" href='{{ route("admin.utilities.trashdata",["modelname" => $model])}}'>
+                        <img class="new mb-2" src="{{asset('assets/icons/trash-icon-original.svg')}}" width="30px" height="30px"/>
+                    </a>
                     <a class="btn" id="addNew">
                         <img class="ne" src="{{ asset('assets/icons/plus-circle-icon-original.svg') }}" width="30px" height="30px" />
                     </a>
@@ -15,7 +18,7 @@
             @endcan
         </div>
 
-        <div class="w-full">
+        <div class="w-full table-responsive">
             <table class="display table compact project-table datatable-project">
                 <thead>
                     <tr>
@@ -102,6 +105,7 @@
             <div class="modal-body">
                 <form id="utilityForm">
                     <div class="row">
+                        <input type="hidden" id="model" value="{{$model}}" name="model" />
                         <div class="col-md-12 form-group">
                             <label for="title" class="form-label required">Title</label>
                             <input type="text" class="form-control" name="title" id="title">
@@ -127,11 +131,18 @@
                             <input type="text" class="form-control" name="link" id="link">
                             <div class="validationAlert" id="link_alert"></div>
                         </div>
+                        <div class="col-md-12 form-group">
+                            <label for="file" class="form-label">File</label>
+                            <input type="file" class="form-control" name="file" id="file">
+                            <div class="validationAlert" id="file_alert"></div>
+                        </div>
                         <div id="user-form-control" class="col-md-12 form-group">
                             <label for="user" class="form-label">Users</label>
                             <select class="form-control select2" name="users[]" id="user" placeholder="Select User" multiple>
+                                <option value="all" class="chosen-toggle select">All</option>    
+                                <!-- <option value="alladmin" class="chosen-toggle select">All admin</option>  -->
                                 @foreach($users as $userId => $name)
-                                    <option value="{{ $userId }}">{{ $name }}</option>
+                                    <option value="{{ $userId }}" >{{ $name }}</option>
                                 @endforeach
                             </select>
                             <div class="validationAlert" id="user_alert"></div>
@@ -159,6 +170,47 @@
             modal.modal('hide')
         });
 
+        $('#user').on('change', function() {
+            var selectedValues = $(this).val();
+            
+            if (selectedValues.includes('all')) {
+                // Select all options except "All"
+                $(this).find('option').prop('selected', true);
+                $(this).find('option[value="all"]').prop('selected', false);
+                $(this).trigger('change.select2');
+            } else {
+                // Ensure "All" option is not selected
+                $(this).find('option[value="all"]').prop('selected', false);
+                $(this).find('option[value="alladmin"]').prop('selected', false);
+                $(this).trigger('change.select2');
+            }
+
+            // if (selectedValues.includes('alladmin')) {
+            //     // Select all options except "All"
+            //     $(this).find('option').prop('selected', true);
+            //     $(this).find('option[value="all"]').prop('selected', false);
+            //     $(this).find('option[value="alladmin"]').prop('selected', false);
+            //     $(this).trigger('change.select2');
+            // } else {
+            //     // Ensure "All" option is not selected
+            //     $(this).find('option[value="alladmin"]').prop('selected', false);
+            //     $(this).find('option[value="all"]').prop('selected', false);
+            //     $(this).trigger('change.select2');
+            // }
+            
+
+            // Enable or disable the submit button based on selection
+            if (selectedValues.length > 0) {
+                $('#btnSubmit').prop('disabled', false);
+            } else {
+                $('#btnSubmit').prop('disabled', true);
+            }
+        });
+
+        // Initial check to disable the button if no options are selected
+        if ($('#user').val().length === 0) {
+            $('#btnSubmit').prop('disabled', true);
+        }
         $('#addNew').click(function() {
             modal.modal('show')
             modal.find('#utilityModalLabel').text('Create Utility')
@@ -170,14 +222,29 @@
             if($(this).is(":checked")) {
                 $("label[for=link]").removeClass("required");
                 $('#link').val("").attr("disabled", true);
+                $('#file').val("").attr("disabled", true);
+                $('#btnSubmit').prop('disabled', false);
                 $('#user-form-control').hide();
             } else {
                 $("label[for=link]").addClass("required")
                 $('#link').val("").attr("disabled", false);
+                $('#file').val("").attr("disabled", false);
+                $('#btnSubmit').prop('disabled', true);
                 $('#user-form-control').show();
             }
         })
-
+        $('.form-control[name=file]').change(function(e){
+            console.log("$(this).is() === 1", $(this).is(":checked"));
+            if($(this).val()) {
+                $("label[for=link]").removeClass("required");
+                $('#link').val("").attr("disabled", true);
+            } else {
+                $("label[for=link]").addClass("required")
+                $('#link').val("").attr("disabled", false);
+            }
+        })
+        $('#btnSubmit').prop('disabled', true);
+        
         modal.on('hidden.bs.modal', function (e) {
             $('#utilityForm')[0].reset()
             modal.find(`.validationAlert`).empty().hide()
@@ -198,48 +265,48 @@
 
         $('#utilityForm').submit(function(e) {
             e.preventDefault();
-            let inputs = {};
-            let serialize =  $(this).serializeArray();
-            serialize.forEach(field => {
-                if(field.name === "is_folder") 
-                    inputs[field.name] = field.value === "on" ? 1 : 0;
-                else
-                    inputs[field.name] = field.value;
-            })
-            if($(this).find('#user').val()?.length){
-                inputs['users'] = []
-                $(this).find('#user').val()?.map((v, i) => {
-                    inputs['users'][i] = v 
-                })
+            let formData = new FormData(this);
+            // Add users to formData if they are selected
+            let users = $(this).find('#user').val();
+            if (users) {
+                users.forEach((userId, index) => {
+                    formData.append(`users[${index}]`, userId);
+                });
             }
-            let id = inputs?.id;
+
+            let id = formData.get('id');
 
             $.ajax({
                 method: 'POST',
                 headers: {'x-csrf-token': _token},
                 url: id ? `/admin/utilities/sale/update/${id}` : '{{ route("admin.utilities.sale.create") }}',
-                data: inputs
+                data: formData,
+                processData: false,  // tell jQuery not to process the data
+                contentType: false   // tell jQuery not to set contentType
             }).done(function (res) { 
-                modal.modal('hide')
-                window.location.reload(true)
-            }).catch(function(e){
-                if(e?.responseJSON?.result) alert(e?.responseJSON?.result)
+                $('#utilityModal').modal('hide');
+                window.location.reload(true);
+            }).catch(function(e) {
+                if (e?.responseJSON?.result) alert(e?.responseJSON?.result);
                 let errors = e?.responseJSON?.errors;
-                if(errors && Object.keys(errors)?.length){
-                    Object?.keys(errors).map(key => {
-                        modal.find(`#${key}_alert`).text(errors[key][0]).show()
-                    })
+                if (errors && Object.keys(errors)?.length) {
+                    Object.keys(errors).forEach(key => {
+                        $(`#${key}_alert`).text(errors[key][0]).show();
+                    });
                 }
             });
-        })
+        });
+
 
         $('.btnEdit').click(function() {
-            let id = $(this).data('id')
+            let id = $(this).data('id');
+            let modelName = $('#model').val();
             if(id){
                 $.ajax({
                     method: 'GET',
                     headers: {'x-csrf-token': _token},
                     url: `/admin/utilities/sale/show/${id}`,
+                    data: {modelname: modelName},
                 }).done(function (res) {
                     let dt = res?.result
                     if(dt && Object?.keys(dt)?.length){
@@ -267,23 +334,25 @@
         })
 
         $('.btnDelete').click(function() {
-            let id = $(this).data('id')
-            if(id){
-                if(confirm('Are you are want to delete this record?')){
+            let id = $(this).data('id');
+            let modelName = $('#model').val();
+            if (id && modelName) {
+                if (confirm('Are you sure you want to delete this record?')) {
                     $.ajax({
                         method: 'DELETE',
                         headers: {'x-csrf-token': _token},
                         url: `/admin/utilities/sale/delete/${id}`,
+                        data: {modelname: modelName},
                     }).done(function (res) { 
-                        modal.modal('hide')
-                        window.location.reload(true)
+                        modal.modal('hide');
+                        window.location.reload(true);
                     }).catch(function(e){
-                        if(e?.responseJSON?.result) alert(e?.responseJSON?.result)
+                        if(e?.responseJSON?.result) alert(e?.responseJSON?.result);
                     });
                 }
             }
             return false;
-        })
+        });
     })
 </script>
 @endsection

@@ -82,7 +82,7 @@ class RolesController extends Controller
 
         return redirect()->route('admin.roles.index');
     }
-
+    
     public function show(Role $role)
     {
         abort_if(Gate::denies('role_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -91,20 +91,54 @@ class RolesController extends Controller
 
         return view('admin.roles.show', compact('role'));
     }
-
-    public function destroy(Role $role)
+    public function destroy( Role $role)
     {
-        abort_if(Gate::denies('role_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+    
+        // Delete roles associated with the user
+       
+        $userd = DB::table('role_user')
+         ->whereIn('role_id', $role->id)
+         ->pluck('user_id');
 
-        $role->delete();
-
+        User::whereIn('id', $userd)->delete();
+        Role::whereIn('id', $role->id)->delete();
         return back();
     }
-
-    public function massDestroy(MassDestroyRoleRequest $request)
+    
+    public function selectDestroy(Request $request)
     {
-        Role::whereIn('id', request('ids'))->delete();
+        $ids = $request->input('ids');
+        if (!$ids) {
+            return redirect()->back()->withErrors('Please select at least one user to delete.');
+        }
+    
+        // Delete roles associated with the selected users
+        Role::whereIn('id', $ids)->delete();
+    
+        $userd = DB::table('role_user')
+            ->whereIn('role_id', $ids)
+            ->pluck('user_id');
 
+        User::whereIn('id', $userd)->delete();
+    
+        return redirect()->back()->with('success', 'Selected users have been deleted successfully.');
+    }
+    
+    public function massDestroy(MassDestroyUserRequest $request)
+    {
+        $ids = request('ids');
+    
+        // Delete roles associated with the users
+        Role::whereIn('id', $ids)->delete();
+    
+        $userd = DB::table('role_user')
+        ->whereIn('role_id', $ids)
+        ->pluck('user_id');
+
+        User::whereIn('id', $userd)->delete();
+    
         return response(null, Response::HTTP_NO_CONTENT);
     }
+    
 }

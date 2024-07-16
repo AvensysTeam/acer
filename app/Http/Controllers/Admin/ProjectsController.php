@@ -23,8 +23,9 @@ use Illuminate\Support\Facades\Storage;
 class ProjectsController extends Controller
 {    
     public function index()
-    {        
-        $query = "SELECT P.id, P.company, P.contact, P.reference, C.`name` AS `customer`, CP.firstname AS `contact_name`, P.`name` AS `project_name`, P.description, P.updated_at, P.`status` FROM `project` AS `P` LEFT JOIN `company` AS `C` ON P.company = C.id LEFT JOIN `contact_people` AS `CP` ON P.contact = CP.id WHERE ISNULL(P.deleted_at) AND P.user=" . auth()->user()->id;
+    {
+        //$query = "SELECT P.id, P.company, P.contact, P.reference, C.`name` AS `customer`, CP.firstname AS `contact_name`, P.`name` AS `project_name`, P.description, P.updated_at, P.`status` FROM `project` AS `P` LEFT JOIN `company` AS `C` ON P.company = C.id LEFT JOIN `contact_people` AS `CP` ON P.contact = CP.id WHERE ISNULL(P.deleted_at) AND P.user=" . auth()->user()->id;
+        $query = "SELECT P.id, P.company, P.contact, P.reference, C.`name` AS `customer`, CP.firstname AS `contact_name`, P.`name` AS `project_name`, P.description, P.updated_at, P.`status` FROM `project` AS `P` LEFT JOIN `company` AS `C` ON P.company = C.id LEFT JOIN `contact_people` AS `CP` ON P.contact = CP.id WHERE ISNULL(P.deleted_at)" ;
 
         $result = DB::select($query);
         

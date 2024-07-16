@@ -4,7 +4,6 @@ $allPermissions = \App\Permission::get()->toArray();
 $groups = collect($allPermissions)->unique('group');
 @endphp
 
-
 <div class="row">
     @if($groups->count())
     @foreach($groups as $group)

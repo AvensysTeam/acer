@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use App\Http\Controllers\BackupController;
 
-// Route::redirect('/', '/login');
+
 
 
 Route::get('/',function(){
@@ -11,20 +13,95 @@ Route::get('/',function(){
 });
 
 Route::get('/home', 'Admin\HomeController@home')->name('pub_home');
-
+Route::get('/other-login', 'HomeController@otherLogin')->name('user.other.login');
 
 Route::get('/otp/verify', 'OTPVerificationController@showVerificationForm')->name('otp.verify');
 Route::post('/otp/sendverification', 'OTPVerificationController@sendVerification')->name('otp.sendverification');
 Route::post('/otp/verifycode', 'OTPVerificationController@verifyCode')->name('otp.verifycode');
+Route::post('/otp/backlogin', 'OTPVerificationController@backLogin')->name('otp.backlogin');
 Route::get('/captcha', 'CaptchaController@index')->name('captcha');
 Route::post('/captcha/verify', 'CaptchaController@captchaVerify')->name('captcha.verify');
+// App
+
+
+Route::post('/app/login', 'HomeController@appLogin');
+Route::options('/app/login', function (Request $request) {
+    $origin = $request->header('Origin');
+    return response('', 200)
+    ->header('Access-Control-Allow-Origin', $origin) // Dynamic origin
+    ->header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+    ->header('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization')
+    ->header('Access-Control-Allow-Credentials', 'true');
+});
+Route::get('/appautologin', 'HomeController@appAutoLogin');
+Route::options('/appautologin', function (Request $request) {
+    $origin = $request->header('Origin');
+    return response('', 200)
+    ->header('Access-Control-Allow-Origin', $origin) // Dynamic origin
+    ->header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+    ->header('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization')
+    ->header('Access-Control-Allow-Credentials', 'true');
+});
+
+Route::post('/app/register', 'HomeController@appRegister');
+Route::options('/app/register', function (Request $request) {
+    $origin = $request->header('Origin');
+    return response('', 200)
+    ->header('Access-Control-Allow-Origin', $origin)
+    ->header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+    ->header('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization')
+    ->header('Access-Control-Allow-Credentials', 'true');
+});
+
+Route::post('/app/projectname', 'HomeController@appProjectName');
+Route::options('/app/projectname', function (Request $request) {
+    $origin = $request->header('Origin');
+    return response('', 200)
+    ->header('Access-Control-Allow-Origin', $origin)
+    ->header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+    ->header('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization')
+    ->header('Access-Control-Allow-Credentials', 'true');
+});
+
+Route::post('/app/qrcode', 'HomeController@appQrcode');
+Route::options('/app/qrcode', function (Request $request) {
+    $origin = $request->header('Origin');
+    return response('', 200)
+    ->header('Access-Control-Allow-Origin', $origin)
+    ->header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+    ->header('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization')
+    ->header('Access-Control-Allow-Credentials', 'true');
+});
+
+Route::post('/app/qrcode1', 'HomeController@appQrcode1');
+Route::options('/app/qrcode1', function (Request $request) {
+    $origin = $request->header('Origin');
+    return response('', 200)
+    ->header('Access-Control-Allow-Origin', $origin)
+    ->header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+    ->header('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization')
+    ->header('Access-Control-Allow-Credentials', 'true');
+});
 
 Auth::routes(['register' => true]);
 // Admin
 
+
+
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth', 'check.session']], function () {
+    
+    Route::get('scheduler', 'BackupController@index')->name('scheduler');
+    Route::post('scheduler', 'BackupController@storeOrUpdate')->name('scheduler');
     Route::get('/', 'HomeController@index')->name('home');
     Route::get('dashboard-test/{uid?}', 'HomeController@indexTest')->name('dashboard-test');
+   // Route::post('restore-database', 'HomeController@restore');
+    Route::get('restore-database', 'QrCodeController@restoreDatabase')->name('admin.backup');
+    // QRcode
+    Route::get('qrcode', 'QrCodeController@index')->name('qrcode');
+    Route::get('exportdata', 'QrCodeController@exportdata')->name('exportdata');
+    Route::get('exportexcel', 'QrCodeController@export')->name('exportexcel');
+    //Route::get('exportexcel', [QrCodeController::class, 'export'])->name('exportexcel');
+
     // Permissions
     Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
     Route::resource('permissions', 'PermissionsController');
@@ -32,11 +109,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     // Roles
     Route::delete('roles/destroy', 'RolesController@massDestroy')->name('roles.massDestroy');
+    Route::delete('roles/selectDestroy', 'RolesController@selectDestroy')->name('roles.selectDestroy');
     Route::resource('roles', 'RolesController');
     Route::get('roles-test/{uid?}', 'RolesController@indexTest')->name('roles-test');
 
+    Route::get('/coil-calc', 'CoilCalcController@calculate')->name('coil-calc');
+
     // Users
     Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
+    Route::delete('users/selectDestroy', 'UsersController@selectDestroy')->name('users.selectDestroy');
     Route::resource('users', 'UsersController');
     Route::post('users/add/deliveryaddress', 'UsersController@addDeliveryAddress')->name('users.add.DeliveryAddress');
     Route::post('users/add/deliverycondition', 'UsersController@addDeliveryCondition')->name('users.add.DeliveryCondition');
@@ -119,10 +200,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Utilities routes
     Route::get('utilities','UtilitiesSaleController@index')->name('utilities');
     Route::post('utilities/sale/create', 'UtilitiesSaleController@create')->name('utilities.sale.create');
+    Route::get('utilities/trashdata', 'UtilitiesSaleController@trashdata')->name('utilities.trashdata');
     Route::post('utilities/sale/update/{id}', 'UtilitiesSaleController@update')->name('utilities.sale.update');
+    Route::post('utilities/sale/trashrestore/{id}', 'UtilitiesSaleController@trashrestore')->name('utilities.sale.trashrestore');
     Route::delete('utilities/sale/delete/{id}', 'UtilitiesSaleController@delete')->name('utilities.sale.delete');
+    Route::delete('utilities/sale/trashdelete/{id}', 'UtilitiesSaleController@trashdelete')->name('utilities.sale.trashdelete');
     Route::get('utilities/sale/show/{id}', 'UtilitiesSaleController@show')->name('utilities.sale.show');
-
 
     // Customer Manager routes
     Route::get('customer', 'CustomerController@index')->name('customer');
@@ -153,4 +236,3 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 
         Route::get('password-test/{uid?}', 'ChangePasswordController@editTest')->name('password.edit-test');
     }
 });
-

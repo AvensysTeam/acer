@@ -20,6 +20,7 @@ use App\DeliveryCondition;
 use App\Permission;
 use Exception;
 
+
 class UsersController extends Controller
 {
     public function index()
@@ -310,14 +311,56 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        // Delete roles associated with the user
+        //Role::where('id', $user->id)->delete();
+
+        $role = DB::table('role_user')
+            ->whereIn('user_id', $user)
+            ->pluck('role_id');
+        
+        
+         Role::whereIn('id', $role)->delete();
+
+
         $user->delete();
 
         return back();
     }
 
+    public function selectDestroy(Request $request)
+    {
+        $ids = $request->input('ids');
+        if (!$ids) {
+            return redirect()->back()->withErrors('Please select at least one user to delete.');
+        }
+
+        $role = DB::table('role_user')
+            ->whereIn('user_id', $ids)
+            ->pluck('role_id');
+        
+        
+         Role::whereIn('id', $role)->delete();
+
+         User::whereIn('id', $ids)->delete();
+
+        return redirect()->back()->with('success', 'Selected users have been deleted successfully.');
+    }
+
     public function massDestroy(MassDestroyUserRequest $request)
     {
-        User::whereIn('id', request('ids'))->delete();
+        $ids = request('ids');
+
+        $role = DB::table('role_user')
+            ->whereIn('user_id', $ids)
+            ->pluck('role_id');
+        
+        
+         Role::whereIn('id', $role)->delete();
+
+        // Delete roles associated with the users
+       // Role::whereIn('id', $ids)->delete();
+
+        User::whereIn('id', $ids)->delete();
 
         return response(null, Response::HTTP_NO_CONTENT);
     }

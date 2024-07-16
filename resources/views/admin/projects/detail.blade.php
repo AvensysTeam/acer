@@ -116,7 +116,7 @@
         </tfoot>
     </table>
 </div>
-<div class="main-card project-detail p_details" style="width:95%;">    
+<div class="main-card project-detail p_details" style="width:95%; border: 3px solid orange;">    
     <div class="body">
         <div class="row">
             <div class="col-md-5" id="unitform" style="display: none;">
@@ -124,9 +124,9 @@
                     <label for="unit_name" class="col-md-3 col-form-label">@lang('Unit Name')</label>
                     <div class="col-md-8" style="display:flex;">
                     <input type="text" class="form-control" id="unit_name" name="uname" placeholder="Unit Name" value="">
-                         <a class="btn  button-right" data-value="1" onclick="onSaveDeliveryTime()"  style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a>
-                    {{-- <a class="btn compatiblewithuname button-right" data-value="1" onclick="onSaveDeliveryTime()" style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a> --}}
-                    {{-- <a class="btn compatiblewithoutuname button-right" data-value="0"onclick="" style="margin-top: -4px;" ><img class="new mb-2" src="{{asset('assets/icons/caret-circle-double-right-icon-original.png')}}" width="45px" height="45px"/></a> --}}
+                        <!-- <a class="btn  button-right" data-value="1" onclick="onSaveDeliveryTime()"  style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a> -->
+                        <a class="btn compatiblewithuname button-right" data-value="1" onclick="onSaveDeliveryTime()" style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a>
+                        <a class="btn compatiblewithoutuname button-right" data-value="0"onclick="onNextDeliveryTime()" style="margin-top: -4px;" ><img class="new mb-2" src="{{asset('assets/icons/caret-circle-double-right-icon-original.png')}}" width="45px" height="45px"/></a>
                     </div>
                 </div>
             </div>
@@ -134,9 +134,8 @@
             <div class="col-md-5 d-none" id="preview_a_tag" style=" text-align: end;">
                 <a class="btn  button-boxed btn-preview" onclick="preview2PDF()">
                     <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
-                   
-                    {{-- <i class="fa fa-eye" aria-hidden="true"></i> --}}
-                    {{-- <small>@lang('Preview')</small> --}}
+                    <!-- <i class="fa fa-eye" aria-hidden="true"></i> -->
+                    <!-- <small>@lang('Preview')</small> -->
                 </a>
             </div>
             
@@ -247,7 +246,7 @@
                     <div id="tab1" class="tab-pane pt-3 px-3" role="tabpanel">
                         
 
-                        <div class="row">
+                        <div class="row" style="justify-content: space-around;">
                             <div class="col-lg-12 col-xl-5 box1">
                                 <div class="box border border-dark rounded px-3 mt-3">
                                     <div class="box-header">
@@ -2783,7 +2782,33 @@
             //$('.unitfeatures tbody tr').addClass('selected');
             display_compatible_models(null);
             onSaveOffer();
-            
+        }
+        function onNextDeliveryTime() {
+            var temp_units_array = $('.units-delivery-time-table tbody tr');
+            for (row of temp_units_array) {
+                let temp_unit_name = $(row).attr('data-name');
+                let temp_delivery_time = parseInt($(row).find('td:last-child .delivery-time').val());
+                if (temp_delivery_time <= 0 || temp_delivery_time == '') {
+                    $(row).find('td:last-child .delivery-time').focus();
+                    alert("@lang('Please type Time')");
+                    return;
+                }
+                let temp_delivery_time_type = $(row).find('td:last-child .delivery-time-type').val();
+                if (temp_delivery_time_type == 0) {
+                    $(row).find('td:last-child .delivery-time-type').focus();
+                    alert("@lang('Please select Time Type')");
+                    return;
+                }
+                pdf_units.map(row => {
+                    if (row.name == temp_unit_name) {
+                        row.delivery_time = `${temp_delivery_time}_${temp_delivery_time_type}`;
+                    }
+                });
+            }
+            $('#staticBackdrop').modal('hide');
+            //$('.unitfeatures tbody tr').addClass('selected');
+            display_compatible_models(null);
+            onSaveOffer();
         }
 
         function onNewUnit() {

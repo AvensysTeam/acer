@@ -71,18 +71,6 @@
                 @endif
                 <span id="toggle-password"><i class="fa fa-eye-slash" onclick="togglePasswordVisibility(event)"></i></span>
             </label>
-
-            <label class="d-block mt-3">
-                <div class="slidercaptcha card">
-                    <div class="card-body">
-                        <div id="captcha" style="height: 195px;"></div>
-                    </div>
-                </div>
-                @if ($errors->has('captcha'))
-                    <p class="invalid-feedback">Please select tile</p>
-                @endif
-                <input type="hidden" name="captcha">
-            </label>
             <input type="hidden" name="pc_info" value="{{ $pc_info }}">
 
             <div class="flex justify-center items-center mt-4">
@@ -92,7 +80,7 @@
             </div>
 
             <div class="mt-6">
-                <button type="submit" class="button" id="submit_btn" disabled
+                <button type="submit" class="button" id="submit_btn" 
                     style="background-color: rgba(90, 103, 103, var(--bg-opacity))">
                     {{ trans('global.register') }}
                 </button>

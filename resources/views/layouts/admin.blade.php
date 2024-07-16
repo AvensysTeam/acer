@@ -8,6 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ trans('panel.site_title') }}</title>
+    <link rel="icon" type="image/x-icon" href="img/favicon.png">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
     <link href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />    
@@ -17,11 +18,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" /> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-xWMNpZa8lWg10fGXGQe2NRwHngbpf91Nh0aDFlZjX9A1+OzJrWSeYCM+y2/pFBNyhuertM6rzOlU6+NlOIbRg==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" crossorigin="anonymous" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.0/css/perfect-scrollbar.min.css" rel="stylesheet" />
     <!-- For Modal -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <!-- End For Modal -->
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
@@ -30,7 +31,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @yield('styles')
     <style>
-        
+        *{
+            font-family: Arial, Helvetica, sans-serif;
+        }
         .check{
             display:flex;
         } 
@@ -154,12 +157,70 @@
         .items-center h6{
            margin-right: 116px;
         }
-        
+        /* General tree item styling */
+.tree-item {
+    color: black; /* Set text color to black */
+    text-decoration: none; /* Remove underline from links */
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Vertically center items */
+}
+
+/* Add space between the icon and text */
+.tree-item i {
+    margin-right: 8px; /* Adjust the space as needed */
+}
+
+/* Hide sublists initially */
+ul {
+    list-style: none; /* Remove bullet points */
+    padding-left: 0; /* Remove default padding */
+}
+
+/* Optional: style for folder items */
+.folder > a {
+    cursor: pointer; /* Pointer cursor for folders */
+}
+
+/* Optional: style for file items */
+.file > a {
+    cursor: pointer; /* Pointer cursor for files */
+}
+
+        @media only screen and (max-width: 600px) {
+            .title {
+                font-size: 13px !important;
+                text-align: center;
+            }
+            .latest_date {
+                font-size: 13px;
+            }
+            .emailName {
+                font-size: 13px;
+            }
+        }
+        @media only screen and (max-width: 490px) {
+            .title {
+                font-size: 11px;
+            }
+            .latest_date {
+                font-size: 11px;
+            }
+            .emailName {
+                font-size: 11px;
+            }
+        }
+
+        @media only screen and (max-width: 1024px) {
+            .card-deck{
+                display: block;
+            }
+        }
+
+        .title {
+            font-size: 19px;
+        }
     </style>
 </head>
-<!-- <style>
-    
-</style> -->
 <body>
     <div class="flex h-screen bg-gray-200">
         @include('partials.menu')
@@ -172,19 +233,16 @@
                             <path d="M4 6H20M4 12H20M4 18H11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
-                    
-
+                </div>
+                <div class="flex items-center">
                     @if(isset($_page_title))
-                   <div class="title"><h3 style="font-size: 19px">{{$_page_title}}</h3><span class="heading"></span></div>
+                   <div class="title">{{$_page_title}}<span class="heading"></span></div>
                     @endif
                     @if(isset($Latest_date))
-                     <div>
-                        <h6>{{$Latest_date}}</h6>
-                     </div>
+                     <div class="latest_date">{{$Latest_date}}</div>
                      @endif
                 </div>
-                
-            
+                <h5 class="emailName text-primary">{{ old('email', auth()->user()->name) }} : {{ old('email', auth()->user()->email) }}</h5>
                 @if(request()->is('admin/projects/detail*'))
                 <div class="d-inline-block mr-3 backnext">
                     <!-- <a href="{{route('admin.projects.profile')}}/{{$pid}}/{{$cid}}/{{$uid}}" class="btn  button-boxed" style="">
@@ -295,13 +353,12 @@
                         </option>
                     @endforeach
                 </select> -->
-
                 <!-- username for edit role page -->
-                @if(isset($role->title))
+                <!-- @if(isset($role->title))
                 <div style="font-weight: bold;">
                     {{ $role->title }}
                 </div>
-                @endif
+                @endif -->
 
                 <div class="dropdown"> 
                     <button class="dropbtn"> 

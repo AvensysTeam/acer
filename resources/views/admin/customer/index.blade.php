@@ -8,7 +8,7 @@
                 @lang('Company selection')
             </div>
             <div class="body">
-                <div class="w-full">
+                <div class="w-full table-responsive">
                     <table class="display compact project-table datatable-customer">
                         <thead>
                             <tr>
@@ -16,7 +16,7 @@
                                 <th>@lang('Address')</th>
                                 <th>@lang('Tel. No.')</th>
                                 <th>@lang('VAT')</th>
-                                <th>@lang('Description')</th>                        
+                                <th>@lang('Description')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -33,7 +33,7 @@
                             </tr>
                                     <?php
                                 }
-                            }                    
+                            }
                             ?>
                         </tbody>
                     </table>
@@ -48,7 +48,7 @@
             </div>
             <div class="body">
                 <div class="w-full">
-                    <table class="display compact project-table datatable-contact">
+                    <table class="display compact project-table datatable-contact" style="overflow-x:auto;">
                         <thead>
                             <tr>
                                 <th>@lang('First Name')</th>

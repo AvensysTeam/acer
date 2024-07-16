@@ -13,7 +13,7 @@
     </div>
 
     <div class="body">
-        <div class="w-full">
+        <div class="w-full table-responsive">
             <table class="stripe hover bordered datatable datatable-Permission">
                 <thead>
                     <tr>
@@ -24,7 +24,7 @@
                             {{ trans('cruds.permission.fields.display') }}
                         </th>
                         <th>
-                            &nbsp;
+                            Action
                         </th>
                     </tr>
                 </thead>
@@ -39,14 +39,14 @@
                             </td>
                             <td align="center">
                                 @can('permission_show')
-                                    <a class="btn-sm btn-indigo" href="{{ route('admin.permissions.show', $permission->id) }}">
-                                        {{ trans('global.view') }}
+                                    <a class="btn-sm btn-primary" href="{{ route('admin.permissions.show', $permission->id) }}">
+                                        <i class="fa fa-eye"></i>
                                     </a>
                                 @endcan
 
                                 @can('permission_edit')
-                                    <a class="btn-sm btn-blue" href="{{ route('admin.permissions.edit', $permission->id) }}">
-                                        {{ trans('global.edit') }}
+                                    <a class="btn-sm btn-info" href="{{ route('admin.permissions.edit', $permission->id) }}">
+                                        <i class="fa fa-pen"></i>
                                     </a>
                                 @endcan
 
@@ -54,7 +54,9 @@
                                     <form action="{{ route('admin.permissions.destroy', $permission->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn-sm btn-red" value="{{ trans('global.delete') }}">
+                                        <button type="submit" class="btn-sm btn-danger">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
                                     </form>
                                 @endcan
 

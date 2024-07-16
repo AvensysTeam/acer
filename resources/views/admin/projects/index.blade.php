@@ -60,7 +60,7 @@
             </div>
         </div>
         
-        <div class="w-full">
+        <div class="w-full table-responsive">
             <table class="display compact project-table datatable-project">
                 <thead>
                     <tr>
@@ -75,7 +75,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php                    
+                    <?php 
                     if(isset($project_list) && is_array($project_list)) {
                         $arr_status = [
                             ['text' => "@lang('In progress')", 'class' => 'primary'],
@@ -104,12 +104,6 @@
                                         <!-- <i class="fa fa-edit"></i>
                                         <small>@lang('Modify')</small> -->
                                         <img class="new mb-2" src="{{asset('assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"/>
-                                    </a>
-                                    <!-- <a class="duplicate" data-id="{{$p->id}}" onclick="duplicate({{$p->id}})"> -->
-                                    <a class="duplicate" href="{{route('admin.projects.profile')}}" data-id="{{$p->id}}" >
-                                        <!-- <i class="fa fa-paste"></i>
-                                        <small>@lang('Duplicate')</small> -->
-                                        <img class="new mb-2" src="{{asset('assets/icons/plus-circle-icon-original.svg')}}" width="25px" height="25px"/>
                                     </a>
                                     <a class="" onclick="del('{{$p->id}}')">
                                         <!-- <i class="fa fa-trash"></i>

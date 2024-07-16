@@ -11,7 +11,6 @@
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span class="mx-4">@lang('Dashboard')</span>
         </a>
-
         @can('user_management_access')
             <div class="nav-dropdown">
                 <a class="nav-link border-danger" href="#">
@@ -132,16 +131,16 @@
                 <span class="mx-4">@lang('Offer tool')</span>
             </a>
         @endcan
-        @can('utilities_access')
-        <a class="nav-link border-success{{ request()->is('admin/utilities*') ? ' active' : '' }}" href="{{ route('admin.utilities') }}">
-            <i class="fas fa-fw fa-fire"></i>
-            <span class="mx-4">@lang('Utilities')</span>
-        </a>
-        @endcan
         @can('customer_access')
             <a class="nav-link border-success{{ request()->is('admin/customer*') ? ' active' : '' }}" href="{{ route('admin.customer') }}">
                 <i class="fas fa-fw fa-folder"></i>
                 <span class="mx-4">@lang('Customer Manager')</span>
+            </a>
+        @endcan
+        @can('product_access')
+            <a class="nav-link border-success{{ request()->is('admin/product*') ? ' active' : '' }}" href="https://acer.avensys-srl.com/cost?token=$2y$10$EKFLZgIxBMqQGc8QZPFcMOKo.RhEjmnnlRaIzP.A9nKoVg3jv.XX.">
+                <i class="fas fa-fw fa-cogs"></i>
+                <span class="mx-4">@lang('Product Management')</span>
             </a>
         @endcan
         @can('language_access')

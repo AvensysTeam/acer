@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Console\Commands\DumpDatabase;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,7 +14,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        \App\Console\Commands\DumpDatabase::class,
     ];
 
     /**
@@ -24,7 +25,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $scheduleFile = base_path('DB/backup_schedule.txt');
+
+        if (file_exists($scheduleFile)) {
+            $time = trim(file_get_contents($scheduleFile));
+    
+            if (!empty($time)) {
+                $schedule->command('database:dump')
+                         ->dailyAt($time);
+                         //->everyminute();
+            }
+        }
     }
 
     /**

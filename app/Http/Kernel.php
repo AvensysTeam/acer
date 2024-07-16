@@ -20,8 +20,10 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
             \App\Http\Middleware\AuthGates::class,
+            \Fruitcake\Cors\HandleCors::class,
         ],
         'web' => [
+            \Fruitcake\Cors\HandleCors::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,

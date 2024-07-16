@@ -2,8 +2,8 @@
 @section('content')
 @can('role_create')
     <div class="block my-4">
-        <a class="btn-md btn-green" href="{{ route('admin.roles.create') }}">
-            {{ trans('global.add') }} {{ trans('cruds.role.title_singular') }}
+        <a class="btn-md btn-success" href="{{ route('admin.roles.create') }}">
+            <i class="fa fa-plus"></i> {{ trans('global.add') }} {{ trans('cruds.role.title_singular') }}
         </a>
     </div>
 @endcan
@@ -13,10 +13,17 @@
     </div>
 
     <div class="body">
-        <div class="w-full">
-            <table class="stripe hover bordered datatable datatable-Role">
-                <thead>
+        <div class="w-full table-responsive">
+            <form action="{{ route('admin.roles.selectDestroy') }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');">
+            @method('DELETE')
+            @csrf
+            <button type="submit" class="btn-sm btn-red mb-1">Delete selected user</button>
+            <table class="table stripe hover bordered datatable datatable-Role">
+                <thead class="thead-dark">
                     <tr>
+                        <th>
+                            <input type="checkbox" id="select-all">
+                        </th>
                         <th>
                             {{ trans('cruds.role.fields.id') }}
                         </th>
@@ -27,13 +34,14 @@
                             {{ trans('cruds.role.fields.permissions') }}
                         </th>
                         <th>
-                            &nbsp;
+                            Action
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($roles as $key => $role)
                         <tr data-entry-id="{{ $role->id }}">
+                            <td><input type="checkbox" name="ids[]" value="{{ $role->id }}"></td>
                             <td align="center">
                                 {{ $role->id ?? '' }}
                             </td>
@@ -48,30 +56,33 @@
                             </td>
                             <td align="center">
                                 @can('role_show')
-                                    <a class="btn-sm btn-indigo" href="{{ route('admin.roles.show', $role->id) }}">
-                                        {{ trans('global.view') }}
+                                    <a class="btn-sm btn-primary" href="{{ route('admin.roles.show', $role->id) }}">
+                                        <i class="fa fa-eye"></i>
                                     </a>
                                 @endcan
 
                                 @can('role_edit')
-                                    <a class="btn-sm btn-blue" href="{{ route('admin.roles.edit', $role->id) }}">
-                                        {{ trans('global.edit') }}
+                                    <a class="btn-sm btn-info" href="{{ route('admin.roles.edit', $role->id) }}">
+                                        <i class="fa fa-pen"></i>
                                     </a>
                                 @endcan
-
+<!-- 
                                 @can('role_delete')
                                     <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn-sm btn-red" value="{{ trans('global.delete') }}">
+                                        <button type="submit" class="btn-sm btn-danger">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
                                     </form>
-                                @endcan
+                                @endcan -->
 
                             </td>
 
                         </tr>
                     @endforeach
                 </tbody>
+            </form>
             </table>
         </div>
     </div>
@@ -127,6 +138,19 @@
   });
   
 })
+    $(function () {
+    // Handle 'Select All' checkbox click event
+        $('#select-all').click(function(){
+            $('input[type="checkbox"]').prop('checked', this.checked);
+        });
+
+        // Handle individual checkbox click event
+        $('input[type="checkbox"]').click(function(){
+            if (!this.checked) {
+                $('#select-all').prop('checked', false);
+            }
+        });
+    });
 
 </script>
 @endsection

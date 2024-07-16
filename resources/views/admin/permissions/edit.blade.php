@@ -34,7 +34,7 @@
         </div>
 
         <div class="footer">
-            <button type="submit" class="submit-button">{{ trans('global.save') }}</button>
+            <button type="submit" class="btn btn-primary">{{ trans('global.save') }}</button>
         </div>
     </form>
 </div>

@@ -72,11 +72,11 @@
 <script>
     $(document).ready(function() {
         $('.chk-select-all').click(function() {
-            $('.permissionChk').attr('checked', true)
+            $('.permissionChk').prop('checked', true)
         })
 
         $('.chk-deselect-all').click(function() {
-            $('.permissionChk').attr('checked', false)
+            $('.permissionChk').prop('checked', false)
         })
 
         $('#btnReset').click(function(){

@@ -43,6 +43,7 @@ class LanguageMiddleware
 //         }else{
 //             $lang = 'EN';
 //         }
+    $preferredLanguage = 'en'; 
 
      if (session()->has('lang')) {
          return session('lang');

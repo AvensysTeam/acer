@@ -1,4 +1,24 @@
 @extends('layouts.app')
+
+@section('script')
+    <script>
+        function onSubmit(event) {
+            event.preventDefault(); 
+            var response = grecaptcha.getResponse();
+            if(response.length == 0){
+                console.log(response.length, "false")
+                return false;
+            }
+            else {
+                console.log(response.length, "true");
+                event.target.submit();
+            }
+        }
+    </script>
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+@endsection
+
 @section('styles')
     <link href="{{ asset('css/slidercaptcha.min.css') }}" rel="stylesheet" />
 @endsection
@@ -23,7 +43,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('register') }}">
+        <form method="POST" onsubmit="onSubmit(event)" action="{{ route('register') }}">
             @csrf
             <label class="d-block">
                 <span class="text-gray-700 text-sm">{{ trans('global.login_name') }}</span>
@@ -70,6 +90,18 @@
                     <p class="invalid-feedback">{{ $errors->first('password_confirmation') }}</p>
                 @endif
                 <span id="toggle-password"><i class="fa fa-eye-slash" onclick="togglePasswordVisibility(event)"></i></span>
+            </label>
+
+            <label class="d-block mt-3">
+                <div class="slidercaptcha card">
+                    <div class="card-body">
+                        <div id="captcha" style="height: 195px;"></div>
+                    </div>
+                </div>
+                @if ($errors->has('captcha'))
+                    <p class="invalid-feedback">Please select tile</p>
+                @endif
+                <input type="hidden" name="captcha">
             </label>
             <input type="hidden" name="pc_info" value="{{ $pc_info }}">
 

@@ -41,6 +41,9 @@ QRcode
                     <th>Alarm11</th>
                     <th>Alarm12</th>
                     <th>Timestamp</th>
+                    <th width="150px" ><img class="new" src="{{ asset('assets/icons/trash-icon-original.svg') }}" width="25px" height="25px"
+                                           /></th>
+
                     
                 </tr>
             </thead>
@@ -147,6 +150,9 @@ QRcode
                     </td>
                     <td align="center">
                         {{ $qr->timestamp }}
+                    </td>
+                    <td align = "center">
+                        <input type="checkbox" id="select-all">
                     </td>
                    
                 </tr>

@@ -156,7 +156,7 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('js/longbow.slidercaptcha.min.js') }}"></script>
+    
     <script>
         function handleRegLink() {
             var pageSelectedOption = document.querySelector("input[name=pageSelectButton]:checked").value;
@@ -192,6 +192,7 @@
                 if(pageSelectedOption == "acer") {
                     var linkElement = document.createElement("a");
                     linkElement.href = "https://acer.avensys-srl.com/other-login?email=" + emailValue + "&password=" + passwordValue + "&pc_info=" + pcInfoValue;
+                    console.log();
                     linkElement.click();                
                 } else if(pageSelectedOption == "smart") {
                     var linkElement = document.createElement("a");
@@ -218,27 +219,7 @@
                 toggleIcon.classList.add("fa-eye");
             }
         }
-        var captcha = sliderCaptcha({
-            width: 280,
-            height: 155,
-            PI: Math.PI,
-            sliderL: 21,
-            sliderR: 4.5,
-            offset: 5,
-            loadingText: 'Loading...',
-            failedText: 'Try It Again',
-            barText: 'Slide the Puzzle',
-            repeatIcon: 'fa fa-repeat',
-            maxLoadCount: 3,
-            id: 'captcha',
-
-            onSuccess: function() {
-                document.querySelector('input[name="captcha"]').value = 'success';
-                document.getElementById("submit_btn").disabled = false;
-                document.getElementById("submit_btn").style.backgroundColor =
-                    "rgba(90, 103, 216, var(--bg-opacity))";
-            }
-        });
+        ;
     </script>
     <script>
         var acerRadioButton = document.getElementById('acer');

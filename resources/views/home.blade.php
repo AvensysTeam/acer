@@ -1,8 +1,6 @@
 @extends('layouts.admin')
 @section('content')
 
-
-
 <!-- creo un messaggio di conferma per l'avvenuta eliminazione della sezione -->
 @if(session('deleted'))
 <div class="alert alert-success" role="alert">
@@ -11,6 +9,32 @@
 @endif
 
 <h1 title="Read Only">@lang('DASHBOARD')</h1>
+
+<!-- Display the latest 3 GitHub commits -->
+<div class="card mb-3">
+    <div class="card-body">
+        <h4 class="card-title text-danger font-weight-bold">@lang('Latest GitHub Commits')</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Commit Message</th>
+                    <th>Author</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($commits as $commit)
+                    <tr>
+                        <td>{{ $commit['commit']['message'] }}</td>
+                        <td>{{ $commit['commit']['author']['name'] }}</td>
+                        <td>{{ \Carbon\Carbon::parse($commit['commit']['author']['date'])->format('Y-m-d H:i:s') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <h5>@lang('overviews and notifications')</h5>
 <hr>
 <div class="card-deck">

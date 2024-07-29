@@ -17,18 +17,28 @@ use App\UtilitiesMaintenance;
 use App\UtilitiesQuality;
 use App\UtilitiesMechanicals;
 use App\UtilitiesElectronics;
+use App\Services\GithubService;
+use Illuminate\Http\Request;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 
 class HomeController
 {
+    protected $githubService;
+
+    public function __construct(GithubService $githubService)
+    {
+        $this->githubService = $githubService;
+    }
+
     public function index()
     {
         $ready_status = ScooterStatus::where('name', 'FINALIZAT')->first();
         $working_status = ScooterStatus::where('name', 'IN LUCRU')->first();
         $ready_scooters =  Scooter::where('status_id', isset($ready_status->id) ? $ready_status->id : 0)->orderBy('created_at', 'asc')->get();
         $working_scooters =  Scooter::where('status_id', isset($working_status->id) ? $working_status->id : 0)->orderBy('created_at', 'asc')->get();
+        $commits = $this->githubService->getLatestCommits('AvensysTeam', 'acer');
 
         $version = "v1.00";
         if(file_exists(public_path('settings.json'))) {
@@ -212,6 +222,7 @@ class HomeController
             'utilitiesQuality' => $utilitiesQuality,
             'utilitiesMechanicals' => $utilitiesMechanicals,
             'utilitiesElectronics' => $utilitiesElectronics,
+            'commits' => $commits
         ]);
     }
 

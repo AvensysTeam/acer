@@ -94,6 +94,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('scheduler', 'BackupController@storeOrUpdate')->name('scheduler');
     Route::get('/', 'HomeController@index')->name('home');
     Route::get('dashboard-test/{uid?}', 'HomeController@indexTest')->name('dashboard-test');
+    Route::post('/run-script', 'HomeController@runScript')->name('run-script');
    // Route::post('restore-database', 'HomeController@restore');
     Route::get('restore-database', 'QrCodeController@restoreDatabase')->name('admin.backup');
     // QRcode

@@ -276,4 +276,19 @@ class HomeController
 
         return redirect()->route('admin.home');
     }
+
+    public function runScript()
+    {
+        $scriptPath = base_path('commit_script.bat');
+
+        // Check if the script file exists
+        if (file_exists($scriptPath)) {
+            // Execute the script using the Windows shell
+            pclose(popen('start /b cmd /c "'.$scriptPath.'"', 'r'));
+
+            return back()->with('success', 'Script executed successfully!');
+        } else {
+            return back()->with('error', 'Script file not found.');
+        }
+    }
 }

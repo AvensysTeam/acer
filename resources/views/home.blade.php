@@ -9,11 +9,11 @@
 @endif
 
 <h1 title="Read Only">@lang('DASHBOARD')</h1>
-@if(session('success'))
-    <p>{{ session('success') }}</p>
-@elseif(session('error'))
-    <p>{{ session('error') }}</p>
-@endif
+    @if(session('success'))
+        <p>{{ session('success') }}</p>
+    @elseif(session('error'))
+        <p>{{ session('error') }}</p>
+    @endif
 <h5>@lang('overviews and notifications')</h5>
 <hr>
 <div class="card-deck">

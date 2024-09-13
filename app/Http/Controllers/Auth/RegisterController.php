@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Stevebauman\Location\Facades\Location;
 
 class RegisterController extends Controller
 {
@@ -59,13 +60,32 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        $countrycode = "AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IE,IT,LV,LT,LU,MT,NL,NO,PL,PT,RO,SK,SI,ES,SE,CH,GB";
+        
+        if ($position = Location::get(request()->getClientIp())) {
+            // Successfully retrieved position.
+            if(isset($position) && !empty($position)) {
+                if(!strpos($countrycode, $position->countryCode)) {              
+                    return Validator::make($data, [
+                        'ip_address'     => ['required']
+                    ], [
+                        'required' => 'IP address is not valid. Your location is ' . $position->countryName
+                    ]);
+                }
+            }
+        }
+
+        $messages = [
+            'phone'    => 'The :attribute should be an European Country Number',
+        ];
+
         return Validator::make($data, [
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone'    => ['required', 'string', 'min:11', 'max:16'],
+            'phone'    => ['required', 'string', 'min:11', 'max:16', "phone:{$countrycode}"],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             // 'captcha'  => ['required', 'string', 'min:1'],
-        ]);
+        ], $messages);
     }
 
     /**

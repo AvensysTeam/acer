@@ -4,15 +4,15 @@
     <script>
         function onSubmit(event) {
             event.preventDefault(); 
-            var response = grecaptcha.getResponse();
-            if(response.length == 0){
-                console.log(response.length, "false")
-                return false;
-            }
-            else {
-                console.log(response.length, "true");
+            // var response = grecaptcha.getResponse();
+            // if(response.length == 0){
+            //     console.log(response.length, "false")
+            //     return false;
+            // }
+            // else {
+                // console.log(response.length, "true");
                 event.target.submit();
-            }
+            // }
         }
     </script>
 
@@ -40,6 +40,12 @@
         @if (session('message'))
             <div class="alert success">
                 {{ session('message') }}
+            </div>
+        @endif
+
+        @if ($errors->has('ip_address'))
+            <div class="alert danger">
+                {{ $errors->first('ip_address') }}
             </div>
         @endif
 

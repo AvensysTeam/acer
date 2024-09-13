@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Stevebauman\Location\Facades\Location;
 
 class HomeController extends Controller
 {
@@ -333,6 +334,18 @@ class HomeController extends Controller
         }
     }
     public function otherLogin(Request $request) {
+
+        $countrycode = "AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IE,IT,LV,LT,LU,MT,NL,NO,PL,PT,RO,SK,SI,ES,SE,CH,GB";        
+        
+        if ($position = Location::get(request()->getClientIp())) {
+            // Successfully retrieved position.
+            if(isset($position) && !empty($position)) {
+                if(!strpos($countrycode, $position->countryCode)) {
+                    return back()->with('error', 'Invalid Location: You location is '.$position->countryName);
+                }
+            }
+        }
+
         $this->validate($request, [
             'email' => 'required|string',
             'password' => 'required|string',

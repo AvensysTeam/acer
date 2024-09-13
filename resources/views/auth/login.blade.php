@@ -89,6 +89,12 @@
             </div>
         @endif
 
+        @if (session('error'))
+            <div class="alert danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <form method="get" onsubmit="onSubmit(event)" action="">
             <img src="{{ asset('img/login/logo_dark.png') }}" class="login_logo_res" />
             <div class="flex flex-shrink-0 justify-center">

@@ -12,6 +12,10 @@ Route::get('/',function(){
    return redirect('/login');
 });
 
+Route::get('/banned', function() {
+    return view('banned');
+})->name('ip.banned');
+
 Route::get('/home', 'Admin\HomeController@home')->name('pub_home');
 Route::get('/other-login', 'HomeController@otherLogin')->name('user.other.login');
 

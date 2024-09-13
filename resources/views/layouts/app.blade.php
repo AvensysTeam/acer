@@ -22,13 +22,106 @@
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
     @yield('script')
     @yield('styles')
+    <style>
+        #main-content{
+            display: none;
+        }
+        #preloader{
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        /** css spinner */
+        .lds-dual-ring {
+        color: #1c4c5b
+        }
+        .lds-dual-ring, .lds-dual-ring:after {
+            box-sizing: border-box;
+        }
+        .lds-dual-ring {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+        }
+        .lds-dual-ring:after {
+            content: " ";
+            display: block;
+            width: 64px;
+            height: 64px;
+            margin: 8px;
+            border-radius: 50%;
+            border: 6.4px solid currentColor;
+            border-color: currentColor transparent currentColor transparent;
+            animation: lds-dual-ring 1.2s linear infinite;
+        }
+        @keyframes lds-dual-ring {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="flex justify-center items-center h-screen bg-gray-200 px-6">
+    <div id="preloader">
+        <div class="lds-dual-ring"></div>
+    </div>
+    <div class="flex justify-center items-center h-screen bg-gray-200 px-6" id="main-content">
         @yield("content")
     </div>    
     @yield('scripts')
+    <script>
+        var allowed = sessionStorage.getItem('allowed');
+        if(allowed == "1") {
+            showcontent();
+        } else if(allowed == "0") {
+            location.href="<?php echo route('ip.banned'); ?>"
+        } else {
+            getip();
+        }
+        function getip() {
+            fetch("https://api.ipify.org?format=json")
+                .then(response => response.json())
+                .then(data => {
+                    getipdetail(data.ip);
+                })
+                .catch(error => {
+                    console.error("Error fetching IP address:", error);
+                    showcontent();
+                });
+        }
+            
+        function getipdetail(ip) {
+            fetch("https://ipinfo.io/"+ip+"/json")
+                .then(response => response.json())
+                .then(data => {
+                    var countrycode = "AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IE,IT,LV,LT,LU,MT,NL,NO,PL,PT,RO,SK,SI,ES,SE,CH,GB".split(',');
+                    if(!countrycode.includes(data.country)) {
+                        sessionStorage.setItem( 'allowed', '0' );
+                        location.href="<?php echo route('ip.banned'); ?>"
+                    } else {
+                        showcontent();
+                    }
+
+                })
+                .catch(error => {
+                    console.error("Error fetching IP address:", error);
+                    showcontent();
+                });
+
+        }
+
+        function showcontent() {
+            document.getElementById('preloader').style.display = 'none';
+            document.getElementById('main-content').style.display = 'flex';
+            sessionStorage.setItem( 'allowed', '1' );
+        }
+
+    </script>
 </body>
 
 </html>

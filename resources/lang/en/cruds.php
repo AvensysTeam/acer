@@ -95,6 +95,9 @@ return [
             'deleted_at_helper'        => '',
             'price_list'        => 'Price List',
             'price_list_helper' => '',
+            'active'                   => 'Active',
+            'phone'                   => 'Phone' ,
+            'email_verified' => 'Email Verification'
         ],
     ],
     'priceManagement' => [

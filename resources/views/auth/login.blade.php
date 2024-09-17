@@ -95,7 +95,7 @@
             </div>
         @endif
 
-        <form method="get" onsubmit="onSubmit(event)" action="">
+        <form method="POST" onsubmit="onSubmit(event)" action="{{ route('login') }}">
             <img src="{{ asset('img/login/logo_dark.png') }}" class="login_logo_res" />
             <div class="flex flex-shrink-0 justify-center">
                 <div style="width:50%;">
@@ -169,25 +169,38 @@
             
             if(pageSelectedOption == "acer") {
                 var linkElement = document.createElement("a");
-                linkElement.href = "https://acer.avensys-srl.com/register";
+                linkElement.href = "/register";
                 linkElement.click();
             } else if(pageSelectedOption == "smart") {
                 var linkElement = document.createElement("a");
-                linkElement.href = "http://test.avensys-srl.com/signup";
+                linkElement.href = "/signup";
                 linkElement.click();
             } else {
                 alert("Something is wrong.");
                 return false;
             }
         }
-
         function onSubmit(event) {
             event.preventDefault(); 
             var response = grecaptcha.getResponse();
             if(response.length == 0){
+                console.log(response.length, "false")
                 return false;
             }
             else {
+                console.log(response.length, "true");
+                event.target.submit();
+            }
+        }
+
+
+        function onSubmit1(event) {
+            event.preventDefault(); 
+            // var response = grecaptcha.getResponse();
+            // if(response.length == 0){
+            //     return false;
+            // }
+            // else {
                 
                 // get sign in info 
                 var pageSelectedOption = document.querySelector("input[name=pageSelectButton]:checked").value;
@@ -197,18 +210,18 @@
 
                 if(pageSelectedOption == "acer") {
                     var linkElement = document.createElement("a");
-                    linkElement.href = "https://acer.avensys-srl.com/other-login?email=" + emailValue + "&password=" + passwordValue + "&pc_info=" + pcInfoValue;
+                    linkElement.href = "/other-login?email=" + emailValue + "&password=" + passwordValue + "&pc_info=" + pcInfoValue;
                     console.log();
                     linkElement.click();                
                 } else if(pageSelectedOption == "smart") {
                     var linkElement = document.createElement("a");
-                    linkElement.href = "http://test.avensys-srl.com/other-login?email=" + emailValue + "&password=" + passwordValue + "&pc_info=" + pcInfoValue;
+                    linkElement.href = "/other-login?email=" + emailValue + "&password=" + passwordValue + "&pc_info=" + pcInfoValue;
                     linkElement.click();
                 } else {
                     alert("Something is wrong.")
                     return false;
                 }
-            }
+            // }
         }
 
         function togglePasswordVisibility() {

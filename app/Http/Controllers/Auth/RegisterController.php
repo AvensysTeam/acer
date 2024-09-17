@@ -76,14 +76,19 @@ class RegisterController extends Controller
         }
 
         $messages = [
-            'phone'    => 'The :attribute should be an European Country Number',
+            'mobile_phone'    => 'The :attribute should be an European Country Number',
         ];
 
         return Validator::make($data, [
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone'    => ['required', 'string', 'min:11', 'max:16', "phone:{$countrycode}"],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'company_name'          => ['required', 'string', 'max:255'],
+            'VAT'                   => ['required', 'string', 'max:255'],
+            'contact_person_name'   => ['required', 'string', 'max:255'],
+            'legal_address'         => ['required', 'string', 'max:255'],
+            'position'              => ['required', 'string', 'max:255'],
+            'username'              => ['required', 'string', 'max:255'],
+            'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'mobile_phone'          => ['required', 'string', 'min:10', 'max:16', "phone:{$countrycode}"],
+            'password'              => ['required', 'string', 'min:8', 'confirmed'],
             // 'captcha'  => ['required', 'string', 'min:1'],
         ], $messages);
     }
@@ -97,17 +102,26 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $user = User::create([
-            'name'     => $data['name'],
+            'name'     => $data['username'],
             'email'    => $data['email'],
-            'phone'    => $data['phone'],
+            'phone'    => $data['mobile_phone'],
+            'company_name'    => $data['company_name'],
+            'company_vat'    => $data['VAT'],
+            'company_address' => $data['legal_address'],
             'pc_info' => 'required|string',
+            'legal_form' => $data['legal_form'],
+            'sector_activity' => $data['sector_activity'],
+            'company_size' => $data['company_size'],
+            'operational_address' => $data['operational_address'],
+            'contact_person_name' => $data['contact_person_name'],
+            'position' => $data['position'],
             'password' => Hash::make($data['password']),
         ]);
 
         $isDefaultRole = Role::with('permissions')->where('title', 'default')->first();
         if($isDefaultRole){
             $newRole = $isDefaultRole->replicate();
-            $newRole->title = $data['name'];
+            $newRole->title = $data['position'];
             $newRole->save(); 
             if($newRole) {
                 $user->roles()->sync([$newRole->id]);
@@ -143,9 +157,18 @@ class RegisterController extends Controller
         $newPC->is_verified = 0;
         $newPC->save();
         Session::put('phone', $user->phone);
-        Session::put('redirect', "register");
+        Session::put('redirect', "thanks");
         Session::put('email', $user->email);
         Session::put('pc_info', $pc_info);
+        Auth::login($user);
         return redirect()->route('otp.verify');
+    }
+
+    public function showProfilePg() {
+        return view('auth.profile');
+    }
+
+    public function addProfile(Request $request) {
+
     }
 }

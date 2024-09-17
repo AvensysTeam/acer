@@ -363,14 +363,22 @@ class HomeController extends Controller
                 $newPC->save();
             }
             
+            
+
+            if (!$user->hasVerifiedEmail()) {
+                Session::put('redirect', "thanks");
+            } else {            
+                Session::put('redirect', "login");
+            }
+
             Session::put('email', $user->email);
-            Session::put('redirect', "login");
             Session::put('phone', $user->phone);
             Session::put('pc_info', $pc_info);
             
+            Auth::login($user);
+            
             return redirect()->route('otp.verify');
         }
-
         return back()->with('error', 'Invalid Email or Password');
     }
 }

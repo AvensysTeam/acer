@@ -34,6 +34,14 @@ class HomeController
 
     public function index()
     {
+        if (\Auth::user()->approved == 0) {
+            return redirect('thanks');
+        }
+        
+        if (!\Auth::user()->hasVerifiedEmail()) {            
+            return redirect('thanks');
+        }
+
         $ready_status = ScooterStatus::where('name', 'FINALIZAT')->first();
         $working_status = ScooterStatus::where('name', 'IN LUCRU')->first();
         $ready_scooters =  Scooter::where('status_id', isset($ready_status->id) ? $ready_status->id : 0)->orderBy('created_at', 'asc')->get();

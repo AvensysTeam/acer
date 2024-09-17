@@ -7,7 +7,15 @@
 <div class="main-card">
     <div class="header">
         {{ trans('global.edit') }} {{ trans('cruds.user.title_singular') }}
+        @if($user->approved == 0)
+        <form id="logoutform" action="{{ route('admin.users.approve', $user->id) }}" method="POST" >
+            {{ csrf_field() }}
+            <button class="btn btn-success">Approve Customer</button>
+        </form>
+        @endif
     </div>
+    
+   
 
     <form method="POST" action="{{ route('admin.users.update', [$user->id]) }}" enctype="multipart/form-data">
         @method('PUT')

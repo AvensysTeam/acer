@@ -5,9 +5,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BackupController;
 
-
-
-
 Route::get('/',function(){
    return redirect('/login');
 });
@@ -15,6 +12,7 @@ Route::get('/',function(){
 Route::get('/banned', function() {
     return view('banned');
 })->name('ip.banned');
+
 
 Route::get('/home', 'Admin\HomeController@home')->name('pub_home');
 Route::get('/other-login', 'HomeController@otherLogin')->name('user.other.login');
@@ -87,8 +85,14 @@ Route::options('/app/qrcode1', function (Request $request) {
     ->header('Access-Control-Allow-Credentials', 'true');
 });
 
-Auth::routes(['register' => true]);
+Auth::routes(['register' => true, 'verify'=> true]);
 // Admin
+
+Route::get('/thanks', function() {   
+    return view('auth.thanks');
+})->name('thanks'); 
+
+
 
 
 
@@ -131,6 +135,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::get('users-test/{uid?}', 'UsersController@indexTest')->name('users-test');
     Route::get('users/verify-test/{uid?}', 'UsersController@verifyTest')->name('users.verify-test');
     Route::get('user/permission/{id}', 'UsersController@fetchPermission');
+    Route::post('user/approve/{id}','UsersController@approveCustomer')->name('users.approve');
 
     // Scooters
     Route::delete('scooters/destroy', 'ScootersController@massDestroy')->name('scooters.massDestroy');

@@ -13,6 +13,7 @@ use App\PCInfo;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
+use Stevebauman\Location\Facades\Location;
 
 class LoginController extends Controller
 {
@@ -48,38 +49,48 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+        $countrycode = "AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IE,IT,LV,LT,LU,MT,NL,NO,PL,PT,RO,SK,SI,ES,SE,CH,GB";        
+        
+        if ($position = Location::get(request()->getClientIp())) {
+            // Successfully retrieved position.
+            if(isset($position) && !empty($position)) {
+                if(!strpos($countrycode, $position->countryCode)) {
+                    return back()->with('error', 'Invalid Location: You location is '.$position->countryName);
+                }
+            }
+        }
+
         $this->validate($request, [
             'email' => 'required|string',
             'password' => 'required|string',
             'pc_info' => 'required|string',
-            // 'captcha' => 'required|string',
         ]);
         $credentials = $request->only('email', 'password');
         $pc_info = $request->input('pc_info');
-
         $user = User::where('email', $credentials['email'])->first();
         if ($user && Hash::check($request->password, $user->password)) {
-            $verifiedPcInfo = PCInfo::where('uid', $user->id)->where('info', $pc_info)->where('is_verified', 1)->first();
-            if ($verifiedPcInfo) {
-                Auth::login($user);
-            } else {
-                if (!PCInfo::where('uid', $user->id)->where('info', $pc_info)->first()) {
-                    $newPC = new PCInfo();
-                    $newPC->uid = $user->id;
-                    $newPC->info = $pc_info;
-                    $newPC->is_verified = 1;
-                    $newPC->save();
-                }
-                Session::put('email', $user->email);
-                Session::put('redirect', "login");
-                Session::put('phone', $user->phone);
-                Session::put('pc_info', $pc_info);
-                Auth::login($user);
-                // event(new Login('web',$user,$request->remember));
-                // return redirect()->route('otp.verify');
-           }
-        }
+            if (!PCInfo::where('uid', $user->id)->where('info', $pc_info)->first()) {
+                $newPC = new PCInfo();
+                $newPC->uid = $user->id;
+                $newPC->info = $pc_info;
+                $newPC->is_verified = 0;
+                $newPC->save();
+            }
 
+            if (!$user->hasVerifiedEmail()) {
+                Session::put('redirect', "thanks");
+            } else {            
+                Session::put('redirect', "login");
+            }
+
+            Session::put('email', $user->email);
+            Session::put('phone', $user->phone);
+            Session::put('pc_info', $pc_info);
+            
+            Auth::login($user);
+            
+            return redirect()->route('otp.verify');
+        }
         return back()->with('error', 'Invalid Email or Password');
     }
 }

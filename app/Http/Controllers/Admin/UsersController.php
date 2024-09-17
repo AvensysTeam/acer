@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Session;
 use App\DeliveryAddress;
 use App\DeliveryCondition;
+use App\Mail\VerificationEmail;
 use App\Permission;
 use Exception;
 
@@ -459,6 +460,31 @@ class UsersController extends Controller
             return response()->json(['success' => true, 'permissions' => $permissions]);
         }catch(\Exception $e){
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function approveCustomer($id) {
+        try{
+            $user = User::find($id);
+
+            $email = '';
+            // Make sure you've got the Page model
+            if($user) {
+                $user->approved = 1;
+                $user->save();
+                $email = $user->email;
+            }
+
+            if ($email != '') {
+                \Mail::to($email)->send(new VerificationEmail($user->id));
+
+            }
+
+            return redirect('/admin/users')->with('success', 'Selected users have been approved successfully.');
+          
+        }catch(\Exception $e){
+            dd($e);
+            return redirect()->back()->withErrors('Failed approvement.');
         }
     }
 }

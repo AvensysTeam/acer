@@ -39,6 +39,70 @@
                 </tr>
                 <tr>
                     <th>
+                        {{ trans('Company Name') }}
+                    </th>
+                    <td>
+                        {{ $user->company_name }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ trans('Contract Person\'s Name') }}
+                    </th>
+                    <td>
+                        {{ $user->company_name }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ trans('Legal Form') }}
+                    </th>
+                    <td>
+                        {{ $user->legal_form }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ trans('Sector of Activity') }}
+                    </th>
+                    <td>
+                        {{ $user->sector_activity }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ trans('Company Size') }}
+                    </th>
+                    <td>
+                        {{ $user->company_size }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ trans('Company Address') }}
+                    </th>
+                    <td>
+                        {{ $user->company_address }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ trans('Operational  Address') }}
+                    </th>
+                    <td>
+                        {{ $user->operational_address }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ trans('Position/Role') }}
+                    </th>
+                    <td>
+                        {{ $user->position }}
+                    </td>
+                </tr>
+                <!-- <tr>
+                    <th>
                         {{ trans('cruds.user.fields.email_verified_at') }}
                     </th>
                     <td>
@@ -174,13 +238,20 @@
                     <td>
                         {{ $delivery_condition->cond ?? ''}}
                     </td>
-                </tr>
+                </tr> -->
             </tbody>
         </table>
-        <div class="block pt-4">
+        
+        <div class="flex justify-between pt-4">
             <a class="btn-md btn-gray" href="{{ route('admin.users.index') }}">
                 {{ trans('global.back_to_list') }}
             </a>
+            @if($user->approved == 0)
+            <form id="logoutform" action="{{ route('admin.users.approve', $user->id) }}" method="POST" >
+                {{ csrf_field() }}
+                <button class="btn btn-success">Approve Customer</button>
+            </form>
+            @endif
         </div>
     </div>
 </div>

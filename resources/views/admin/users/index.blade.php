@@ -17,6 +17,13 @@
 
     <div class="body">
         <div class="w-full table-responsive">
+
+            @if (session('success'))
+                <div class="alert success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            
             <form action="{{ route('admin.users.selectDestroy') }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');">
                 @method('DELETE')
                 @csrf
@@ -28,20 +35,22 @@
                             <th>{{ trans('cruds.user.fields.id') }}</th>
                             <th>{{ trans('cruds.user.fields.name') }}</th>
                             <th>{{ trans('cruds.user.fields.email') }}</th>
-                            <th>{{ trans('cruds.user.fields.password') }}</th>
+                            <th>{{ trans('cruds.user.fields.active') }}</th>
+                            <th>{{ trans('cruds.user.fields.email_verified') }}</th>
+                            <th>{{ trans('cruds.user.fields.phone') }}</th>
                             <th>{{ trans('cruds.user.fields.roles') }}</th>
                             <th>{{ trans('cruds.user.fields.company_name') }}</th>
                             <th>{{ trans('cruds.user.fields.company_address') }}</th>
-                            <th>{{ trans('cruds.user.fields.company_post_code') }}</th>
+                            <!-- <th>{{ trans('cruds.user.fields.company_post_code') }}</th>
                             <th>{{ trans('cruds.user.fields.company_city') }}</th>
                             <th>{{ trans('cruds.user.fields.company_tel') }}</th>
                             <th>{{ trans('cruds.user.fields.company_mobile') }}</th>
                             <th>{{ trans('cruds.user.fields.company_web_address') }}</th>
                             <th>{{ trans('cruds.user.fields.company_state') }}</th>
-                            <th>{{ trans('cruds.user.fields.company_country') }}</th>
+                            <th>{{ trans('cruds.user.fields.company_country') }}</th> -->
                             <th>{{ trans('cruds.user.fields.company_vat') }}</th>
-                            <th>{{ trans('cruds.user.fields.delivery_address') }}</th>
-                            <th>{{ trans('cruds.user.fields.delivery_condition') }}</th>
+                            <!-- <th>{{ trans('cruds.user.fields.delivery_address') }}</th>
+                            <th>{{ trans('cruds.user.fields.delivery_condition') }}</th> -->
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -52,7 +61,25 @@
                                 <td align="center">{{ $user->id ?? '' }}</td>
                                 <td align="center"><a href="/admin/users/{{ $user->id ?? '' }}/edit">{{ $user->name ?? '' }}</a></td>
                                 <td align="center">{{ $user->email ?? '' }}</td>
-                                <td align="center">{{ $user->password ? '****' : ''}}</td>
+                                <td align="center">
+                                    <?php
+                                        if($user->approved == 0) {
+                                            echo '<span class="badge bg-danger text-white">'.trans('inactive').'</>';
+                                        } else {
+                                            echo '<span class="bg-success badge text-white">'.trans('active').'</>';
+                                        }
+                                    ?>
+                                </td>
+                                <td align="center">
+                                    <?php
+                                        if(!$user->email_verified_at) {
+                                            echo '<span class="badge bg-danger text-white">'.trans('not yet').'</>';
+                                        } else {
+                                            echo '<span class="bg-success badge text-white">'.trans('done').'</>';
+                                        }
+                                    ?>
+                                </td>
+                                <td align="center">{{ $user->phone ?? '' }}</td>
                                 <td align="center">
                                     @foreach($user->roles as $key => $item)
                                         <a href="/admin/roles/{{ $user->roles[0]->id ?? '' }}/edit"><span class="badge blue">{{ $item->title }}</span></a>
@@ -60,16 +87,16 @@
                                 </td>
                                 <td align="center">{{ $user->company_name ?? '' }}</td>
                                 <td align="center">{{ $user->company_address ?? '' }}</td>
-                                <td align="center">{{ $user->company_post_code ?? '' }}</td>
+                                <!-- <td align="center">{{ $user->company_post_code ?? '' }}</td>
                                 <td align="center">{{ $user->company_city ?? '' }}</td>
                                 <td align="center">{{ $user->company_tel ?? '' }}</td>
                                 <td align="center">{{ $user->company_mobile ?? '' }}</td>
                                 <td align="center">{{ $user->company_web_address ?? '' }}</td>
                                 <td align="center">{{ $user->company_state ?? '' }}</td>
-                                <td align="center">{{ $user->company_country ?? '' }}</td>
+                                <td align="center">{{ $user->company_country ?? '' }}</td> -->
                                 <td align="center">{{ $user->company_vat ?? '' }}</td>
-                                <td align="center">{{ $user->delivery_address_data ?? '' }}</td>
-                                <td align="center">{{ $user->delivery_condition_data ?? '' }}</td>
+                                <!-- <td align="center">{{ $user->delivery_address_data ?? '' }}</td>
+                                <td align="center">{{ $user->delivery_condition_data ?? '' }}</td> -->
                                 <td align="center">
                                     @can('user_show')
                                         <a class="btn-sm btn-indigo" href="{{ route('admin.users.show', $user->id) }}">{{ trans('global.view') }}</a>

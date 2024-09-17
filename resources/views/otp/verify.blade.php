@@ -29,12 +29,16 @@
 </div>
 
 
-<span id="redirect" style="display: none">
-@if($redirect === "login")
-{{url("/home")}}
-@else
-{{url("/login")}}
-@endif
+<span id="redirect" style="display: none"> 
+    <?php
+        if($redirect === "login") {
+            echo url("/home");
+        } else if($redirect === "thanks") {
+            echo url('/thanks');
+        } else {
+            echo url("/login"); 
+        }
+    ?>
 </span>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

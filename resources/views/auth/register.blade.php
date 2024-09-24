@@ -87,7 +87,7 @@
                 <div class="col-md-4 ">
                   <div class="form-group">
                     <label for="exampleSelect">Legal Form</label>
-                    <select class="form-control" id="exampleSelect" name="legal_form">
+                    <select class="form-control" id="legal_form" name="legal_form">
                       <option value="1">LLC</option>
                       <option value="2">LTD</option>
                       <option value="3">3</option>
@@ -99,7 +99,7 @@
                 <div class="col-md-4 ">
                   <div class="form-group">
                     <label for="exampleSelect">Sector of Activity</label>
-                    <select class="form-control" id="exampleSelect" name="sector_activity">
+                    <select class="form-control" id="sector_activity" name="sector_activity">
                       <option value="1">Technology and IT</option>
                       <option value="2">Engineering</option>
                       <option value="3">Mechanics</option>
@@ -111,7 +111,7 @@
                 <div class="col-md-4 ">
                   <div class="form-group">
                     <label for="exampleSelect">Company Size</label>
-                    <select class="form-control" id="exampleSelect" name="company_size">
+                    <select class="form-control" id="company_size" name="company_size">
                       <option value="1">1 ~ 9 employees</option>
                       <option value="2">10 ~ 50 employees</option>
                       <option value="3">51 ~ 100 employees</option>
@@ -147,14 +147,12 @@
               </div>
               <div class="form-row">
                 <div class="col-md-6">
-                  <label for="validationCustom04">Position/Role</label>
-                  <div class="input-group">
-                    <input type="text" class="form-control {{ $errors->has('position') ? ' is-invalid' : '' }}" 
-                    placeholder="IT Manager" name="position" required  value="{{ old('position') }}" >
-                    @if ($errors->has('position'))
-                        <p class="invalid-feedback">{{ $errors->first('position') }}</p>
-                    @endif
-                  </div>
+                  <label for="validationCustom04">Position/Role</label> 
+                  <select class="form-control" id="position" name="position">                  
+                    @foreach($roles as $role)
+                      <option value="{{$role->id}}">{{$role->title}}</option>;                  
+                    @endforeach
+                    </select>                  
                 </div>
                 <div class="col-md-6">
                   <label for="validationCustom03">Business Email</label>

@@ -52,6 +52,11 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+    public function showRegistrationForm() {
+        $roles = Role::all();
+        return view('auth.register', compact('roles'));
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -84,7 +89,7 @@ class RegisterController extends Controller
             'VAT'                   => ['required', 'string', 'max:255'],
             'contact_person_name'   => ['required', 'string', 'max:255'],
             'legal_address'         => ['required', 'string', 'max:255'],
-            'position'              => ['required', 'string', 'max:255'],
+            // 'position'              => ['required', 'string', 'max:255'],
             'username'              => ['required', 'string', 'max:255'],
             'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'mobile_phone'          => ['required', 'string', 'min:10', 'max:16', "phone:{$countrycode}"],
@@ -118,16 +123,8 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        $isDefaultRole = Role::with('permissions')->where('title', 'default')->first();
-        if($isDefaultRole){
-            $newRole = $isDefaultRole->replicate();
-            $newRole->title = $data['position'];
-            $newRole->save(); 
-            if($newRole) {
-                $user->roles()->sync([$newRole->id]);
-                $newRole->permissions()->sync($isDefaultRole->permissions->pluck('id'));   
-            }
-        }
+        $user->roles()->sync($data['position']);
+        
         return $user;
     }
 

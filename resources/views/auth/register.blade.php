@@ -150,7 +150,7 @@
                   <label for="validationCustom04">Position/Role</label> 
                   <select class="form-control" id="position" name="position">                  
                     @foreach($roles as $role)
-                      <option value="{{$role->id}}">{{$role->title}}</option>;                  
+                      <option value="{{$role}}">{{trans($role)}}</option>;                  
                     @endforeach
                     </select>                  
                 </div>

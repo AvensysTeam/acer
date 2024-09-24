@@ -53,7 +53,8 @@ class RegisterController extends Controller
     }
 
     public function showRegistrationForm() {
-        $roles = Role::all();
+        $roleObject = new Role();
+        $roles = $roleObject->getOtherRoles();
         return view('auth.register', compact('roles'));
     }
 
@@ -123,8 +124,17 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        $user->roles()->sync($data['position']);
-        
+        $isDefaultRole = Role::with('permissions')->where('title', 'default')->first();
+        if($isDefaultRole){
+            // $newRole = $isDefaultRole->replicate();
+            // $newRole->title = $data['position'];
+            // $newRole->save(); 
+            // if($newRole) {
+            //     $user->roles()->sync([$newRole->id]);
+            //     $newRole->permissions()->sync($isDefaultRole->permissions->pluck('id'));   
+            // }
+            $user->roles()->sync([$isDefaultRole->id]);
+        }
         return $user;
     }
 

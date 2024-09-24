@@ -40,6 +40,7 @@
                             <th>{{ trans('cruds.user.fields.phone') }}</th>
                             <th>{{ trans('cruds.user.fields.roles') }}</th>
                             <th>{{ trans('cruds.user.fields.company_name') }}</th>
+                            <th>{{ trans('Position/Role') }}</th>
                             <th>{{ trans('cruds.user.fields.company_address') }}</th>
                             <!-- <th>{{ trans('cruds.user.fields.company_post_code') }}</th>
                             <th>{{ trans('cruds.user.fields.company_city') }}</th>
@@ -86,6 +87,7 @@
                                     @endforeach
                                 </td>
                                 <td align="center">{{ $user->company_name ?? '' }}</td>
+                                <td align="center">{{ $user->position ?? '' }}</td>
                                 <td align="center">{{ $user->company_address ?? '' }}</td>
                                 <!-- <td align="center">{{ $user->company_post_code ?? '' }}</td>
                                 <td align="center">{{ $user->company_city ?? '' }}</td>

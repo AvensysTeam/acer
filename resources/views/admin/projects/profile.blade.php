@@ -1,6 +1,5 @@
 @extends('layouts.admin')
 @section('content')
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
 <style>
     .act_btn a{
        /* display:flex; */
@@ -230,6 +229,7 @@
 
 
 
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
 <script>
     function select_row(id) {
         // Get the total number of rows in the table
@@ -306,8 +306,8 @@
         function drawContactTable(company_id) {
             $.ajax({
                 method: 'GET',
-                url: '{{route('admin.projects.get.contactlist')}}',
-                data: {id: company_id}
+                url: `{{route('admin.projects.get.contactlist')}}?id=` + company_id,
+                // data: {id: company_id}
             }).done(function (res) { 
                 
                 contact_list = res.result;
@@ -521,13 +521,13 @@ input.addEventListener('keyup', reset);
            
        
             var email = $('#email').val();
-            // console.log("email"+email);
+            
             if(email != "" && IsEmail(email)==false){
                 alert("Enter valid email");
                 flag = false;
                 return false;
             }
-            //    alert(contact_validate);
+
             if( contact_validate == false){
                 alert("Enter valid number");
                 flag = false;
@@ -535,6 +535,7 @@ input.addEventListener('keyup', reset);
             }
         
             var postData = {company_id: company_id};
+
             $('#contactModal .modal-body input,#contactModal .modal-body select').each(function() {
                 const _v = $(this).val().trim();
                 
@@ -554,13 +555,12 @@ input.addEventListener('keyup', reset);
             $.ajax({
                 method: 'POST',
                 headers: {'x-csrf-token': _token},
-                url: '{{route('admin.projects.store.contact')}}',
+                url: `{{route('admin.projects.store.contact')}}`,
                 data: postData
-            }).done(function (res) { 
-                drawContactTable(company_id);
+            }).done(function (res) {
+                drawContactTable(postData.company_id);
                 $("#phone").val("");
                 $('.modal').modal('hide');
-                //location.reload();
             });
         }
 
@@ -637,7 +637,7 @@ input.addEventListener('keyup', reset);
             $.ajax({
                 method: 'POST',
                 headers: {'x-csrf-token': _token},
-                url: '{{route('admin.projects.save.company')}}',
+                url: `{{route('admin.projects.save.company')}}`,
                 data: postData
             }).done(function (res) { 
                 $('.modal').modal('hide');

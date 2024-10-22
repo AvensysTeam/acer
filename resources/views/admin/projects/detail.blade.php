@@ -125,8 +125,8 @@
                     <div class="col-md-8" style="display:flex;">
                     <input type="text" class="form-control" id="unit_name" name="uname" placeholder="Unit Name" value="">
                         <!-- <a class="btn  button-right" data-value="1" onclick="onSaveDeliveryTime()"  style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a> -->
-                        <a class="btn compatiblewithuname button-right" data-value="1" onclick="onSaveDeliveryTime()" style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a>
-                        <a class="btn compatiblewithoutuname button-right" data-value="0"onclick="onNextDeliveryTime()" style="margin-top: -4px;" ><img class="new mb-2" src="{{asset('assets/icons/caret-circle-double-right-icon-original.png')}}" width="45px" height="45px"/></a>
+                        <a class="btn compatiblewithuname button-right" data-value="1" onclick="onSaveNewUnit()" style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a>
+                        <!-- <a class="btn compatiblewithoutuname button-right" data-value="0"onclick="onNextDeliveryTime()" style="margin-top: -4px;" ><img class="new mb-2" src="{{asset('assets/icons/caret-circle-double-right-icon-original.png')}}" width="45px" height="45px"/></a> -->
                     </div>
                 </div>
             </div>
@@ -212,36 +212,34 @@
                             
                         </div>
                         <div class="row">
-                        <div class="col-lg-12">
-                        
+                            <div class="col-lg-12">
+                                @if($option == "")
+                                        
+                                    @if( $pid == '0')
+                                        <a class="btn nextbtn1 button-boxed btn-first-unit-next" onclick="onNewUnit()" style="display: none; padding: 0px;" disabled>
+                                            <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/>
+                                        </a>
+                                    @else
+                                        @if($units_list)
+                                            @foreach($units_list as $rows)
+                                                <a class="btn nextbtn1 button-boxed btn-first-unit-next" onclick="onEditUnit(`{{$rows->name}}`)" style="display: none; padding: 0px;" disabled>
+                                                    <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/>
+                                                </a>
+                                            @endforeach
+                                        @else
+                                            <a class="btn nextbtn1 button-boxed btn-first-unit-next" onclick="onEditUnit()" style="display: none; padding: 0px;" disabled>
+                                                <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/>
+                                            </a>
+                                        @endif   
 
-                 @if($option == "")
-                           
-                        @if( $pid == '0')
-                        <a class="btn nextbtn1 button-boxed btn-first-unit-next" onclick="onNewUnit()" style="display: none; padding: 0px;" disabled>
-                              <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/>
-                        </a>
-                        @else
-                        @if($units_list)
-                           @foreach($units_list as $rows)
-                             <a class="btn nextbtn1 button-boxed btn-first-unit-next" onclick="onEditUnit(`{{$rows->name}}`)" style="display: none; padding: 0px;" disabled>
-                                   <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/>
-                             </a>
-                           @endforeach
-                          @else
-                            <a class="btn nextbtn1 button-boxed btn-first-unit-next" onclick="onEditUnit()" style="display: none; padding: 0px;" disabled>
-                                   <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/>
-                            </a>
-                          @endif   
-
-                  @endif
-                             
-                    <a class="btn nextbtn2 button-boxed btn-first-unit-next" onclick="onNewUnit()" data-value="1" style="display: none; padding: 0px;" disabled>
-                      <img class="new mb-2" src="{{asset('assets/icons/caret-circle-double-right-icon-original.png')}}" width="35px" height="35px"/>
-                    </a>
-                @endif
+                                    @endif
+                                
+                                    <!-- <a class="btn nextbtn2 button-boxed btn-first-unit-next" onclick="onNewUnit()" data-value="1" style="display: none; padding: 0px;" disabled>
+                                        <img class="new mb-2" src="{{asset('assets/icons/caret-circle-double-right-icon-original.png')}}" width="35px" height="35px"/>
+                                    </a> -->
+                                @endif
                             </div>
-                            </div>
+                        </div>
                     </div>
                     <div id="tab1" class="tab-pane pt-3 px-3" role="tabpanel">
                         
@@ -572,7 +570,10 @@
                                         <a class="nav-link" href="#tab8" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('TECHNICAL INFORMATION')</a>
                                     </li>
                                     <li class="nav-item" role="presentation">               
-                                        <a class="nav-link" href="#tab9" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('PRICE')</a>
+                                        <a class="nav-link" href="#tab9" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('ACCESSORIES')</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">               
+                                        <a class="nav-link" href="#tab10" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('PRICE')</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content chart-tab-content">
@@ -650,6 +651,10 @@
                                     <div id="tab8" class="tab-pane p-3" role="tabpanel">
                                     </div>
                                     <div id="tab9" class="tab-pane p-3" role="tabpanel">
+                                        <div class="w-full" id="accessoriestable">
+                                        </div>
+                                    </div>
+                                    <div id="tab10" class="tab-pane p-3" role="tabpanel">
                                         <div class="w-full" id="pricetable">
                                         </div>
                                     </div>
@@ -683,7 +688,7 @@
         </div>
         <div class="modal-content modal-content-save-delivery-time" style="display: none;">
             <div class="modal-body">
-                <div class="w-full my-3">
+                <div class="w-full">
                     <table class="display compact units-delivery-time-table datatable-t1" style="width: 100%;">
                         <thead>
                             <tr>
@@ -816,6 +821,8 @@
         var pdf_units = [];
         var isLoadImage = false;
         var loadImageId = null;
+        var selected_price_id = null;
+
         <?php
             $user_multiplier = auth()->user()->multiplier;
             if ($user_multiplier) {
@@ -955,7 +962,7 @@
 
             $.ajax({
                 method: 'GET',
-                url: '{{route('admin.projects.get.models')}}',
+                url: `{{route('admin.projects.get.models')}}`,
                 data: params
             }).done(function (res) { 
                 var result = res.result;
@@ -1013,7 +1020,8 @@
             var id = $(this).find('td:first-child').data('id');
             var reg = $(this).find('td:last-child').text();
             loadFromModel(id, reg, model);
-            initPriceTable(id);
+            loadAccessoriesFromModel(id, reg, model);
+            // initPriceTable(id);
         }
 
         function initTable(data, callback) {
@@ -1075,7 +1083,8 @@
                             var id = $(this).find('td:first-child').data('id');
                             var reg = $(this).find('td:last-child').text();
                             loadFromModel(id, reg, model);
-                            initPriceTable(id);
+                            loadAccessoriesFromModel(id, reg, model);
+                            // initPriceTable(id);
                         });
                     }                    
                 }
@@ -1090,11 +1099,14 @@
                   var modelid_default = selectedRows[i][0];
                   var reg_default = selectedRows[i][8];
                   loadFromModel(id_default, reg_default, modelid_default);
-                  initPriceTable(id_default);
+                  loadAccessoriesFromModel(id_default, reg_default, modelid_default);
+                //   initPriceTable(id_default);
               }
         }
             
         }
+
+
 
 
 
@@ -1114,6 +1126,9 @@
     }
 
    
+    $(document).on('click', '.accessories', function(){
+        initPriceTable(model_id)
+    })
 
         function initPriceTable(id, price_id = 0, callback) {
             if (id == null){
@@ -1154,9 +1169,9 @@
                                 row.description2 = '';
                             }
                             if (row.id == price_id) {
-                                temprow.append(`<td class="text-center"><input class="form-radio" type="radio" name="price" value="${row.id}" checked></td>`);
+                                temprow.append(`<td class="text-center"><input class="form-radio price-value" type="radio" name="price" value="${row.id}" checked></td>`);
                             } else {
-                                temprow.append(`<td class="text-center"><input class="form-radio" type="radio" name="price" value="${row.id}"></td>`);
+                                temprow.append(`<td class="text-center"><input class="form-radio price-value" type="radio" name="price" value="${row.id}"></td>`);
                             }
                             let pos = row.image.indexOf('img');
                             if (pos != -1) {
@@ -1228,6 +1243,77 @@
                     isView = true;
                     $('.btn-unit-save').show();
                 }
+                if (showLoading)
+                    swal.close();
+            });
+            $('#unitform').show();
+            $('.btn-preview').show();
+        }
+        function loadAccessoriesFromModel(id, reg, model, showLoading = true) {
+            model_id = id;
+            if (showLoading)
+                showSwalLoading();
+            $.ajax({
+                method: 'GET',
+                url: `{{route('admin.projects.get.getaccessories')}}`,
+                data: {
+                    idmodel: id
+                }
+            }).done(function (res) { 
+                var result = res.result;
+                $('#accessoriestable').html("<table class='table display compact datatable-t1'>\
+                            <thead>\
+                                <tr>\
+                                    <th></th>\
+                                    <th>@lang('ABR')</th>\
+                                    <th>@lang('Description')</th>\
+                                    <th>@lang('Multiple')</th>\
+                                </tr>\
+                            </thead>\
+                            <tbody>\
+                            </tbody>\
+                        </table>");
+                    if (result.length == 0){
+                        $('#accessoriestable tbody').empty().append('<tr><td colspan="4"><p class="text-center">@lang("NO Data")</p></td></tr>');
+                    } else {
+                        var dt = $('#accessoriestable tbody');
+                        dt.empty();
+                        var accessories = result.accessories;
+                        var i = 0;
+                        for (row of accessories) {
+                            console.log(row);
+                            var temprow = $('<tr></tr>');                           
+                            temprow.append(`<td class="text-center">
+                                <input class="form-checkbox accessories control-regulation" type="checkbox" name="control_regulation" value="${row.abr}"></td>`);
+                            temprow.append('<td>' + row.abbreviation + '</td>');
+                            temprow.append('<td>' + row.description + '</td>');
+                            if(row.multiple) {
+                                var dropdown = `<select name="accessories_${row.abbreviation}">`;
+                                for (option of row.options) {
+                                    dropdown += `<option value="${option}">${option}</option>`;
+                                }
+                                dropdown += `</select>`;
+                                temprow.append(`<td>${dropdown}</td>`);
+                            } else {
+                                temprow.append('<td>@lang("Single")</td>');
+                            }
+
+                            dt.append(temprow);
+                        }
+
+                        
+                        @if($project != null)
+                        // if ($(`input[name="price"][value="${price_id}"]`).length != 0){
+                        //     $(`input[name="price"][value="${price_id}"]`)[0].setAttribute("checked", true);
+                        // }
+                        // else {
+                        //     $('input[name="price"]')[0].setAttribute("checked", true);
+                        // }
+                        @else
+                            // $('input[name="price"]')[0].setAttribute("checked", true);
+                        @endif
+                    }
+
                 if (showLoading)
                     swal.close();
             });
@@ -1504,27 +1590,11 @@
 
             $("#btn-download").addClass('d-none');
             $("#btn-sendemail").addClass('d-none');
-
-        
-
-            var selectedModel = $(dTable.row({selected: true}).data());
-            var valueZero = selectedModel[0];
            
             showSwalLoading();
             $('.chart-tab-content .tab-pane').addClass('chart-tab-active');
             setTimeout(() => {
-                const project_name = $('#project_name').val().trim();
-                const project_desc = $('#project_desc').val().trim();
-                const project_refer = $('#project_reference').val().trim();
-                const creation_date = $('#create_date').val().trim();
-                const modify_date = $('#modify_date').val().trim();
-
-                if (project_name === ''){
-                    document.querySelector('.nav-link[href="#tab0"]').click();
-                    alert("@lang('Please type Project Name')");
-                    $('#project_name').focus();
-                    return;
-                }
+               
                 // if (project_refer === ''){
                 //     document.querySelector('.nav-link[href="#tab0"]').click();
                 //     alert("@lang('Please type Project Reference')");
@@ -1532,7 +1602,70 @@
                 //     return;
                 // }
                 
-                var doc1 = new jsPDF('p', 'pt', [595, 842], true); // A4 Size
+                var doc1 = generatePDF()
+                // let circleRadius = 10
+                // doc1.circle(300, nextY + circleRadius + 5, circleRadius, 'S');
+                
+
+                // console.log(doc1);
+                
+
+
+
+                // const text = "Click here to visit Example.com";
+                // const url = "https://www.example.com";
+                // // Simulate a link appearance
+                // doc1.textWithLink(text, 10, 20, {url});
+
+
+
+                var filename = 'PREVIEW_REPORT_' + (new Date()).getTime() + '.pdf';
+                savedPreviewDoc = {
+                    'filename': filename,
+                    'doc': doc1
+                };
+
+                $('.chart-tab-content .tab-pane.chart-tab-active').removeClass('chart-tab-active');
+                swal.close();
+                // Open the PDF in a new window/tab
+                let pdfB64String = doc1.output('dataurlstring', savedPreviewDoc.filename);
+                // console.log(pdfB64String);
+                $("#pdf_on_iframe").attr("src",pdfB64String);
+                $('#pdf_on_iframe_model').modal('show');
+                // aaaaaaaaaaaa
+
+
+
+
+
+                // Create a new window and set its content to the PDF data
+                // var newWindow = window.open();
+                // newWindow.document.write('<iframe width="100%" height="100%" src="' + pdfOutput + '" frameborder="0" allowfullscreen></iframe>');
+                // savedPreviewDoc.doc.save(savedPreviewDoc.filename);
+                // $('.chart-tab-content .tab-pane.chart-tab-active').removeClass('chart-tab-active');
+                // swal.close();
+            }, 100);
+        }
+
+        function generatePDF() {
+            const project_name = $('#project_name').val().trim();
+            const project_desc = $('#project_desc').val().trim();
+            const project_refer = $('#project_reference').val().trim();
+            const creation_date = $('#create_date').val().trim();
+            const modify_date = $('#modify_date').val().trim();
+
+
+            if (project_name === ''){
+                document.querySelector('.nav-link[href="#tab0"]').click();
+                alert("@lang('Please type Project Name')");
+                $('#project_name').focus();
+                return;
+            }
+
+            var selectedModel = $(dTable.row({selected: true}).data());
+            var valueZero = selectedModel[0];
+            
+            var doc1 = new jsPDF('p', 'pt', [595, 842], true); // A4 Size
                 var x = 20;
                 var y = 20;
 
@@ -1722,48 +1855,152 @@
                 h3 = drawGraphOnPDF(doc1, 'g_noise6', 20 + 105 / 4 * 3 + 150 * 2, nextY);
                 nextY = Math.max(h1, h2, h3) + nextY + 10;
                 doc1.rect(20, tempy, 595 - 40, nextY - tempy);
-                // let circleRadius = 10
-                // doc1.circle(300, nextY + circleRadius + 5, circleRadius, 'S');
+
+                return doc1;
+        }
+
+        function generatePDF_2() {
+
+            const project_name = $('#project_name').val().trim();
+            const project_desc = $('#project_desc').val().trim();
+            const project_refer = $('#project_reference').val();
+            const creation_date = $('#create_date').val().trim();
+            const modify_date = $('#modify_date').val().trim();
+
+
+            var doc = new jsPDF('p', 'pt', [595, 842], true);
+
+            y = 0;
+            x = 20;
+            doc.setDrawColor(0,0,0);
+
+            y += 20;
+            doc.rect(20, y, 595 - 40, 105);
+            doc.line(595 / 2,  y, 595 / 2, y + 105);
+
+            y += 10;
+            doc.addImage(logoImgData.dataURL, 'PNG', 30, y, logoImgData.width * 30 / logoImgData.height, 30, '', 'FAST');
+            y += 30;
+
+            y += 10;
+            // set font size to 10
+            doc.setFontSize(10);
+            doc.setFontStyle('bold');
+            doc.text('{{$user->company_name ?? ""}}', 30, y);
+            doc.text('{{$company->name}}', 595 / 2 + 10, y);
+
+            y += 10;
+            doc.setFontSize(7);
+            doc.setFontStyle('normal');
+            doc.text('{{$user->company_address ?? ""}}', 30, y);
+            doc.text('{{$company->address}}', 595 / 2 + 10, y); //120
+            doc.text("@lang('Contact')", 180, y);
+
+            y += 10;
+            doc.text('{{$user->company_post_code ?? ""}}, {{$user->company_city ?? ""}}', 30, y);
+            doc.text('{{$settings->conname ?? ""}}', 180, y);
+
+            y += 10;
+            doc.text("{{$user->company_state ?? ""}}, {{$user->company_country ?? ""}}", 30, y);
+            doc.text("@lang('Tel. No.') : {{$user->company_tel ?? ''}}", 180, y);
+            doc.text("@lang('Tel. No.') : {{$company->phone}} ", 595 / 2 + 10, y);
+
+            y += 10;
+            doc.text("@lang('VAT No.') {{$user->company_vat ?? ''}}", 30, y);
+            doc.text("@lang('Mobile') : {{$user->company_mobile ?? ''}}", 180, y);
+            doc.text("@lang('VAT') : {{$company->VAT}}" , 595 / 2 + 10, y);
+
+            y += 10;
+            doc.text("{{$user->company_web_address ?? ''}}", 30, y);
+            doc.text('{{$user->email ?? ""}}', 180, y);
+
+            y += 10;
+            doc.rect(20, y, 595 - 40, 25);
+            doc.line(595 / 2, y, 595 / 2, y + 25);
+
+            y += 10;
+            doc.text("@lang('Recipient') : {{$contact->firstname}}  {{$contact->secondname}}", 30, y);
+            doc.text("@lang('Mobile') : {{$contact->mobile}}" , 595 / 2 + 10, y);
+            y += 10;
+            doc.text("@lang('Tel. No.') : {{$contact->phone}}", 30, y);
+            doc.text("@lang('Mail') : {{$contact->email}}", 595 / 2 + 10, y);
+
+            y += 10;
+
+            doc.rect(20, y, 595 - 40, 25);
+            y += 10;
+            doc.text("@lang('Project') : " + project_name  + ' - ' + project_desc, 30, y);
+            doc.text("@lang('Project reference') : " + project_refer, 595 / 3 + 10, y);
+            doc.text("@lang('Creation date') : " + creation_date, 595 * 2 / 3 + 10, y);
+            y += 10;
+            doc.text("@lang('Last revistion') : " + modify_date, 30, y);
+            doc.text("@lang('SSW version') : {{$version ?? ''}}", 595 / 3 + 10, y);
+
+            y += 10;
+            var startCharCode = 65;
+            var i = 0;
+            var totalprice = 0;
+            for (const unit of pdf_units) {
+                y += 10;
+                var char = String.fromCharCode(startCharCode + i);
+                i++;
+                doc.text(`${char}) ${unit.name}`, 30, y);
+                y += 10;
+                doc.text(`${unit.itemcode} - ${unit.description}`, 50, y);
+                doc.text(`€`, 250, y);
+                let temp = unit.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                doc.text(`${temp}`, 300, y, { align: "right" });
+                totalprice += unit.price;
+                doc.text(`@lang('Delivery Time'):`, 320, y);
+                temp = unit.delivery_time.split('_');
+                if (temp[1] == 1) {
+                    doc.text(`${temp[0]} @lang('Days')`, 400, y, { align: "right" });
+                } else {
+                    doc.text(`${temp[0]} @lang('Weeks')`, 400, y, { align: "right" });
+                }
+            }
+
+            doc.setFontStyle('bold');
+            y += 30;
+            doc.text(`@lang('Total')`, 50, y);
+            doc.text(`€`, 250, y);
+            let temp = totalprice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            doc.text(`${temp}`, 300, y, { align: "right" });
+
+            y += 30;
+            doc.text("@lang('Delivery Terms'):  {{$delivery_address->address ?? ''}},  {{$delivery_condition->cond ?? ''}}", 595 / 2, y, { align: "center" });
+
+            y += 20;
+            if (price_validity != '') {
+                temp = price_validity.split('_');
+                temp[1] = temp[1] == 1 ? 'Days' : 'Weeks';
+                doc.text(`@lang('Price Validity'):  ${temp[0]} ${temp[1]}`, 595 / 2, y, { align: "center" });
+            } else {
+                doc.text(`@lang('Price Validity'):`, 595 / 2, y, { align: "center" });
+            }
+
+            var currentPageNumber = doc.internal.getNumberOfPages();
+            doc.movePage(currentPageNumber, 1);
+
+            var totalPages = doc.internal.getNumberOfPages();
+
+            // Define the header and footer template function
+            var headerFooterTemplate = function(pageNumber, pageCount) {
+                // Footer
+                doc.setFontSize(10);
+                doc.text(pageNumber + " / " + pageCount, doc.internal.pageSize.width / 2 - 10, doc.internal.pageSize.height - 10, { align: "right" });
+            };
+
+            // Apply the header and footer template function to each page
+            for (var i = 1; i <= totalPages; i++) {
+                doc.setPage(i);
+                var pageInfo = doc.internal.getCurrentPageInfo();
                 
+                // Add the footer text to each page
+                headerFooterTemplate(pageInfo.pageNumber, totalPages);
+            }
 
-                // console.log(doc1);
-                
-
-
-
-                // const text = "Click here to visit Example.com";
-                // const url = "https://www.example.com";
-                // // Simulate a link appearance
-                // doc1.textWithLink(text, 10, 20, {url});
-
-
-
-                var filename = 'PREVIEW_REPORT_' + (new Date()).getTime() + '.pdf';
-                savedPreviewDoc = {
-                    'filename': filename,
-                    'doc': doc1
-                };
-
-                $('.chart-tab-content .tab-pane.chart-tab-active').removeClass('chart-tab-active');
-                swal.close();
-                // Open the PDF in a new window/tab
-                let pdfB64String = doc1.output('dataurlstring', savedPreviewDoc.filename);
-                // console.log(pdfB64String);
-                $("#pdf_on_iframe").attr("src",pdfB64String);
-                $('#pdf_on_iframe_model').modal('show');
-                // aaaaaaaaaaaa
-
-
-
-
-
-                // Create a new window and set its content to the PDF data
-                // var newWindow = window.open();
-                // newWindow.document.write('<iframe width="100%" height="100%" src="' + pdfOutput + '" frameborder="0" allowfullscreen></iframe>');
-                // savedPreviewDoc.doc.save(savedPreviewDoc.filename);
-                // $('.chart-tab-content .tab-pane.chart-tab-active').removeClass('chart-tab-active');
-                // swal.close();
-            }, 100);
+            return doc;
         }
 
         function Email_sending() {
@@ -1788,197 +2025,8 @@
                 //     $('#project_reference').focus();
                 //     return;
                 // }
-                
-                var doc1 = new jsPDF('p', 'pt', [595, 842], true); // A4 Size
-                var x = 20;
-                var y = 20;
 
-                doc1.addImage(logoImgData.dataURL, 'PNG', 30, y, logoImgData.width * 30 / logoImgData.height, 30, '', 'FAST');
-                y += 30;
-
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
-                y += 10;
-
-                doc1.rect(20, y, 595 - 40, 25);
-                y += 10;
-                doc1.text("@lang('Project') : " + project_name  + ' - ' + project_desc, 30, y);
-                doc1.text("@lang('Project reference') : " + project_refer, 595 / 3 + 10, y);
-                doc1.text("@lang('Creation date') : " + creation_date, 595 * 2 / 3 + 10, y);
-                y += 10;
-                doc1.text("@lang('Last revistion') : " + modify_date, 30, y);
-                doc1.text("@lang('SSW version') : {{$version ?? ''}}", 595 / 3 + 10, y);
-                y += 10;
-
-                var temp_y = y;
-
-                doc1.rect(20, y, 595 - 40 - 350, 150);
-                y += 10;
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('SELECTED UNIT'): " + selected_model, 20 + (595 - 40 - 350) / 2, y, {align: 'center'});
-                y += 5;
-                doc1.line(20,  y, 595 - 20 - 350, y);
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
-                var temp_price = $('input[name="price"]:checked').parents('tr').children('td');
-                if (temp_price.length != 0){
-                    y += 10;
-                    doc1.text("@lang('Itemcode'):    " + temp_price[2].innerHTML, 30, y);
-                    y += 10;
-                    doc1.text("@lang('Description'): " + temp_price[3].innerHTML + (temp_price[4].innerHTML != '' ? ( ' - ' + temp_price[4].innerHTML) : ''), 30, y);
-                }
-                y += 10;
-                doc1.addImage(renderImgData.dataURL, 'PNG', 20 + (595 - 40 - 350 - renderImgData.width / renderImgData.height * 100) / 2, y,  renderImgData.width / renderImgData.height * 100, 100, '', 'FAST');
-                y += 110;
-
-                
-                doc1.rect(20, y, 595 - 40 - 350, 60);
-                y += 10;
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('WORKING POINT')", 20 + (595 - 40 - 350) / 2, y, {align: 'center'});
-                y += 3;
-                doc1.line(20, y, 595 - 20 - 350, y);
-                // set font size to 10
-
-                y += 10;
-                doc1.setFontSize(8);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('Airflow data')", 30, y);
-                y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
-                doc1.text("@lang('Airflow rate') : " + airflow +' [m³/h]', 30, y);
-                doc1.text("@lang('Airflow pressure') : " + pressure +  ' [Pa]', 130, y);
-                y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
-                doc1.text("@lang('Power consumption') : " + powerconsumption +' [W]', 30, y);
-                doc1.text("@lang('Regulation') : " + regulation +  ' [%]', 130, y);
-                y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
-                doc1.text("@lang('Unit SEL') : " + unitsel +' [J/m3]', 30, y);
-                doc1.text("@lang('PSFP') : " + psfp +  ' [J/m3]', 130, y);
-
-
-                doc1.rect(595 - 20 - 340, temp_y, 340, 180);
-                temp_y += 10;
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('THERMAL PERFORMANCE')", 595 - 20 - 340 / 2, temp_y, {align: 'center'});
-                temp_y += 5;
-                doc1.line(595 - 20 - 340, temp_y, 595 - 20, temp_y);
-
-                // set font size to 10
-
-                var drawGridText = (pdf, arrText, y) => {
-                    var x0 = 245, x1 = 345, x2 = 365, x3 = 405, x4 = 505, x5 = 525;
-                    pdf.text(arrText[0], x0, y);
-                    pdf.text(arrText[1], x1, y);
-                    pdf.text(arrText[2], x2, y);
-                    pdf.text(arrText[3], x3, y);
-                    pdf.text(arrText[4], x4, y);
-                    pdf.text(arrText[5], x5, y);
-                };
-
-                temp_y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('WINTER OPERATION')", 595 - 20 - 340 + 10, temp_y);
-                doc1.text(`@lang('imbalance ratio') : 90 %`, 595 - 20 - 340 + 100, temp_y);
-
-                doc1.setFontStyle('normal');
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Supply Temperature')", $('#TI-0').val(), '[°C]', "@lang('Fresh Temperature')", $('#TI-7').val(), '[°C]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Supply Humidity')", $('#TI-1').val(), '[%]', "@lang('Fresh Humidity')", $('#TI-8').val(), '[%]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Exhaust Temperature')", $('#TI-2').val(), '[°C]', "@lang('Efficiency')", $('#TI-9').val(), '[%]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Exahust Humidity')", $('#TI-3').val(), '[%]', "@lang('Heat Recovery')", $('#TI-10').val(), '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Water produced')", $('#TI-4').val(), '[l/h]', "@lang('Sensible Heat')", $('#TI-11').val(), '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Return Temperature')", $('#TI-5').val(), '[°C]', "@lang('Latent Heat')", $('#TI-12').val(), '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Return Humidity')", $('#TI-6').val(), '[%]', '', '', ''], temp_y);
-
-                temp_y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('SUMMER OPERATION')", 595 - 20 - 340 + 10, temp_y);
-                doc1.text(`@lang('imbalance ratio') : 70 %`, 595 - 20 - 340 + 100, temp_y);
-
-                doc1.setFontStyle('normal');
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Supply Temperature')", '', '[°C]', "@lang('Fresh Temperature')", '', '[°C]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Supply Humidity')", '', '[%]', "@lang('Fresh Humidity')", '', '[%]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Exhaust Temperature')", '', '[°C]', "@lang('Efficiency')", '', '[%]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Exahust Humidity')", '', '[%]', "@lang('Heat Recovery')", '', '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Water produced')", '', '[l/h]', "@lang('Sensible Heat')", '', '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Return Temperature')", '', '[°C]', "@lang('Latent Heat')", '', '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Return Humidity')", '', '[%]', '', '', ''], temp_y);
-
-                temp_y = y;
-
-                y += 10;
-                var _y = y;
-                y += 20;
-                doc1.line(20, y, 595 - 20, y);
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('PERFORMANCE CURVES')", 30, y - 7);
-
-                y += 10;
-                var drawGraphOnPDF = (pdf, id, x, y) => {                    
-                    var canvas = document.getElementById(id);
-                    canvas.getContext('2d');
-                    var image = canvas.toDataURL('image/png', 1.0);
-                    var cw = 150;
-                    var cy = cw * canvas.height / canvas.width;
-                    
-                    pdf.addImage(image, 'PNG', x, y, cw, cy, '', 'FAST');
-                    return cy;
-                }
-                h1 = drawGraphOnPDF(doc1, 'pressure_graph', 105, y);
-                h2 = drawGraphOnPDF(doc1, 'power_graph', 340, y);
-                y = Math.max(h1, h2) + y + 10;
-
-                h1 = drawGraphOnPDF(doc1, 'efficiency_graph', 105, y);
-                h2 = drawGraphOnPDF(doc1, 'psfp_graph', 340, y);
-                y = Math.max(h1, h2) + y + 10;
-                
-                doc1.rect(20, _y, 595 - 40, y - _y);
-
-                y += 25;
-
-                tempy = y - 15;
-
-                doc1.line(20, y, 595 - 20, y);
-
-                // set font size to 10
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('ACOUSTIC CHARACTERISTICS')", 30, y - 3);
-                y += 10;
-                var h1 = drawGraphOnPDF(doc1, 'g_noise1', 20 + 105 / 4, y);
-                var h2 = drawGraphOnPDF(doc1, 'g_noise2', 20 + 105 / 2 + 150, y);
-                var h3 = drawGraphOnPDF(doc1, 'g_noise3', 20 + 105 / 4 * 3 + 150 * 2, y);
-                var nextY = Math.max(h1, h2, h3) + y + 10;
-
-                h1 = drawGraphOnPDF(doc1, 'g_noise4', 20 + 105 / 4, nextY);
-                h2 = drawGraphOnPDF(doc1, 'g_noise5', 20 + 105 / 2 + 150, nextY);
-                h3 = drawGraphOnPDF(doc1, 'g_noise6', 20 + 105 / 4 * 3 + 150 * 2, nextY);
-                nextY = Math.max(h1, h2, h3) + nextY + 10;
-                doc1.rect(20, tempy, 595 - 40, nextY - tempy);
+                var doc1 = generatePDF()
 
                 var filename = 'PREVIEW_REPORT_' + (new Date()).getTime() + '.pdf';
                 savedPreviewDoc = {
@@ -2032,215 +2080,8 @@
             showSwalLoading();
             $('.chart-tab-content .tab-pane').addClass('chart-tab-active');
             setTimeout(() => {
-                const project_name = $('#project_name').val().trim();
-                const project_desc = $('#project_desc').val().trim();
-                const project_refer = $('#project_reference').val().trim();
-                const creation_date = $('#create_date').val().trim();
-                const modify_date = $('#modify_date').val().trim();
-
-                if (project_name === ''){
-                    document.querySelector('.nav-link[href="#tab0"]').click();
-                    alert("@lang('Please type Project Name')");
-                    $('#project_name').focus();
-                    return;
-                }
-                // if (project_refer === ''){
-                //     document.querySelector('.nav-link[href="#tab0"]').click();
-                //     alert("@lang('Please type Project Reference')");
-                //     $('#project_reference').focus();
-                //     return;
-                // }
                 
-                var doc1 = new jsPDF('p', 'pt', [595, 842], true); // A4 Size
-                var x = 20;
-                var y = 20;
-
-                doc1.addImage(logoImgData.dataURL, 'PNG', 30, y, logoImgData.width * 30 / logoImgData.height, 30, '', 'FAST');
-                y += 30;
-
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
-                y += 10;
-
-                doc1.rect(20, y, 595 - 40, 25);
-                y += 10;
-                doc1.text("@lang('Project') : " + project_name  + ' - ' + project_desc, 30, y);
-                doc1.text("@lang('Project reference') : " + project_refer, 595 / 3 + 10, y);
-                doc1.text("@lang('Creation date') : " + creation_date, 595 * 2 / 3 + 10, y);
-                y += 10;
-                doc1.text("@lang('Last revistion') : " + modify_date, 30, y);
-                doc1.text("@lang('SSW version') : {{$version ?? ''}}", 595 / 3 + 10, y);
-                y += 10;
-
-                var temp_y = y;
-
-                doc1.rect(20, y, 595 - 40 - 350, 150);
-                y += 10;
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('SELECTED UNIT'): " + valueZero, 20 + (595 - 40 - 350) / 2, y, {align: 'center'});
-                y += 5;
-                doc1.line(20,  y, 595 - 20 - 350, y);
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
-                var temp_price = $('input[name="price"]:checked').parents('tr').children('td');
-                if (temp_price.length != 0){
-                    y += 10;
-                    doc1.text("@lang('Itemcode'):    " + temp_price[2].innerHTML, 30, y);
-                    y += 10;
-                    doc1.text("@lang('Description'): " + temp_price[3].innerHTML + (temp_price[4].innerHTML != '' ? ( ' - ' + temp_price[4].innerHTML) : ''), 30, y);
-                }
-                y += 10;
-                doc1.addImage(renderImgData.dataURL, 'PNG', 20 + (595 - 40 - 350 - renderImgData.width / renderImgData.height * 100) / 2, y,  renderImgData.width / renderImgData.height * 100, 100, '', 'FAST');
-                y += 110;
-
-                
-                doc1.rect(20, y, 595 - 40 - 350, 60);
-                y += 10;
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('WORKING POINT')", 20 + (595 - 40 - 350) / 2, y, {align: 'center'});
-                y += 3;
-                doc1.line(20, y, 595 - 20 - 350, y);
-                // set font size to 10
-
-                y += 10;
-                doc1.setFontSize(8);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('Airflow data')", 30, y);
-                y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
-                doc1.text("@lang('Airflow rate') : " + airflow +' [m³/h]', 30, y);
-                doc1.text("@lang('Airflow pressure') : " + pressure +  ' [Pa]', 130, y);
-                y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
-                doc1.text("@lang('Power consumption') : " + powerconsumption +' [W]', 30, y);
-                doc1.text("@lang('Regulation') : " + regulation +  ' [%]', 130, y);
-                y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
-                doc1.text("@lang('Unit SEL') : " + unitsel +' [J/m3]', 30, y);
-                doc1.text("@lang('PSFP') : " + psfp +  ' [J/m3]', 130, y);
-
-
-                doc1.rect(595 - 20 - 340, temp_y, 340, 180);
-                temp_y += 10;
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('THERMAL PERFORMANCE')", 595 - 20 - 340 / 2, temp_y, {align: 'center'});
-                temp_y += 5;
-                doc1.line(595 - 20 - 340, temp_y, 595 - 20, temp_y);
-
-                // set font size to 10
-
-                var drawGridText = (pdf, arrText, y) => {
-                    var x0 = 245, x1 = 345, x2 = 365, x3 = 405, x4 = 505, x5 = 525;
-                    pdf.text(arrText[0], x0, y);
-                    pdf.text(arrText[1], x1, y);
-                    pdf.text(arrText[2], x2, y);
-                    pdf.text(arrText[3], x3, y);
-                    pdf.text(arrText[4], x4, y);
-                    pdf.text(arrText[5], x5, y);
-                };
-
-                temp_y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('WINTER OPERATION')", 595 - 20 - 340 + 10, temp_y);
-                doc1.text(`@lang('imbalance ratio') : 90 %`, 595 - 20 - 340 + 100, temp_y);
-
-                doc1.setFontStyle('normal');
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Supply Temperature')", $('#TI-0').val(), '[°C]', "@lang('Fresh Temperature')", $('#TI-7').val(), '[°C]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Supply Humidity')", $('#TI-1').val(), '[%]', "@lang('Fresh Humidity')", $('#TI-8').val(), '[%]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Exhaust Temperature')", $('#TI-2').val(), '[°C]', "@lang('Efficiency')", $('#TI-9').val(), '[%]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Exahust Humidity')", $('#TI-3').val(), '[%]', "@lang('Heat Recovery')", $('#TI-10').val(), '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Water produced')", $('#TI-4').val(), '[l/h]', "@lang('Sensible Heat')", $('#TI-11').val(), '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Return Temperature')", $('#TI-5').val(), '[°C]', "@lang('Latent Heat')", $('#TI-12').val(), '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Return Humidity')", $('#TI-6').val(), '[%]', '', '', ''], temp_y);
-
-                temp_y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('SUMMER OPERATION')", 595 - 20 - 340 + 10, temp_y);
-                doc1.text(`@lang('imbalance ratio') : 70 %`, 595 - 20 - 340 + 100, temp_y);
-
-                doc1.setFontStyle('normal');
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Supply Temperature')", '', '[°C]', "@lang('Fresh Temperature')", '', '[°C]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Supply Humidity')", '', '[%]', "@lang('Fresh Humidity')", '', '[%]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Exhaust Temperature')", '', '[°C]', "@lang('Efficiency')", '', '[%]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Exahust Humidity')", '', '[%]', "@lang('Heat Recovery')", '', '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Water produced')", '', '[l/h]', "@lang('Sensible Heat')", '', '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Return Temperature')", '', '[°C]', "@lang('Latent Heat')", '', '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Return Humidity')", '', '[%]', '', '', ''], temp_y);
-
-                temp_y = y;
-
-                y += 10;
-                var _y = y;
-                y += 20;
-                doc1.line(20, y, 595 - 20, y);
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('PERFORMANCE CURVES')", 30, y - 7);
-
-                y += 10;
-                var drawGraphOnPDF = (pdf, id, x, y) => {                    
-                    var canvas = document.getElementById(id);
-                    canvas.getContext('2d');
-                    var image = canvas.toDataURL('image/png', 1.0);
-                    var cw = 150;
-                    var cy = cw * canvas.height / canvas.width;
-                    
-                    pdf.addImage(image, 'PNG', x, y, cw, cy, '', 'FAST');
-                    return cy;
-                }
-                h1 = drawGraphOnPDF(doc1, 'pressure_graph', 105, y);
-                h2 = drawGraphOnPDF(doc1, 'power_graph', 340, y);
-                y = Math.max(h1, h2) + y + 10;
-
-                h1 = drawGraphOnPDF(doc1, 'efficiency_graph', 105, y);
-                h2 = drawGraphOnPDF(doc1, 'psfp_graph', 340, y);
-                y = Math.max(h1, h2) + y + 10;
-                
-                doc1.rect(20, _y, 595 - 40, y - _y);
-
-                y += 25;
-
-                tempy = y - 15;
-
-                doc1.line(20, y, 595 - 20, y);
-
-                // set font size to 10
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('ACOUSTIC CHARACTERISTICS')", 30, y - 3);
-                y += 10;
-                var h1 = drawGraphOnPDF(doc1, 'g_noise1', 20 + 105 / 4, y);
-                var h2 = drawGraphOnPDF(doc1, 'g_noise2', 20 + 105 / 2 + 150, y);
-                var h3 = drawGraphOnPDF(doc1, 'g_noise3', 20 + 105 / 4 * 3 + 150 * 2, y);
-                var nextY = Math.max(h1, h2, h3) + y + 10;
-
-                h1 = drawGraphOnPDF(doc1, 'g_noise4', 20 + 105 / 4, nextY);
-                h2 = drawGraphOnPDF(doc1, 'g_noise5', 20 + 105 / 2 + 150, nextY);
-                h3 = drawGraphOnPDF(doc1, 'g_noise6', 20 + 105 / 4 * 3 + 150 * 2, nextY);
-                nextY = Math.max(h1, h2, h3) + nextY + 10;
-                doc1.rect(20, tempy, 595 - 40, nextY - tempy);
+                var doc1 = generatePDF();
 
                 var filename = 'PREVIEW_REPORT_' + (new Date()).getTime() + '.pdf';
                 savedPreviewDoc = {
@@ -2259,23 +2100,25 @@
         
 
         function export2PDF(final = false) {
+            console.log('export, pdf');
             $('.chart-tab-content .tab-pane').addClass('chart-tab-active');
-            setTimeout(() => {
+            // setTimeout(() => {
                 const project_name = $('#project_name').val().trim();
                 const project_desc = $('#project_desc').val().trim();
                 const project_refer = $('#project_reference').val();
                 const creation_date = $('#create_date').val().trim();
                 const modify_date = $('#modify_date').val().trim();
 
-                var nextbtnval = $('.nextbtn2').data('value'); 
-                if(nextbtnval == 1){
+                // var nextbtnval = $('.nextbtn2').data('value'); 
+                // if(nextbtnval == 1){
                   
-                }else{
-                    document.querySelector('.nav-link[href="#tab0"]').click();
-                    alert("@lang('Please type Project Name')");
-                    $('#project_name').focus();
-                    return;
-                }
+                // }else{
+                //     document.querySelector('.nav-link[href="#tab0"]').click();
+                //     alert("@lang('Please type Project Name')");
+                //     $('#project_name').focus();
+                //     return;
+                // }
+
                 // if (project_name === ''){
                 //     document.querySelector('.nav-link[href="#tab0"]').click();
                 //     alert("@lang('Please type Project Name')");
@@ -2302,202 +2145,7 @@
                         
                      }
                 if (!final) {
-                    var x = 0;
-                    var y = 20;
-                    if (doc === null) {
-                        doc = new jsPDF('p', 'pt', [595, 842], true); // A4 Size
-                    } else {
-                        //doc.addPage(595, 842);
-                        doc = new jsPDF('p', 'pt', [595, 842], true);
-                    }
-
-                    y = 20;
-                    doc.addImage(logoImgData.dataURL, 'PNG', 30, y, logoImgData.width * 30 / logoImgData.height, 30, '', 'FAST');
-                    y += 30;
-
-                    doc.setFontSize(7);
-                    doc.setFontStyle('normal');
-                    y += 10;
-
-                    doc.rect(20, y, 595 - 40, 25);
-                    y += 10;
-                    doc.text("@lang('Project') : " + project_name  + ' - ' + project_desc, 30, y);
-                    doc.text("@lang('Project reference') : " + project_refer, 595 / 3 + 10, y);
-                    doc.text("@lang('Creation date') : " + creation_date, 595 * 2 / 3 + 10, y);
-                    y += 10;
-                    doc.text("@lang('Last revistion') : " + modify_date, 30, y);
-                    doc.text("@lang('SSW version') : {{$version ?? ''}}", 595 / 3 + 10, y);
-                    y += 10;
-
-                    var temp_y = y;
-
-                    doc.rect(20, y, 595 - 40 - 350, 150);
-                    y += 10;
-                    doc.setFontSize(10);
-                    doc.setFontStyle('bold');
-                    doc.text("@lang('SELECTED UNIT'): " + selected_model, (595 - 350) / 2, y, {align: 'center'});
-                    y += 5;
-                    doc.line(20,  y, 595 - 20 - 350, y);
-                    doc.setFontSize(7);
-                    doc.setFontStyle('normal');
-                    var temp_price = $('input[name="price"]:checked').parents('tr').children('td');
-                    if (temp_price.length != 0){
-                        y += 10;
-                        doc.text("@lang('Itemcode'):    " + temp_price[2].innerHTML, 30, y);
-                        y += 10;
-                        doc.text("@lang('Description'): " + temp_price[3].innerHTML + (temp_price[4].innerHTML != '' ? ( ' - ' + temp_price[4].innerHTML) : ''), 30, y);
-                    }
-                    y += 10;
-                    doc.addImage(renderImgData.dataURL, 'PNG', 20 + (595 - 40 - 350 - renderImgData.width / renderImgData.height * 100) / 2, y,  renderImgData.width / renderImgData.height * 100, 100, '', 'FAST');
-                    y += 110;
-
-                    
-                    doc.rect(20, y, 595 - 40 - 350, 60);
-                    y += 10;
-                    doc.setFontSize(10);
-                    doc.setFontStyle('bold');
-                    doc.text("@lang('WORKING POINT')", (595 - 350) / 2, y, {align: 'center'});
-                    y += 3;
-                    doc.line(20, y, 595 - 20 - 350, y);
-                    // set font size to 10
-
-                    y += 10;
-                    doc.setFontSize(8);
-                    doc.setFontStyle('bold');
-                    doc.text("@lang('Airflow data')", 30, y);
-                    y += 10;
-                    doc.setFontSize(7);
-                    doc.setFontStyle('normal');
-                    doc.text("@lang('Airflow rate') : " + airflow +' [m³/h]', 30, y);
-                    doc.text("@lang('Airflow pressure') : " + pressure +  ' [Pa]', 130, y);
-                    y += 10;
-                    doc.setFontSize(7);
-                    doc.setFontStyle('normal');
-                    doc.text("@lang('Power consumption') : " + powerconsumption +' [W]', 30, y);
-                    doc.text("@lang('Regulation') : " + regulation +  ' [%]', 130, y);
-                    y += 10;
-                    doc.setFontSize(7);
-                    doc.setFontStyle('normal');
-                    doc.text("@lang('Unit SEL') : " + unitsel +' [J/m3]', 30, y);
-                    doc.text("@lang('PSFP') : " + psfp +  ' [J/m3]', 130, y);
-
-
-                    doc.rect(595 - 20 - 340, temp_y, 340, 180);
-                    temp_y += 10;
-                    doc.setFontSize(10);
-                    doc.setFontStyle('bold');
-                    doc.text("@lang('THERMAL PERFORMANCE')", 595 - 20 - 340 / 2, temp_y, {align: 'center'});
-                    temp_y += 5;
-                    doc.line(595 - 20 - 340, temp_y, 595 - 20, temp_y);
-
-                    // set font size to 10
-
-                    var drawGridText = (pdf, arrText, y) => {
-                        var x0 = 245, x1 = 345, x2 = 365, x3 = 405, x4 = 505, x5 = 525;
-                        pdf.text(arrText[0], x0, y);
-                        pdf.text(arrText[1], x1, y);
-                        pdf.text(arrText[2], x2, y);
-                        pdf.text(arrText[3], x3, y);
-                        pdf.text(arrText[4], x4, y);
-                        pdf.text(arrText[5], x5, y);
-                    };
-
-                    temp_y += 10;
-                    doc.setFontSize(7);
-                    doc.setFontStyle('bold');
-                    doc.text("@lang('WINTER OPERATION')", 595 - 20 - 340 + 10, temp_y);
-                    doc.text(`@lang('imbalance ratio') : 90 %`, 595 - 20 - 340 + 100, temp_y);
-
-                    doc.setFontStyle('normal');
-                    temp_y += 10;
-                    drawGridText(doc, ["@lang('Supply Temperature')", $('#TI-0').val(), '[°C]', "@lang('Fresh Temperature')", $('#TI-7').val(), '[°C]'], temp_y);
-                    temp_y += 10;
-                    drawGridText(doc, ["@lang('Supply Humidity')", $('#TI-1').val(), '[%]', "@lang('Fresh Humidity')", $('#TI-8').val(), '[%]'], temp_y);
-                    temp_y += 10;
-                    drawGridText(doc, ["@lang('Exhaust Temperature')", $('#TI-2').val(), '[°C]', "@lang('Efficiency')", $('#TI-9').val(), '[%]'], temp_y);
-                    temp_y += 10;
-                    drawGridText(doc, ["@lang('Exahust Humidity')", $('#TI-3').val(), '[%]', "@lang('Heat Recovery')", $('#TI-10').val(), '[W]'], temp_y);
-                    temp_y += 10;
-                    drawGridText(doc, ["@lang('Water produced')", $('#TI-4').val(), '[l/h]', "@lang('Sensible Heat')", $('#TI-11').val(), '[W]'], temp_y);
-                    temp_y += 10;
-                    drawGridText(doc, ["@lang('Return Temperature')", $('#TI-5').val(), '[°C]', "@lang('Latent Heat')", $('#TI-12').val(), '[W]'], temp_y);
-                    temp_y += 10;
-                    drawGridText(doc, ["@lang('Return Humidity')", $('#TI-6').val(), '[%]', '', '', ''], temp_y);
-
-                    temp_y += 10;
-                    doc.setFontSize(7);
-                    doc.setFontStyle('bold');
-                    doc.text("@lang('SUMMER OPERATION')", 595 - 20 - 340 + 10, temp_y);
-                    doc.text(`@lang('imbalance ratio') : 70 %`, 595 - 20 - 340 + 100, temp_y);
-
-                    doc.setFontStyle('normal');
-                    temp_y += 10;
-                    drawGridText(doc, ["@lang('Supply Temperature')", '', '[°C]', "@lang('Fresh Temperature')", '', '[°C]'], temp_y);
-                    temp_y += 10;
-                    drawGridText(doc, ["@lang('Supply Humidity')", '', '[%]', "@lang('Fresh Humidity')", '', '[%]'], temp_y);
-                    temp_y += 10;
-                    drawGridText(doc, ["@lang('Exhaust Temperature')", '', '[°C]', "@lang('Efficiency')", '', '[%]'], temp_y);
-                    temp_y += 10;
-                    drawGridText(doc, ["@lang('Exahust Humidity')", '', '[%]', "@lang('Heat Recovery')", '', '[W]'], temp_y);
-                    temp_y += 10;
-                    drawGridText(doc, ["@lang('Water produced')", '', '[l/h]', "@lang('Sensible Heat')", '', '[W]'], temp_y);
-                    temp_y += 10;
-                    drawGridText(doc, ["@lang('Return Temperature')", '', '[°C]', "@lang('Latent Heat')", '', '[W]'], temp_y);
-                    temp_y += 10;
-                    drawGridText(doc, ["@lang('Return Humidity')", '', '[%]', '', '', ''], temp_y);
-
-                    temp_y = y;
-
-                    y += 10;
-                    var _y = y;
-                    y += 20;
-                    doc.line(20, y, 595 - 20, y);
-                    doc.setFontSize(10);
-                    doc.setFontStyle('bold');
-                    doc.text("@lang('PERFORMANCE CURVES')", 30, y - 7);
-
-                    y += 10;
-                    var drawGraphOnPDF = (pdf, id, x, y) => {                    
-                        var canvas = document.getElementById(id);
-                        canvas.getContext('2d');
-                        var image = canvas.toDataURL('image/png', 1.0);
-                        var cw = 150;
-                        var cy = cw * canvas.height / canvas.width;
-                        
-                        pdf.addImage(image, 'PNG', x, y, cw, cy, '', 'FAST');
-                        return cy;
-                    }
-                    h1 = drawGraphOnPDF(doc, 'pressure_graph', 105, y);
-                    h2 = drawGraphOnPDF(doc, 'power_graph', 340, y);
-                    y = Math.max(h1, h2) + y + 10;
-
-                    h1 = drawGraphOnPDF(doc, 'efficiency_graph', 105, y);
-                    h2 = drawGraphOnPDF(doc, 'psfp_graph', 340, y);
-                    y = Math.max(h1, h2) + y + 10;
-                    
-                    doc.rect(20, _y, 595 - 40, y - _y);
-
-                    y += 25;
-
-                    tempy = y - 15;
-
-                    doc.line(20, y, 595 - 20, y);
-
-                    // set font size to 10
-                    doc.setFontSize(10);
-                    doc.setFontStyle('bold');
-                    doc.text("@lang('ACOUSTIC CHARACTERISTICS')", 30, y - 3);
-                    y += 10;
-                    var h1 = drawGraphOnPDF(doc, 'g_noise1', 20 + 105 / 4, y);
-                    var h2 = drawGraphOnPDF(doc, 'g_noise2', 20 + 105 / 2 + 150, y);
-                    var h3 = drawGraphOnPDF(doc, 'g_noise3', 20 + 105 / 4 * 3 + 150 * 2, y);
-                    var nextY = Math.max(h1, h2, h3) + y + 10;
-
-                    h1 = drawGraphOnPDF(doc, 'g_noise4', 20 + 105 / 4, nextY);
-                    h2 = drawGraphOnPDF(doc, 'g_noise5', 20 + 105 / 2 + 150, nextY);
-                    h3 = drawGraphOnPDF(doc, 'g_noise6', 20 + 105 / 4 * 3 + 150 * 2, nextY);
-                    nextY = Math.max(h1, h2, h3) + nextY + 10;
-                    doc.rect(20, tempy, 595 - 40, nextY - tempy);
+                    doc = generatePDF();
                     saveLoading = false;
                     $('#unitform').hide();
                     $('#tab_unit_selection').addClass('disabled');
@@ -2508,137 +2156,7 @@
                     $('.btn-unit-save').hide();
                 } else {
                      //doc.addPage(595, 842);
-                    doc = new jsPDF('p', 'pt', [595, 842], true);
-
-                    y = 0;
-                    x = 20;
-                    doc.setDrawColor(0,0,0);
-
-                    y += 20;
-                    doc.rect(20, y, 595 - 40, 105);
-                    doc.line(595 / 2,  y, 595 / 2, y + 105);
-
-                    y += 10;
-                    doc.addImage(logoImgData.dataURL, 'PNG', 30, y, logoImgData.width * 30 / logoImgData.height, 30, '', 'FAST');
-                    y += 30;
-
-                    y += 10;
-                    // set font size to 10
-                    doc.setFontSize(10);
-                    doc.setFontStyle('bold');
-                    doc.text('{{$user->company_name ?? ""}}', 30, y);
-                    doc.text('{{$company->name}}', 595 / 2 + 10, y);
-
-                    y += 10;
-                    doc.setFontSize(7);
-                    doc.setFontStyle('normal');
-                    doc.text('{{$user->company_address ?? ""}}', 30, y);
-                    doc.text('{{$company->address}}', 595 / 2 + 10, y); //120
-                    doc.text("@lang('Contact')", 180, y);
-
-                    y += 10;
-                    doc.text('{{$user->company_post_code ?? ""}}, {{$user->company_city ?? ""}}', 30, y);
-                    doc.text('{{$settings->conname ?? ""}}', 180, y);
-
-                    y += 10;
-                    doc.text("{{$user->company_state ?? ""}}, {{$user->company_country ?? ""}}", 30, y);
-                    doc.text("@lang('Tel. No.') : {{$user->company_tel ?? ''}}", 180, y);
-                    doc.text("@lang('Tel. No.') : {{$company->phone}} ", 595 / 2 + 10, y);
-                    
-                    y += 10;
-                    doc.text("@lang('VAT No.') {{$user->company_vat ?? ''}}", 30, y);
-                    doc.text("@lang('Mobile') : {{$user->company_mobile ?? ''}}", 180, y);
-                    doc.text("@lang('VAT') : {{$company->VAT}}" , 595 / 2 + 10, y);
-                    
-                    y += 10;
-                    doc.text("{{$user->company_web_address ?? ''}}", 30, y);
-                    doc.text('{{$user->email ?? ""}}', 180, y);
-                    
-                    y += 10;
-                    doc.rect(20, y, 595 - 40, 25);
-                    doc.line(595 / 2, y, 595 / 2, y + 25);
-
-                    y += 10;
-                    doc.text("@lang('Recipient') : {{$contact->firstname}}  {{$contact->secondname}}", 30, y);
-                    doc.text("@lang('Mobile') : {{$contact->mobile}}" , 595 / 2 + 10, y);
-                    y += 10;
-                    doc.text("@lang('Tel. No.') : {{$contact->phone}}", 30, y);
-                    doc.text("@lang('Mail') : {{$contact->email}}", 595 / 2 + 10, y);
-
-                    y += 10;
-
-                    doc.rect(20, y, 595 - 40, 25);
-                    y += 10;
-                    doc.text("@lang('Project') : " + project_name  + ' - ' + project_desc, 30, y);
-                    doc.text("@lang('Project reference') : " + project_refer, 595 / 3 + 10, y);
-                    doc.text("@lang('Creation date') : " + creation_date, 595 * 2 / 3 + 10, y);
-                    y += 10;
-                    doc.text("@lang('Last revistion') : " + modify_date, 30, y);
-                    doc.text("@lang('SSW version') : {{$version ?? ''}}", 595 / 3 + 10, y);
-
-                    y += 10;
-                    var startCharCode = 65;
-                    var i = 0;
-                    var totalprice = 0;
-                    for (const unit of pdf_units) {
-                        y += 10;
-                        var char = String.fromCharCode(startCharCode + i);
-                        i++;
-                        doc.text(`${char}) ${unit.name}`, 30, y);
-                        y += 10;
-                        doc.text(`${unit.itemcode} - ${unit.description}`, 50, y);
-                        doc.text(`€`, 250, y);
-                        let temp = unit.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                        doc.text(`${temp}`, 300, y, { align: "right" });
-                        totalprice += unit.price;
-                        doc.text(`@lang('Delivery Time'):`, 320, y);
-                        temp = unit.delivery_time.split('_');
-                        if (temp[1] == 1) {
-                            doc.text(`${temp[0]} @lang('Days')`, 400, y, { align: "right" });
-                        } else {
-                            doc.text(`${temp[0]} @lang('Weeks')`, 400, y, { align: "right" });
-                        }
-                    }
-
-                    doc.setFontStyle('bold');
-                    y += 30;
-                    doc.text(`@lang('Total')`, 50, y);
-                    doc.text(`€`, 250, y);
-                    let temp = totalprice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                    doc.text(`${temp}`, 300, y, { align: "right" });
-
-                    y += 30;
-                    doc.text("@lang('Delivery Terms'):  {{$delivery_address->address ?? ''}},  {{$delivery_condition->cond ?? ''}}", 595 / 2, y, { align: "center" });
-
-                    y += 20;
-                    if (price_validity != '') {
-                        temp = price_validity.split('_');
-                        temp[1] = temp[1] == 1 ? 'Days' : 'Weeks';
-                        doc.text(`@lang('Price Validity'):  ${temp[0]} ${temp[1]}`, 595 / 2, y, { align: "center" });
-                    } else {
-                        doc.text(`@lang('Price Validity'):`, 595 / 2, y, { align: "center" });
-                    }
-
-                    var currentPageNumber = doc.internal.getNumberOfPages();
-                    doc.movePage(currentPageNumber, 1);
-
-                    var totalPages = doc.internal.getNumberOfPages();
-
-                    // Define the header and footer template function
-                    var headerFooterTemplate = function(pageNumber, pageCount) {
-                        // Footer
-                        doc.setFontSize(10);
-                        doc.text(pageNumber + " / " + pageCount, doc.internal.pageSize.width / 2 - 10, doc.internal.pageSize.height - 10, { align: "right" });
-                    };
-
-                    // Apply the header and footer template function to each page
-                    for (var i = 1; i <= totalPages; i++) {
-                        doc.setPage(i);
-                        var pageInfo = doc.internal.getCurrentPageInfo();
-                        
-                        // Add the footer text to each page
-                        headerFooterTemplate(pageInfo.pageNumber, totalPages);
-                    }
+                    doc = generatePDF_2();
 
                     var filename = 'REPORT_' + (new Date()).getTime() + '.pdf';
                     savedDoc = {
@@ -2660,26 +2178,40 @@
                     formData.append('reference', $('#project_reference').val());
                     formData.append('pdf', doc.output('blob'), filename);                
 
-                     formData.append('units', JSON.stringify(pdf_units));
-                       formData.append('unit_name',$('#unit_name').val());
-                       formData.append('layout',$('#p_layout').val());
-                       formData.append('indoor',$("input[name='indoor']:checked").val());
-                       formData.append('ex1',$('input[name=ex]:checked').val().split('|')[1]);
-                       formData.append('ex2',$('input[name=ex]:checked').val().split('|')[0]);
-                       formData.append('airflow',$('#p_airflow').val());
-                       formData.append('pressure',$('#p_pressure').val());
-                       formData.append('Tfin',$('#p_w_Trin').val());
-                       formData.append('Trin',$('#p_w_Hrin').val());
-                       formData.append('Hfin',$('#p_w_Tfin').val());
-                       formData.append('Hrin',$('#p_w_Hfin').val());
-                       //formData.append('modelId',$('#modelid').val());
-                    //    formData.append('priceId',$('#p_w_Hfin').val());
-                      
+                    formData.append('units', JSON.stringify(pdf_units));
+                    formData.append('unit_name',$('#unit_name').val());
+                    formData.append('layout',$('#p_layout').val());
+                    formData.append('indoor',$("input[name='indoor']:checked").val());
+                    formData.append('ex1',$('input[name=ex]:checked').val().split('|')[1]);
+                    formData.append('ex2',$('input[name=ex]:checked').val().split('|')[0]);
+                    formData.append('airflow',$('#p_airflow').val());
+                    formData.append('pressure',$('#p_pressure').val());
+                    formData.append('Tfin',$('#p_w_Trin').val());
+                    formData.append('Trin',$('#p_w_Hrin').val());
+                    formData.append('Hfin',$('#p_w_Tfin').val());
+                    formData.append('Hrin',$('#p_w_Hfin').val());
+                    formData.append('modelId',model_id);
+
+                    $(document).find('input.price-value').map((index, ele) => {
+                        if($(ele).prop('checked')) {
+                            formData.append('priceId',$(ele).val());
+                        }
+                    })
+
+                    var accessories = [];
+
+                    $(document).find('input.accessories').map((index, ele) => {
+                        if($(ele).prop('checked')) {
+                            accessories.push($(ele).val());
+                        }
+                    })
+
+                    formData.append('accessories',accessories.join(','));    
                        
                     showSwalLoading(); 
                     $.ajax({
                         type: 'POST',
-                        url: '{{route('admin.projects.store.project')}}',
+                        url: `{{route('admin.projects.store.project')}}`,
                         data: formData,
                         headers: {'x-csrf-token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')},
                         processData: false,
@@ -2687,7 +2219,10 @@
                         success: function(data) {
                             swal.close();
                             console.log('File uploaded successfully.');
+                            
+                            // location.href = `{{route('admin.projects')}}`;
                             $('.btn-report').show();
+
                         },
                         error: function(xhr, status, error) {
                             swal.close();
@@ -2697,7 +2232,7 @@
                 }
 
                 $('.chart-tab-content .tab-pane.chart-tab-active').removeClass('chart-tab-active');
-            }, final ? 100 : 2000);
+            // }, final ? 100 : 2000);
         }
 
         function getCenteredTextPos(pdf, x, w, text) {
@@ -2756,7 +2291,44 @@
             onViewUnit(temp_unit_name);
         });
 
+        function onSaveNewUnit() {
+
+            
+            console.log('show delivery time modal')
+            $('#staticBackdrop').modal('show');
+            $('#staticBackdrop .modal-content-add-unit').hide();
+            $('#staticBackdrop .modal-content-save-delivery-time').show();
+                $('.units-delivery-time-table tbody').html('');
+
+                var unit_name = $('input#unit_name').val();
+
+                    $('.units-delivery-time-table tbody').append(`
+                        <tr data-name="${unit_name}">
+                            <td>${unit_name}</td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <input type="number" class="form-control delivery-time" value="1" min="1" max="320" maxlength="3">
+                                    </div>
+                                    <div class="col-md-9">
+                                        <select class="form-control delivery-time-type">
+                                            <option value="0" selected disabled>Please select Time Type</option>
+                                            <option value="1">Days</option>
+                                            <option value="2">Weeks</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
+
+                return;
+        }
+
         function onSaveDeliveryTime() {
+
+           
+
             var temp_units_array = $('.units-delivery-time-table tbody tr');
             for (row of temp_units_array) {
                 let temp_unit_name = $(row).attr('data-name');
@@ -2780,7 +2352,7 @@
             }
             $('#staticBackdrop').modal('hide');
             //$('.unitfeatures tbody tr').addClass('selected');
-            display_compatible_models(null);
+            // display_compatible_models(null);
             onSaveOffer();
         }
         function onNextDeliveryTime() {
@@ -2808,16 +2380,17 @@
             $('#staticBackdrop').modal('hide');
             //$('.unitfeatures tbody tr').addClass('selected');
             display_compatible_models(null);
-            onSaveOffer();
+            // onSaveOffer();
         }
 
         function onNewUnit() {
             $('.btn-first-unit-next').hide();
-            $('#unitform').show();
+            // $('#unitform').show();
             isNew = true;
             isView = false;
             $('#tab_unit_selection').removeClass('disabled');
-            $('#tab_results_table').addClass('disabled');
+            // $('#tab_results_table').addClass('disabled');
+            $('#tab_results_table').removeClass('disabled');
             document.querySelector('.nav-link[href="#tab1"]').click();
             document.querySelector('#tab1').scrollTop = 0;
             $('.btn-unit-save').hide();
@@ -2867,7 +2440,8 @@
                 if(id == model_id) {
                     selected_model = model;
                     loadFromModel(id, reg, model);
-                    initPriceTable(id, temp_unit.priceId);
+                    loadAccessoriesFromModel(id, reg, model);
+                    // initPriceTable(id, temp_unit.priceId);
                 }
             });
         }else{
@@ -3102,6 +2676,8 @@
                 if(id == model_id) {
                     selected_model = model;
                     loadFromModel(id, reg, model, 0, false);
+                    loadAccessoriesFromModel(id, reg, model);
+                    /*
                     initPriceTable(id, temp_unit.priceId, function () {
                         var temp_price = $('input[name="price"]:checked').parents('tr').children('td');
                         if (temp_price.length != 0) {
@@ -3120,6 +2696,7 @@
                             $('.btn-offer-save').hide();
                         }
                     });
+                    */
                 }
             }, false);
             
@@ -3197,12 +2774,12 @@
                 var projectName = $(this).val().trim();
         
                 if (projectName == "") {
-                    $('.nextbtn2').show();
+                    // $('.nextbtn2').show();
                     $('.nextbtn1').hide();
                 } 
                 else {
                     $('.nextbtn1').show();
-                    $('.nextbtn2').hide();
+                    // $('.nextbtn2').hide();
                 } 
            });
 

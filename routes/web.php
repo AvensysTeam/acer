@@ -190,6 +190,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::get('projects/detail/{pid?}/{cid?}/{uid?}', 'ProjectsController@detail')->name('projects.detail');
     Route::get('projects/get/models', 'ProjectsController@get_models')->name('projects.get.models');
     Route::get('projects/get/completedata', 'ProjectsController@get_completedata')->name('projects.get.completedata');
+    Route::get('projects/get/getaccessories', 'ProjectsController@get_accessories')->name('projects.get.getaccessories');
     Route::get('projects/get/contactlist', 'ProjectsController@get_contact_list')->name('projects.get.contactlist');
     //Route::get('projects/get/contactlist/{id?}', 'ProjectsController@contactlist')->name('projects.get.contactlist');
     Route::get('projects/get/modelprice', 'ProjectsController@get_model_price')->name('projects.get.modelprice');

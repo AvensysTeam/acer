@@ -12,6 +12,7 @@ use App\Settings;
 use App\JobPosition;
 use App\Price;
 use App\Unit;
+use App\Accessories;
 use App\User;
 use App\DeliveryAddress;
 use App\DeliveryCondition;
@@ -189,6 +190,23 @@ class ProjectsController extends Controller
         return response()->json(['result' => json_decode($response)]);
     }
 
+    public function get_accessories(Request $request)
+    {
+        $server_url = "https://www.avensys-srl.com/";
+        $url = $server_url.'api/accessories.php';
+        $data = $request->all();//https://www.avensys-srl.com/api/accessories.php?idmodel=96
+
+        $ch = curl_init($url . '?' . http_build_query($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+        
+        curl_close($ch);      
+        
+        return response()->json(['result' => json_decode($response)]);
+    }
+
     public function get_contact_list(Request $request) 
     {
         $id = $request->id;
@@ -248,7 +266,7 @@ class ProjectsController extends Controller
     }
 
     public function save_project(Request $request) {
-         //dd($request->all());
+        //  dd($request->all());
         $p_id = $request->id;
     
         $project = null;
@@ -351,6 +369,25 @@ class ProjectsController extends Controller
         // Save the updated $unit object
         $unit->save();
 
+
+         
+        $accessorie = Accessories::select('id')->Where('project_id',$p_id)->first();
+        
+        if ($p_id > 0 || $accessorie === null) {
+            if ($accessorie !== null) {
+                $accessorie = Accessories::findOrFail($accessorie->id);
+            } else {
+                $accessorie = new Accessories();
+            }
+        }
+
+        $accessorie->accessories = $request->accessories;
+        $accessorie->project_id = $pid;
+       
+        // Save the updated $unit object
+        $accessorie->save();
+
+        echo 'success';
     }
 
     public function delete_project(Request $req) {
@@ -519,7 +556,7 @@ class ProjectsController extends Controller
 
     private function get_project_dir_path() {
         if(!file_exists(public_path('uploads/project')) || !is_dir(public_path('uploads/project'))) {
-            mkdir(public_path('uploads/project'));
+            mkdir(public_path('uploads/project'),0777,true);
         }
 
         return public_path('uploads/project');

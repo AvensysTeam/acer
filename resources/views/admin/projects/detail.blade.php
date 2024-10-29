@@ -313,13 +313,13 @@
                                                     <div class="col-lg-12 col-xl-6">
                                                         <h6>@lang("Supply")</h6>
                                                         <div class="row">
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-6 text-left">
                                                                 <label for="p_airflow" class="text-xs">@lang('Airflow rate')(m3/h)</label>
                                                                 <div class="form-group">
                                                                     <input type="text" id="p_airflow" name="p_airflow" class="form-control" value="200" style="width: 69px;">
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-6 text-left">
                                                                 <label for="p_pressure" class="text-xs">@lang('Airflow pressure')(Pa)</label>
                                                                 <div class="form-group">
                                                                     <input type="text" id="p_pressure" name="p_pressure" class="form-control" value="50" style="width: 69px;">
@@ -330,18 +330,32 @@
                                                     <div class="col-lg-12 col-xl-6">
                                                         <h6>@lang("Return")</h6>
                                                         <div class="row">
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-6 text-left">
                                                                 <label for="p_r_airflow" class="text-xs">@lang('Airflow rate')(m3/h)</label>
                                                                 <div class="form-group">
                                                                     <input type="text" id="p_r_airflow" name="p_r_airflow" class="form-control" value="200" style="width: 69px;">
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-6 text-left">
                                                                 <label for="p_r_pressure" class="text-xs">@lang('Airflow pressure')(Pa)</label>
                                                                 <div class="form-group">
                                                                     <input type="text" id="p_r_pressure" name="p_r_pressure" class="form-control" value="50" style="width: 69px;">
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 text-left">
+                                                        <label for="p_sfp" class="text-xs">@lang('PERFORMANCE CONSTRAIN') (SFP(J/m3))</label>
+                                                        <div class="form-group">
+                                                            <input type="text" id="p_sfp" name="p_sfp" class="form-control" value="1000" style="width: 69px;">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 text-left">
+                                                        <label for="m_rfl" class="text-xs">@lang('Max Regulation Fan Level')([%])</label>
+                                                        <div class="form-group">
+                                                            <input type="text" id="m_rfl" name="m_rfl" class="form-control" value="85" style="width: 69px;">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -549,7 +563,10 @@
                         </div>
                         <div class="w-full mt-3">
                             <div class="tabs tabs-primary graph-tabs hidden">
-                                <ul class="nav nav-tabs" role="tablist">
+                                <ul class="nav nav-tabs" role="tablist">                                    
+                                    <li class="nav-item" role="presentation">               
+                                        <a class="nav-link" href="#tab8" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('TECHNICAL INFORMATION')</a>
+                                    </li>
                                     <li class="nav-item" role="presentation">               
                                         <a class="nav-link active" href="#tab3" data-bs-toggle="tab" aria-selected="true" role="tab">
                                             @lang('PRESSURE CURVE')</a>
@@ -567,9 +584,6 @@
                                         <a class="nav-link" href="#tab7" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">@lang('NOISE LEVEL')</a>
                                     </li>
                                     <li class="nav-item" role="presentation">               
-                                        <a class="nav-link" href="#tab8" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('TECHNICAL INFORMATION')</a>
-                                    </li>
-                                    <li class="nav-item" role="presentation">               
                                         <a class="nav-link" href="#tab9" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('ACCESSORIES')</a>
                                     </li>
                                     <li class="nav-item" role="presentation">               
@@ -577,7 +591,9 @@
                                     </li>
                                 </ul>
                                 <div class="tab-content chart-tab-content">
-                                    <div id="tab3" class="tab-pane active pt-3" role="tabpanel">
+                                    <div id="tab8" class="tab-pane active p-3" role="tabpanel">
+                                    </div>
+                                    <div id="tab3" class="tab-pane pt-3" role="tabpanel">
                                         <div class="w-fill px-3 graph-container">
                                             <div class="row">
                                                 <div class="col-md-4">
@@ -647,8 +663,6 @@
                                         </div>
                                     </div>
                                     <div id="tab7" class="tab-pane pt-3" role="tabpanel">
-                                    </div>
-                                    <div id="tab8" class="tab-pane p-3" role="tabpanel">
                                     </div>
                                     <div id="tab9" class="tab-pane p-3" role="tabpanel">
                                         <div class="w-full" id="accessoriestable">
@@ -924,6 +938,26 @@
             }
             params.pressure = parseFloat(pressure);
 
+            /** new fields; constrain and regular fan level */
+
+            p_sfp = $.trim($('#p_sfp').val());
+            if(p_sfp === '' || isNaN(parseFloat(p_sfp)) ||  parseFloat(p_sfp) <= 0) {
+                alert("@lang('Performance Contrain must be greater than 0')");
+                $('#p_sfp').focus();
+                return false;
+            }
+            params.p_sfp = parseFloat(p_sfp);
+
+            m_rfl = $.trim($('#m_rfl').val());
+            if(m_rfl === '' || isNaN(parseFloat(m_rfl)) ||  parseFloat(m_rfl) <= 0) {
+                alert("@lang('Max regulation fan level must be greater than 0')");
+                $('#m_rfl').focus();
+                return false;
+            }
+            params.m_rfl = parseFloat(m_rfl);
+
+            /** */
+
             w_Trin = $.trim($('#p_w_Trin').val());
             if(w_Trin === '' || isNaN(parseFloat(w_Trin)) ||  parseFloat(w_Trin) < -20 ||  parseFloat(w_Trin) > 40) {
                 alert("@lang('Exhaust Air temperature(°C) must be greater than or equal to -20 and less than or equal to 40')");
@@ -1033,11 +1067,8 @@
                             <th>@lang("Airflow")<br/>[m³/h]</th>\
                             <th>@lang("Pressure")<br/>[Pa]</th>\
                             <th>@lang("Power")<br/>[W]</th>\
-                            <th>@lang("Unit-SEL")<br/>[kW/m³/h]</th>\
                             <th>@lang("Efficiency")<br/>[%]</th>\
                             <th>@lang("Noise Power")<br/>[dB(A)]</th>\
-                            <th>@lang("Noise Pressure") (@3m distance)<br/>[dB(A)]</th>\
-                            <th>@lang("Reg. level")<br/>[%]</th>\
                         </tr>\
                     </thead>\
                     <tbody>\                                  
@@ -1051,11 +1082,8 @@
                 $row.append('<td>' + data[model]["Airflow"] + '</td>');
                 $row.append('<td>' + data[model]["Pressure"] + '</td>');
                 $row.append('<td>' + data[model]["Power"] + '</td>');
-                $row.append('<td>' + data[model]["Unit-SEL"] + '</td>');
                 $row.append('<td>' + data[model]["Efficiency"] + '</td>');
                 $row.append('<td>' + data[model]["Lw"] + '</td>');
-                $row.append('<td>' + data[model]["Lp30"] + '</td>');
-                $row.append('<td>' + data[model]["Reg"] + '</td>');
                 $dt.find('tbody').append($row);
 
                 if(callback !== undefined && callback !== null) {
@@ -1213,7 +1241,7 @@
                 showSwalLoading();
             $.ajax({
                 method: 'GET',
-                url: '{{route('admin.projects.get.completedata')}}',
+                url: '{{route("admin.projects.get.completedata")}}',
                 data: {
                     id: id,
                     reg: reg,
@@ -1224,27 +1252,41 @@
                     Tfin: w_Tfin,
                     Hfin: w_Hfin
                 }
-            }).done(function (res) { 
-                var result = res.result;
-                powerconsumption = result[model].Power;
-                regulation = result[model].Reg;
-                unitsel = result[model].Unit_SEL;
-                psfp = result[model].PSFP;
-                drawGraph(result[model]);
-                
-                $('.dataTable tr.selected').removeClass('selected');
-                if(!$('.dataTable tr td[data-id=' + model_id + ']').closest('tr').hasClass('selected'))
-                    $('.dataTable tr td[data-id=' + model_id + ']').closest('tr').addClass('selected');
-                if('{{$option}}' === 'readonly') {
-                    $('a.btn-display-models').hide();
+            }).done(function (res) {
+                if(res.result) {
+                    var result = res.result;
+                    powerconsumption = result[model].Power;
+                    regulation = result[model].Reg;
+                    unitsel = result[model].Unit_SEL;
+                    psfp = result[model].PSFP;
+                    drawGraph(result[model]);
+                    
+                    $('.dataTable tr.selected').removeClass('selected');
+                    if(!$('.dataTable tr td[data-id=' + model_id + ']').closest('tr').hasClass('selected'))
+                        $('.dataTable tr td[data-id=' + model_id + ']').closest('tr').addClass('selected');
+                    if('{{$option}}' === 'readonly') {
+                        $('a.btn-display-models').hide();
+                    }
+                    dTable.draw(false);
+                    if (!isView) {
+                        isView = true;
+                        $('.btn-unit-save').show();
+                    }
+                    if (showLoading)
+                        swal.close();
+                } else {
+                    if (showLoading)
+                        swal.close();
+                    Swal.fire({
+                        title: 'There is no complete data',
+                        icon: "error",
+                        text: "It seems there are some errors in the server-side.",                
+                        allowOutsideClick: true,
+                        showConfirmButton:false,
+                        showCancelButton:false,
+                        allowEscapeKey: false,
+                    })
                 }
-                dTable.draw(false);
-                if (!isView) {
-                    isView = true;
-                    $('.btn-unit-save').show();
-                }
-                if (showLoading)
-                    swal.close();
             });
             $('#unitform').show();
             $('.btn-preview').show();
@@ -1279,28 +1321,30 @@
                         var dt = $('#accessoriestable tbody');
                         dt.empty();
                         var accessories = result.accessories;
-                        var i = 0;
-                        for (row of accessories) {
-                            console.log(row);
-                            var temprow = $('<tr></tr>');                           
-                            temprow.append(`<td class="text-center">
-                                <input class="form-checkbox accessories control-regulation" type="checkbox" name="control_regulation" value="${row.abr}"></td>`);
-                            temprow.append('<td>' + row.abbreviation + '</td>');
-                            temprow.append('<td>' + row.description + '</td>');
-                            if(row.multiple) {
-                                var dropdown = `<select name="accessories_${row.abbreviation}">`;
-                                for (option of row.options) {
-                                    dropdown += `<option value="${option}">${option}</option>`;
+                        if (accessories) {
+                            var i = 0;
+                            for (row of accessories) {
+                                console.log(row);
+                                var temprow = $('<tr></tr>');                           
+                                temprow.append(`<td class="text-center">
+                                    <input class="form-checkbox accessories control-regulation" type="checkbox" name="control_regulation" value="${row.abr}"></td>`);
+                                temprow.append('<td>' + row.abbreviation + '</td>');
+                                temprow.append('<td>' + row.description + '</td>');
+                                if(row.multiple) {
+                                    var dropdown = `<select name="accessories_${row.abbreviation}">`;
+                                    for (option of row.options) {
+                                        dropdown += `<option value="${option}">${option}</option>`;
+                                    }
+                                    dropdown += `</select>`;
+                                    temprow.append(`<td>${dropdown}</td>`);
+                                } else {
+                                    temprow.append('<td>@lang("Single")</td>');
                                 }
-                                dropdown += `</select>`;
-                                temprow.append(`<td>${dropdown}</td>`);
-                            } else {
-                                temprow.append('<td>@lang("Single")</td>');
+
+                                dt.append(temprow);
                             }
 
-                            dt.append(temprow);
                         }
-
                         
                         @if($project != null)
                         // if ($(`input[name="price"][value="${price_id}"]`).length != 0){
@@ -1648,6 +1692,9 @@
         }
 
         function generatePDF() {
+
+            if (!renderImgData) return;
+            
             const project_name = $('#project_name').val().trim();
             const project_desc = $('#project_desc').val().trim();
             const project_refer = $('#project_reference').val().trim();

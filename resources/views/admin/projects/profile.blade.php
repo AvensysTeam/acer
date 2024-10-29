@@ -472,6 +472,15 @@ const validMsg = document.querySelector("#valid-msg");
 
 // initialise plugin
 const iti = window.intlTelInput(input, {
+    initialCountry: "auto",
+    geoIpLookup: function(callback) {
+        fetch("https://ipapi.co/json")
+            .then(function(res) { return res.json(); })
+            .then(function(data) { callback(data.country_code); })
+            .catch(function() { callback("us"); });
+    },
+    onlyCountries: ["AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE"
+                    ,"GR","HU","IE","IT","LV","LT","LU","MT","NL","NO","PL","PT","RO","SK","SI","ES","SE","CH","GB"],
 	utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
 });
 
@@ -652,7 +661,14 @@ input.addEventListener('keyup', reset);
                     // table1.row({selected:true}).data(data).draw(false);
                     location.reload();
                 } else {
-                    var new_tr = $('<tr data-id="' + res.result.id + '">' + data.map((item) => '<td>' + item + '</td>').join("") + '<tr>');
+                    var innerTr = data.map((item, index) => {
+                        if (index == data.length - 1) {
+                            return '<td class="nowrap act_btn">' + item + '</td>';
+                        } else {
+                            return '<td class="nowrap">' + item + '</td>';
+                        }
+                    }).join("");
+                    var new_tr = $('<tr data-id="' + res.result.id + '">' + innerTr + '<tr>');
                     table1.row.add(new_tr).draw(false);
                     
                 }

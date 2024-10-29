@@ -186,8 +186,23 @@ class ProjectsController extends Controller
         $response = curl_exec($ch);
         
         curl_close($ch);
+
+        $url2 = $server_url.'api/accessories.php';
+
+        $ch = curl_init($url2 . '?' . http_build_query(['idmodel' => $request->id]));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response2 = curl_exec($ch);
         
-        return response()->json(['result' => json_decode($response)]);
+        curl_close($ch);
+
+        $result = [
+            'completedata' => json_decode($response),
+            'accessories' => json_decode($response2)
+        ];
+        
+        return response()->json(['result' => $result]);
     }
 
     public function get_accessories(Request $request)

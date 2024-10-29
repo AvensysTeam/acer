@@ -563,13 +563,12 @@
                         </div>
                         <div class="w-full mt-3">
                             <div class="tabs tabs-primary graph-tabs hidden">
-                                <ul class="nav nav-tabs" role="tablist">                                    
-                                    <li class="nav-item" role="presentation">               
-                                        <a class="nav-link" href="#tab8" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('TECHNICAL INFORMATION')</a>
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link active" href="#tab8" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('TECHNICAL INFORMATION')</a>
                                     </li>
                                     <li class="nav-item" role="presentation">               
-                                        <a class="nav-link active" href="#tab3" data-bs-toggle="tab" aria-selected="true" role="tab">
-                                            @lang('PRESSURE CURVE')</a>
+                                        <a class="nav-link" href="#tab3" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('PRESSURE CURVE')</a>
                                     </li>
                                     <li class="nav-item" role="presentation">               
                                         <a class="nav-link" href="#tab4" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">@lang('POWER CONSUMPTION CURVE')</a>
@@ -1047,17 +1046,6 @@
 
         }
 
-
-        function clickandshow(){
-            var model = $(this).find('td:first-child').text();
-            selected_model = model;
-            var id = $(this).find('td:first-child').data('id');
-            var reg = $(this).find('td:last-child').text();
-            loadFromModel(id, reg, model);
-            loadAccessoriesFromModel(id, reg, model);
-            // initPriceTable(id);
-        }
-
         function initTable(data, callback) {
             $('.models-tbl-container').empty();
             var $dt = $(`<table class="display compact project-table datatable-t1">\
@@ -1078,7 +1066,7 @@
             for(var i=0;i<Object.keys(data).length;i++) {
                 var $row = $('<tr class="uname" id=row_'+i+' onclick="select_row(' + i + ');"></tr>');
                 var model = Object.keys(data)[i];
-                $row.append('<td data-id="' + data[model]["id"] +'">' + model + '</td>');
+                $row.append(`<td data-id="${data[model]["id"]}" data-reg="${data[model]["Reg"]}">${model}</td>`);
                 $row.append('<td>' + data[model]["Airflow"] + '</td>');
                 $row.append('<td>' + data[model]["Pressure"] + '</td>');
                 $row.append('<td>' + data[model]["Power"] + '</td>');
@@ -1089,8 +1077,8 @@
                 if(callback !== undefined && callback !== null) {
                     callback(data[model]["id"], model, data[model]["Reg"]);
                 }
-                document.querySelector('.nav-link[href="#tab3"]').click();
-                $('.tabs.graph-tabs').addClass("hidden");
+                // document.querySelector('.nav-link[href="#tab3"]').click();
+                // $('.tabs.graph-tabs').addClass("hidden");
             }
 
             dTable = $('.models-tbl-container').find('table').DataTable({
@@ -1109,9 +1097,10 @@
                             var model = $(this).find('td:first-child').text();
                             selected_model = model;
                             var id = $(this).find('td:first-child').data('id');
-                            var reg = $(this).find('td:last-child').text();
+                            var reg = $(this).find('td:first-child').data('reg');
+                            // var reg = $(this).find('td:last-child').text();
+                            /** call complete data when the row is clicked */
                             loadFromModel(id, reg, model);
-                            loadAccessoriesFromModel(id, reg, model);
                             // initPriceTable(id);
                         });
                     }                    
@@ -1119,44 +1108,40 @@
             });
             var pid = '{{$pid}}';
             if(pid > 0) {
-              var defaultRowIndex = 1;
-               dTable.row(defaultRowIndex).select();
-              var id_default = $('.selected td:first-child').data('id');
-              var selectedRows = dTable.rows({ selected: true }).data();
-              for(var i=0; i<selectedRows.length;i++){
-                  var modelid_default = selectedRows[i][0];
-                  var reg_default = selectedRows[i][8];
-                  loadFromModel(id_default, reg_default, modelid_default);
-                  loadAccessoriesFromModel(id_default, reg_default, modelid_default);
-                //   initPriceTable(id_default);
-              }
-        }
+                var defaultRowIndex = 1;
+                dTable.row(defaultRowIndex).select();
+                var id_default = $('.selected td:first-child').data('id');
+                var selectedRows = dTable.rows({ selected: true }).data();
+                for(var i=0; i<selectedRows.length;i++){
+                    var modelid_default = selectedRows[i][0];
+                    var reg_default = selectedRows[i][8];
+                    loadFromModel(id_default, reg_default, modelid_default);
+                    //   initPriceTable(id_default);
+                }
+            }
             
         }
 
-
-
-
-
-
         function select_row(id) {
-        // Get the total number of rows in the table
+            // Get the total number of rows in the table
             var total_rows = $("#DataTables_Table_0 tr").length;
-            // Iterate through each row
-            for (var i = 0; i < total_rows; i++) {
-                // Check if the current row does not have the specified id
-                if (i !== id) {
-                    // Hide the row
-                    $('#DataTables_Table_0 tbody tr#row_' + i).hide();
-                }
-            }
-            $("#preview_a_tag").removeClass('d-none');
-    }
+            
+            console.log('row selected', id, total_rows)
+            // // Iterate through each row
+            // for (var i = 0; i < total_rows; i++) {
+            //     // Check if the current row does not have the specified id
+            //     if (i !== id) {
+            //         // Hide the row
+            //         $('#DataTables_Table_0 tbody tr#row_' + i).hide();
+            //     }
+            // }
+            // $("#preview_a_tag").removeClass('d-none');
+        }
 
    
-    $(document).on('click', '.accessories', function(){
-        initPriceTable(model_id)
-    })
+        $(document).on('click', '.accessories', function(){
+            initPriceTable(model_id)
+        })
 
         function initPriceTable(id, price_id = 0, callback) {
             if (id == null){
@@ -1254,12 +1239,15 @@
                 }
             }).done(function (res) {
                 if(res.result) {
-                    var result = res.result;
+                    var result = res.result.completedata;
                     powerconsumption = result[model].Power;
                     regulation = result[model].Reg;
                     unitsel = result[model].Unit_SEL;
                     psfp = result[model].PSFP;
+
                     drawGraph(result[model]);
+
+                    showaccessories(res.result.accessories)
                     
                     $('.dataTable tr.selected').removeClass('selected');
                     if(!$('.dataTable tr td[data-id=' + model_id + ']').closest('tr').hasClass('selected'))
@@ -1274,6 +1262,10 @@
                     }
                     if (showLoading)
                         swal.close();
+                    
+                    $('#unitform').show();
+                    $("#preview_a_tag").removeClass('d-none');
+                    $('.btn-preview').show();
                 } else {
                     if (showLoading)
                         swal.close();
@@ -1282,87 +1274,62 @@
                         icon: "error",
                         text: "It seems there are some errors in the server-side.",                
                         allowOutsideClick: true,
+                        backdrop:true,
                         showConfirmButton:false,
                         showCancelButton:false,
                         allowEscapeKey: false,
                     })
                 }
             });
-            $('#unitform').show();
-            $('.btn-preview').show();
         }
-        function loadAccessoriesFromModel(id, reg, model, showLoading = true) {
-            model_id = id;
-            if (showLoading)
-                showSwalLoading();
-            $.ajax({
-                method: 'GET',
-                url: `{{route('admin.projects.get.getaccessories')}}`,
-                data: {
-                    idmodel: id
-                }
-            }).done(function (res) { 
-                var result = res.result;
+
+        function showaccessories(result) {
                 $('#accessoriestable').html("<table class='table display compact datatable-t1'>\
-                            <thead>\
-                                <tr>\
-                                    <th></th>\
-                                    <th>@lang('ABR')</th>\
-                                    <th>@lang('Description')</th>\
-                                    <th>@lang('Multiple')</th>\
-                                </tr>\
-                            </thead>\
-                            <tbody>\
-                            </tbody>\
-                        </table>");
-                    if (result.length == 0){
-                        $('#accessoriestable tbody').empty().append('<tr><td colspan="4"><p class="text-center">@lang("NO Data")</p></td></tr>');
-                    } else {
-                        var dt = $('#accessoriestable tbody');
-                        dt.empty();
-                        var accessories = result.accessories;
-                        if (accessories) {
-                            var i = 0;
-                            for (row of accessories) {
-                                console.log(row);
-                                var temprow = $('<tr></tr>');                           
-                                temprow.append(`<td class="text-center">
-                                    <input class="form-checkbox accessories control-regulation" type="checkbox" name="control_regulation" value="${row.abr}"></td>`);
-                                temprow.append('<td>' + row.abbreviation + '</td>');
-                                temprow.append('<td>' + row.description + '</td>');
-                                if(row.multiple) {
-                                    var dropdown = `<select name="accessories_${row.abbreviation}">`;
-                                    for (option of row.options) {
-                                        dropdown += `<option value="${option}">${option}</option>`;
-                                    }
-                                    dropdown += `</select>`;
-                                    temprow.append(`<td>${dropdown}</td>`);
-                                } else {
-                                    temprow.append('<td>@lang("Single")</td>');
-                                }
-
-                                dt.append(temprow);
-                            }
-
-                        }
-                        
-                        @if($project != null)
-                        // if ($(`input[name="price"][value="${price_id}"]`).length != 0){
-                        //     $(`input[name="price"][value="${price_id}"]`)[0].setAttribute("checked", true);
+                    <thead>\
+                        <tr>\
+                            <th></th>\
+                            <th>@lang('ABR')</th>\
+                            <th>@lang('Description')</th>\
+                            <th>@lang('Calculable')</th>\
+                        </tr>\
+                    </thead>\
+                    <tbody>\
+                    </tbody>\
+                </table>");
+            if (result.data.length == 0){
+                $('#accessoriestable tbody').empty().append('<tr><td colspan="4"><p class="text-center">@lang("NO Data")</p></td></tr>');
+            } else {
+                var dt = $('#accessoriestable tbody');
+                dt.empty();
+                var accessories = result.data;
+                if (accessories) {
+                    var i = 0;
+                    for (row of accessories) {
+                        var temprow = $('<tr></tr>');                           
+                        temprow.append(`<td class="text-center">
+                            <input class="form-checkbox accessories control-regulation" type="checkbox" name="control_regulation" value="${row.id}"></td>`);
+                        temprow.append('<td class="text-uppercase">' + row.abbr + '</td>');
+                        temprow.append('<td>' + row.description + '</td>');
+                        temprow.append('<td>' + row.calculable + '</td>');
+                        // if(row.multiple) {
+                        //     var dropdown = `<select name="accessories_${row.abbreviation}">`;
+                        //     for (option of row.options) {
+                        //         dropdown += `<option value="${option}">${option}</option>`;
+                        //     }
+                        //     dropdown += `</select>`;
+                        //     temprow.append(`<td>${dropdown}</td>`);
+                        // } else {
+                        //     temprow.append('<td></td>');
                         // }
-                        // else {
-                        //     $('input[name="price"]')[0].setAttribute("checked", true);
-                        // }
-                        @else
-                            // $('input[name="price"]')[0].setAttribute("checked", true);
-                        @endif
+
+                        dt.append(temprow);
                     }
 
-                if (showLoading)
-                    swal.close();
-            });
-            $('.btn-preview').show();
+                }
+            }
         }
+
+        
 
         function mergeArr(x_arr, y_arr) {
             if(Object.keys(x_arr).length != Object.keys(y_arr).length)
@@ -1381,6 +1348,9 @@
 			var power_graph_data = [mergeArr(data.Max_Airflows, data.Max_Powers),mergeArr(data.Regulate_Airflows, data.Regulate_Powers), mergeArr([data.Airflow], [data.Power])];
             var psfp_graph_data = [mergeArr(data.Max_PSFP_af, data.Max_PSFP),mergeArr(data.Regulate_PSFP_af, data.Regulate_PSFP), mergeArr([data.Airflow], [data.Unit_SEL])];
             var efficiency_graph_data = [mergeArr(data.Max_Airflows, data.ThermodynamicData.Efficiencies),  mergeArr([data.Airflow], [data.ThermodynamicData.efficiency])];
+            
+            // Show Technical Informations
+            showTechInfo(data.ThermodynamicData);
 
             document.getElementById('render').src = APP_URL + '/uploads/price/' + data.IND_VarHor_Ceiling_Img;
             renderImgData = null;
@@ -1428,8 +1398,6 @@
             initNoiseGraph('g_noise5', data.Soundtable.Exhaust, "@lang('Exhaust in-duct noise level')", "@lang('Sound Level') [dB(A)] EN ISO 5136", "rgba(87,162,252,0.8)");
            
 
-            // Show Technical Informations
-            showTechInfo(data.ThermodynamicData);
         }        
 
         function initGraph(obj_id, data, xLabel, yLabel) {
@@ -1694,7 +1662,7 @@
         function generatePDF() {
 
             if (!renderImgData) return;
-            
+
             const project_name = $('#project_name').val().trim();
             const project_desc = $('#project_desc').val().trim();
             const project_refer = $('#project_reference').val().trim();
@@ -2267,8 +2235,7 @@
                             swal.close();
                             console.log('File uploaded successfully.');
                             
-                            // location.href = `{{route('admin.projects')}}`;
-                            $('.btn-report').show();
+                            location.href = `{{route('admin.projects')}}`;
 
                         },
                         error: function(xhr, status, error) {
@@ -2487,7 +2454,6 @@
                 if(id == model_id) {
                     selected_model = model;
                     loadFromModel(id, reg, model);
-                    loadAccessoriesFromModel(id, reg, model);
                     // initPriceTable(id, temp_unit.priceId);
                 }
             });
@@ -2681,7 +2647,6 @@
         function onSaveOffer() {
              export2PDF(true);
             $('.btn-offer-save').hide();
-            $('.btn-report').show();
         }
 
         function onAddOffer(unit_name) {
@@ -2723,7 +2688,6 @@
                 if(id == model_id) {
                     selected_model = model;
                     loadFromModel(id, reg, model, 0, false);
-                    loadAccessoriesFromModel(id, reg, model);
                     /*
                     initPriceTable(id, temp_unit.priceId, function () {
                         var temp_price = $('input[name="price"]:checked').parents('tr').children('td');
@@ -2904,7 +2868,12 @@
         
        })
        
-
+    
+        /** if the unit selection tab is clicked, unitname and preview button should be disappeared*/
+        $('#tab_unit_selection').on('click', function(){       
+            $('#unitform').hide();
+            $('.btn-preview').hide();
+        })
      
        
   

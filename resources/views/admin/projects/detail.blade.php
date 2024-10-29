@@ -248,7 +248,7 @@
                             <div class="col-lg-12 col-xl-5 box1">
                                 <div class="box border border-dark rounded px-3 mt-3">
                                     <div class="box-header">
-                                        @lang('Airflow data')
+                                        @lang('AIRFLOW data')
                                         <a href="#" class="btn btn-sm btn-secondary">
                                             <i class="fa fa-minus"></i>
                                         </a>
@@ -345,9 +345,24 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>                                 
+                                    </div>
+                                    
+                                </div>
+                                <div class="box border border-dark rounded px-3 mt-3">
+                                    <div class="box-header">
+                                        @lang('PERFORMANCE CONSTRAINT')
+                                        <a href="#" class="btn btn-sm btn-secondary">
+                                            <i class="fa fa-minus"></i>
+                                        </a>
+                                    </div>
+                                    <div class="box-body pb-4">
+                                        <div class="text-center">
+                                            <div class="mt-3">
                                                 <div class="row">
                                                     <div class="col-md-6 text-left">
-                                                        <label for="p_sfp" class="text-xs">@lang('PERFORMANCE CONSTRAIN') (SFP(J/m3))</label>
+                                                        <label for="p_sfp" class="text-xs">@lang('SFP') (J/m3)</label>
                                                         <div class="form-group">
                                                             <input type="text" id="p_sfp" name="p_sfp" class="form-control" value="1000" style="width: 69px;">
                                                         </div>

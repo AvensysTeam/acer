@@ -796,52 +796,6 @@
 
         }
 
-        function preview_pdf_model(action){
-
-            switch (action) {
-                case 'back':
-                    backToUnitSelect();
-                    break;
-                case 'addmore':
-                    
-                    break;
-                case 'complete':
-                    
-                    break;
-            
-                default:
-                    break;
-            }
-            
-            close_model();
-
-            // if(action == 'continue'){
-            //     $("#btn-continue").addClass('d-none');
-            //     $("#btn-edit").addClass('d-none');
-
-            //     $("#btn-download").removeClass('d-none');
-            //     $("#btn-sendemail").removeClass('d-none');
-
-            // }else if(action == 'download'){
-            //     download_pdf();
-            //     close_model();
-            // }else if(action == 'sendemail'){
-            //     Email_sending();
-            // }else if(action == 'edit'){
-
-            //     $("#preview_a_tag").addClass('d-none');
-            //     $("#tab_unit_selection").addClass('active');
-            //     $("#tab1").addClass('active');
-            //     $("#tab_results_table").removeClass('active');
-            //     $("#tab2").removeClass('active');
-                
-
-            //     tab1
-
-            //     close_model();
-            // }
-        }
-
     </script>
 
     <script>
@@ -1634,7 +1588,7 @@
             $('#staticBackdrop').modal('show');
         }
 
-        function preview2PDF() {
+        async function preview2PDF() {
 
 
             $("#btn-continue").removeClass('d-none');
@@ -1643,60 +1597,24 @@
             $("#btn-download").addClass('d-none');
             $("#btn-sendemail").addClass('d-none');
            
-            showSwalLoading();
-            $('.chart-tab-content .tab-pane').addClass('chart-tab-active');
-            setTimeout(() => {
-               
-                // if (project_refer === ''){
-                //     document.querySelector('.nav-link[href="#tab0"]').click();
-                //     alert("@lang('Please type Project Reference')");
-                //     $('#project_reference').focus();
-                //     return;
-                // }
+            showSwalLoading();          
                 
-                var doc1 = generatePDFforUNIT()
-                // let circleRadius = 10
-                // doc1.circle(300, nextY + circleRadius + 5, circleRadius, 'S');
-                
+            var doc1 = await generatePDFforUNIT();
 
-                // console.log(doc1);
-                
+            var filename = 'PREVIEW_REPORT_' + (new Date()).getTime() + '.pdf';
+            savedPreviewDoc = {
+                'filename': filename,
+                'doc': doc1
+            };
 
+            $('.chart-tab-content .tab-pane.chart-tab-active').removeClass('chart-tab-active');
+            swal.close();
 
+            let pdfB64String = doc1.output('dataurlstring', savedPreviewDoc.filename);
 
-                // const text = "Click here to visit Example.com";
-                // const url = "https://www.example.com";
-                // // Simulate a link appearance
-                // doc1.textWithLink(text, 10, 20, {url});
+            $("#pdf_on_iframe").attr("src",pdfB64String);
+            $('#pdf_on_iframe_model').modal('show');
 
-
-
-                var filename = 'PREVIEW_REPORT_' + (new Date()).getTime() + '.pdf';
-                savedPreviewDoc = {
-                    'filename': filename,
-                    'doc': doc1
-                };
-
-                $('.chart-tab-content .tab-pane.chart-tab-active').removeClass('chart-tab-active');
-                swal.close();
-                // Open the PDF in a new window/tab
-                let pdfB64String = doc1.output('dataurlstring', savedPreviewDoc.filename);
-                // console.log(pdfB64String);
-                $("#pdf_on_iframe").attr("src",pdfB64String);
-                $('#pdf_on_iframe_model').modal('show');
-                // aaaaaaaaaaaa
-
-
-
-
-
-                // Create a new window and set its content to the PDF data
-                // var newWindow = window.open();
-                // newWindow.document.write('<iframe width="100%" height="100%" src="' + pdfOutput + '" frameborder="0" allowfullscreen></iframe>');
-                // savedPreviewDoc.doc.save(savedPreviewDoc.filename);
-                // $('.chart-tab-content .tab-pane.chart-tab-active').removeClass('chart-tab-active');
-                // swal.close();
-            }, 100);
         }
 
         function delay(ms) {
@@ -2781,6 +2699,53 @@
             $('input[name=continue_flag]').val(0);
             onSaveNewUnit(0);
         }
+
+
+        function preview_pdf_model(action){
+
+            switch (action) {
+                case 'back':
+                    backToUnitSelect();
+                    break;
+                case 'addmore':
+                    addMoreUnit();
+                    break;
+                case 'complete':
+                    completeProcess();
+                    break;
+
+                default:
+                    break;
+            }
+
+            close_model();
+
+            // if(action == 'continue'){
+            //     $("#btn-continue").addClass('d-none');
+            //     $("#btn-edit").addClass('d-none');
+
+            //     $("#btn-download").removeClass('d-none');
+            //     $("#btn-sendemail").removeClass('d-none');
+
+            // }else if(action == 'download'){
+            //     download_pdf();
+            //     close_model();
+            // }else if(action == 'sendemail'){
+            //     Email_sending();
+            // }else if(action == 'edit'){
+
+            //     $("#preview_a_tag").addClass('d-none');
+            //     $("#tab_unit_selection").addClass('active');
+            //     $("#tab1").addClass('active');
+            //     $("#tab_results_table").removeClass('active');
+            //     $("#tab2").removeClass('active');
+                
+
+            //     tab1
+
+            //     close_model();
+            // }
+            }
 
         function onSaveNewUnit() {
             $('#staticBackdrop').modal('show');

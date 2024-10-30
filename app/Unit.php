@@ -21,6 +21,7 @@ class Unit extends Model
     protected $fillable = [
         'pid',
         'name',
+        'pdf',
         'layout',
         'indoor',
         'ex1',

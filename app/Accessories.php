@@ -20,6 +20,7 @@ class Accessories extends Model
 
     protected $fillable = [
         'project_id',
+        'unit_id',
         'accessories',
         'description'
     ];

@@ -302,7 +302,7 @@ class ProjectsController extends Controller
         }
         
         if($request->hasFile('pdf')) {
-            if($p_id > 0) {
+            if($p_id > 0 && $project->pdf) {
                 $old_file_path = $this->get_project_dir_path() . '/' . $project->pdf;
                 if (file_exists($old_file_path))
                     unlink($old_file_path);
@@ -327,6 +327,7 @@ class ProjectsController extends Controller
         $project->priceId = $request->priceId;
         $project->save();
         $pid = $project->id;
+
 
         // //Unit::where('pid', $pid)->delete();
         // $units = $request->units;
@@ -355,19 +356,28 @@ class ProjectsController extends Controller
         // }
         // //dd($request->all());
         
-        $unit = unit::select('id')->Where('pid',$p_id)->first();
+        // $unit = Unit::select('id')->Where('pid',$p_id)->first();
         
-        if ($p_id > 0 || $unit === null) {
-            if ($unit !== null) {
-                $unit = Unit::findOrFail($unit->id);
-            } else {
-                $unit = new Unit();
-            }
-        }
+        // if ($p_id > 0 || $unit === null) {
+        //     if ($unit !== null) {
+        //         $unit = Unit::findOrFail($unit->id);
+        //     } else {
+        //         $unit = new Unit();
+        //     }
+        // }
+
+        $unit = new Unit();
         
         // Update the attributes for the $unit object
         $unit->pid = $pid;
         $unit->name = $request->unit_name;
+
+        if($request->hasFile('unit_pdf')) {           
+            $filename_unit = $request->unit_pdf->getClientOriginalName();
+            $request->unit_pdf->move($this->get_project_dir_path(), $filename_unit);            
+            $unit->pdf = $filename_unit;
+        }
+
         $unit->layout = $request->layout;
         $unit->indoor = $request->indoor;
         $unit->ex1 = $request->ex1;
@@ -380,28 +390,41 @@ class ProjectsController extends Controller
         $unit->Hrin = $request->Hrin;
         $unit->modelId = $request->modelId;
         $unit->priceId = $request->priceId;
+        $unit->delivery_time = $request->unit_delivery_time;
        
         // Save the updated $unit object
         $unit->save();
 
 
          
-        $accessorie = Accessories::select('id')->Where('project_id',$p_id)->first();
+        $unit_id = $unit->id;
+
+        // $accessorie = Accessories::select('id')->Where('project_id',$p_id)->first();
         
-        if ($p_id > 0 || $accessorie === null) {
-            if ($accessorie !== null) {
-                $accessorie = Accessories::findOrFail($accessorie->id);
-            } else {
-                $accessorie = new Accessories();
-            }
-        }
+        // if ($p_id > 0 || $accessorie === null) {
+        //     if ($accessorie !== null) {
+        //         $accessorie = Accessories::findOrFail($accessorie->id);
+        //     } else {
+        //         $accessorie = new Accessories();
+        //     }
+        // }
+
+
+        $accessorie = new Accessories();
 
         $accessorie->accessories = $request->accessories;
         $accessorie->project_id = $pid;
+        $accessorie->unit_id = $unit_id;
        
         // Save the updated $unit object
         $accessorie->save();
 
+        return response()->json(['result' => [
+            'success' =>  true,
+            'project_id' => $pid,
+            'unit_id' => $unit_id,
+            'accessory_id' => $accessorie->id
+        ]]);
         echo 'success';
     }
 

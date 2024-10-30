@@ -125,17 +125,25 @@
                     <div class="col-md-8" style="display:flex;">
                     <input type="text" class="form-control" id="unit_name" name="uname" placeholder="Unit Name" value="">
                         <!-- <a class="btn  button-right" data-value="1" onclick="onSaveDeliveryTime()"  style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a> -->
-                        <a class="btn compatiblewithuname button-right" data-value="1" onclick="onSaveNewUnit()" style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a>
+                        <!-- <a class="btn compatiblewithuname button-right" data-value="1" onclick="onSaveNewUnit()" style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a> -->
                         <!-- <a class="btn compatiblewithoutuname button-right" data-value="0"onclick="onNextDeliveryTime()" style="margin-top: -4px;" ><img class="new mb-2" src="{{asset('assets/icons/caret-circle-double-right-icon-original.png')}}" width="45px" height="45px"/></a> -->
                     </div>
                 </div>
             </div>
 
             <div class="col-md-5 d-none" id="preview_a_tag" style=" text-align: end;">
+
+                <a class="btn  button-boxed btn-preview" onclick="backToUnitSelect()">
+                    <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="25px" height="25px"></span>
+                </a>
                 <a class="btn  button-boxed btn-preview" onclick="preview2PDF()">
                     <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
-                    <!-- <i class="fa fa-eye" aria-hidden="true"></i> -->
-                    <!-- <small>@lang('Preview')</small> -->
+                </a>
+                <a class="btn  button-boxed btn-preview" onclick="addMoreUnit()">
+                    <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="25px" height="25px"></span>
+                </a>
+                <a class="btn  button-boxed btn-preview" onclick="completeProcess()">
+                    <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="25px" height="25px"></span>
                 </a>
             </div>
             
@@ -730,7 +738,7 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <button type="button" class="btn btn-primary" onclick="onSaveDeliveryTime()">Save</button>
+                <button type="button" class="btn btn-primary save-delivery-time-btn" onclick="onSaveDeliveryTime()">Save</button>
                 <button type="button" class="btn btn-info btn-cancel">Cancel</button>
             </div>
         </div>
@@ -742,20 +750,19 @@
 <div class="modal" id="pdf_on_iframe_model">
     <div class="modal-dialog modal-xl " role="document">
       <div class="modal-content">
-        {{-- <div class="modal-header">
-          <h5 class="modal-title">PDF Preview </h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onchange="close_model()">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div> --}}
         <div class="modal-body" style="height: 32rem;">
             <iframe id="pdf_on_iframe" src="" height="100%" width="100%"></iframe>
         </div>
         <div class="modal-footer">
-          <button type="button" class=""        id="btn-continue" data-toggle="tooltip" data-placement="top" title="Continue"   onclick="preview_pdf_model('continue');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/check-circle-icon-original.svg')}}" width="25px" height="25px"></button>
+
+            <button type="button" class="" id="btn-back" data-toggle="tooltip" data-placement="top" title="Back"   onclick="preview_pdf_model('back');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="25px" height="25px"></button>
+            <button type="button" class="" id="btn-addmore" data-toggle="tooltip" data-placement="top" title="Add More"  onclick="preview_pdf_model('addmore');" ><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="25px" height="25px"></button>
+            <button type="button" class="" id="btn-complete" data-toggle="tooltip" data-placement="top" title="Complete"       onclick="preview_pdf_model('complete');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="25px" height="25px"></button>
+
+          <!-- <button type="button" class="" id="btn-continue" data-toggle="tooltip" data-placement="top" title="Continue"   onclick="preview_pdf_model('continue');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/check-circle-icon-original.svg')}}" width="25px" height="25px"></button>
           <button type="button" class="" id="btn-download"  data-toggle="tooltip" data-placement="top" title="Download"   onclick="preview_pdf_model('download');"><img class="new mb-2" src="{{asset('/assets/icons/download-simple-icon-original.svg')}}" width="25px" height="25px"></button>
           <button type="button" class="" id="btn-sendemail" data-toggle="tooltip" data-placement="top" title="Send Mail"  onclick="preview_pdf_model('sendemail');" ><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/share-network-icon-original.svg')}}" width="25px" height="25px"></button>
-          <button type="button" class=""        id="btn-edit"     data-toggle="tooltip" data-placement="top" title="Edit"       onclick="preview_pdf_model('edit');"><img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"></button>
+          <button type="button" class="" id="btn-edit"     data-toggle="tooltip" data-placement="top" title="Edit"       onclick="preview_pdf_model('edit');"><img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"></button> -->
         </div>
       </div>
     </div>
@@ -764,6 +771,8 @@
 
 <input type="hidden" id="read_only" value="{{$option}}">
 <input type="hidden" id="project_count" value="{{ $project_count }}">
+<input type="hidden" id="project_id" name="project_id" value="{{ $pid }}">
+<input type="hidden" id="continue_flag" name="continue_flag" value="0">
 @foreach($contact_email as $mail)
   <input type="hidden" id="contact_email" value="{{ $mail->email }}">
 @endforeach
@@ -778,11 +787,9 @@
 
     
     <script>
-
-
-        $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-        })
+        // $(function () {
+        //     $('[data-toggle="tooltip"]').tooltip()
+        // })
 
         function close_model(){
             $("#pdf_on_iframe_model").modal('hide');
@@ -790,31 +797,49 @@
         }
 
         function preview_pdf_model(action){
-            if(action == 'continue'){
-                $("#btn-continue").addClass('d-none');
-                $("#btn-edit").addClass('d-none');
 
-                $("#btn-download").removeClass('d-none');
-                $("#btn-sendemail").removeClass('d-none');
+            switch (action) {
+                case 'back':
+                    backToUnitSelect();
+                    break;
+                case 'addmore':
+                    
+                    break;
+                case 'complete':
+                    
+                    break;
+            
+                default:
+                    break;
+            }
+            
+            close_model();
 
-            }else if(action == 'download'){
-                download_pdf();
-                close_model();
-            }else if(action == 'sendemail'){
-                Email_sending();
-            }else if(action == 'edit'){
+            // if(action == 'continue'){
+            //     $("#btn-continue").addClass('d-none');
+            //     $("#btn-edit").addClass('d-none');
 
-                $("#preview_a_tag").addClass('d-none');
-                $("#tab_unit_selection").addClass('active');
-                $("#tab1").addClass('active');
-                $("#tab_results_table").removeClass('active');
-                $("#tab2").removeClass('active');
+            //     $("#btn-download").removeClass('d-none');
+            //     $("#btn-sendemail").removeClass('d-none');
+
+            // }else if(action == 'download'){
+            //     download_pdf();
+            //     close_model();
+            // }else if(action == 'sendemail'){
+            //     Email_sending();
+            // }else if(action == 'edit'){
+
+            //     $("#preview_a_tag").addClass('d-none');
+            //     $("#tab_unit_selection").addClass('active');
+            //     $("#tab1").addClass('active');
+            //     $("#tab_results_table").removeClass('active');
+            //     $("#tab2").removeClass('active');
                 
 
-                tab1
+            //     tab1
 
-                close_model();
-            }
+            //     close_model();
+            // }
         }
 
     </script>
@@ -850,6 +875,7 @@
         var isLoadImage = false;
         var loadImageId = null;
         var selected_price_id = null;
+        var delivery_times = [];
 
         <?php
             $user_multiplier = auth()->user()->multiplier;
@@ -1411,7 +1437,6 @@
             initNoiseGraph('g_noise3', data.Soundtable.Fresh, "@lang('Fresh in-duct noise level')", "@lang('Sound Level') [dB(A)] EN ISO 5136", "rgba(46,41,78,0.8)");
             initNoiseGraph('g_noise4', data.Soundtable.Supply, "@lang('Supply in-duct noise level')", "@lang('Sound Level') [dB(A)] EN ISO 5136", "rgba(27,153,139,0.8)");
             initNoiseGraph('g_noise5', data.Soundtable.Exhaust, "@lang('Exhaust in-duct noise level')", "@lang('Sound Level') [dB(A)] EN ISO 5136", "rgba(87,162,252,0.8)");
-           
 
         }        
 
@@ -1629,7 +1654,7 @@
                 //     return;
                 // }
                 
-                var doc1 = generatePDF()
+                var doc1 = generatePDFforUNIT()
                 // let circleRadius = 10
                 // doc1.circle(300, nextY + circleRadius + 5, circleRadius, 'S');
                 
@@ -1674,9 +1699,19 @@
             }, 100);
         }
 
-        function generatePDF() {
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+
+        async function generatePDFforUNIT() {
 
             if (!renderImgData) return;
+
+            /** this action is required because canvas elements load all graph within a short time */
+            $('.chart-tab-content .tab-pane').addClass('chart-tab-active');
+
+            await delay(100);
 
             const project_name = $('#project_name').val().trim();
             const project_desc = $('#project_desc').val().trim();
@@ -1696,200 +1731,202 @@
             var valueZero = selectedModel[0];
             
             var doc1 = new jsPDF('p', 'pt', [595, 842], true); // A4 Size
-                var x = 20;
-                var y = 20;
+            var x = 20;
+            var y = 20;
 
-                doc1.addImage(logoImgData.dataURL, 'PNG', 30, y, logoImgData.width * 30 / logoImgData.height, 30, '', 'FAST');
-                y += 30;
+            doc1.addImage(logoImgData.dataURL, 'PNG', 30, y, logoImgData.width * 30 / logoImgData.height, 30, '', 'FAST');
+            y += 30;
 
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
+            doc1.setFontSize(7);
+            doc1.setFontStyle('normal');
+            y += 10;
+
+            doc1.rect(20, y, 595 - 40, 25);
+            y += 10;
+            doc1.text("@lang('Project') : " + project_name  + ' - ' + project_desc, 30, y);
+            doc1.text("@lang('Project reference') : " + project_refer, 595 / 3 + 10, y);
+            doc1.text("@lang('Creation date') : " + creation_date, 595 * 2 / 3 + 10, y);
+            y += 10;
+            doc1.text("@lang('Last revistion') : " + modify_date, 30, y);
+            doc1.text("@lang('SSW version') : {{$version ?? ''}}", 595 / 3 + 10, y);
+            y += 10;
+
+            var temp_y = y;
+
+            doc1.rect(20, y, 595 - 40 - 350, 150);
+            y += 10;
+            doc1.setFontSize(10);
+            doc1.setFontStyle('bold');
+            doc1.text("@lang('SELECTED UNIT'): " + valueZero, 20 + (595 - 40 - 350) / 2, y, {align: 'center'});
+            y += 5;
+            doc1.line(20,  y, 595 - 20 - 350, y);
+            doc1.setFontSize(7);
+            doc1.setFontStyle('normal');
+            var temp_price = $('input[name="price"]:checked').parents('tr').children('td');
+            if (temp_price.length != 0){
                 y += 10;
-
-                doc1.rect(20, y, 595 - 40, 25);
+                doc1.text("@lang('Itemcode'):    " + temp_price[2].innerHTML, 30, y);
                 y += 10;
-                doc1.text("@lang('Project') : " + project_name  + ' - ' + project_desc, 30, y);
-                doc1.text("@lang('Project reference') : " + project_refer, 595 / 3 + 10, y);
-                doc1.text("@lang('Creation date') : " + creation_date, 595 * 2 / 3 + 10, y);
-                y += 10;
-                doc1.text("@lang('Last revistion') : " + modify_date, 30, y);
-                doc1.text("@lang('SSW version') : {{$version ?? ''}}", 595 / 3 + 10, y);
-                y += 10;
+                doc1.text("@lang('Description'): " + temp_price[3].innerHTML + (temp_price[4].innerHTML != '' ? ( ' - ' + temp_price[4].innerHTML) : ''), 30, y);
+            }
+            y += 10;
+            doc1.addImage(renderImgData.dataURL, 'PNG', 20 + (595 - 40 - 350 - renderImgData.width / renderImgData.height * 100) / 2, y,  renderImgData.width / renderImgData.height * 100, 100, '', 'FAST');
+            y += 110;
 
-                var temp_y = y;
+            
+            doc1.rect(20, y, 595 - 40 - 350, 60);
+            y += 10;
+            doc1.setFontSize(10);
+            doc1.setFontStyle('bold');
+            doc1.text("@lang('WORKING POINT')", 20 + (595 - 40 - 350) / 2, y, {align: 'center'});
+            y += 3;
+            doc1.line(20, y, 595 - 20 - 350, y);
+            // set font size to 10
 
-                doc1.rect(20, y, 595 - 40 - 350, 150);
-                y += 10;
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('SELECTED UNIT'): " + valueZero, 20 + (595 - 40 - 350) / 2, y, {align: 'center'});
-                y += 5;
-                doc1.line(20,  y, 595 - 20 - 350, y);
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
-                var temp_price = $('input[name="price"]:checked').parents('tr').children('td');
-                if (temp_price.length != 0){
-                    y += 10;
-                    doc1.text("@lang('Itemcode'):    " + temp_price[2].innerHTML, 30, y);
-                    y += 10;
-                    doc1.text("@lang('Description'): " + temp_price[3].innerHTML + (temp_price[4].innerHTML != '' ? ( ' - ' + temp_price[4].innerHTML) : ''), 30, y);
-                }
-                y += 10;
-                doc1.addImage(renderImgData.dataURL, 'PNG', 20 + (595 - 40 - 350 - renderImgData.width / renderImgData.height * 100) / 2, y,  renderImgData.width / renderImgData.height * 100, 100, '', 'FAST');
-                y += 110;
-
-                
-                doc1.rect(20, y, 595 - 40 - 350, 60);
-                y += 10;
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('WORKING POINT')", 20 + (595 - 40 - 350) / 2, y, {align: 'center'});
-                y += 3;
-                doc1.line(20, y, 595 - 20 - 350, y);
-                // set font size to 10
-
-                y += 10;
-                doc1.setFontSize(8);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('Airflow data')", 30, y);
-                y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
-                doc1.text("@lang('Airflow rate') : " + airflow +' [m³/h]', 30, y);
-                doc1.text("@lang('Airflow pressure') : " + pressure +  ' [Pa]', 130, y);
-                y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
-                doc1.text("@lang('Power consumption') : " + powerconsumption +' [W]', 30, y);
-                doc1.text("@lang('Regulation') : " + regulation +  ' [%]', 130, y);
-                y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('normal');
-                doc1.text("@lang('Unit SEL') : " + unitsel +' [J/m3]', 30, y);
-                doc1.text("@lang('PSFP') : " + psfp +  ' [J/m3]', 130, y);
+            y += 10;
+            doc1.setFontSize(8);
+            doc1.setFontStyle('bold');
+            doc1.text("@lang('Airflow data')", 30, y);
+            y += 10;
+            doc1.setFontSize(7);
+            doc1.setFontStyle('normal');
+            doc1.text("@lang('Airflow rate') : " + airflow +' [m³/h]', 30, y);
+            doc1.text("@lang('Airflow pressure') : " + pressure +  ' [Pa]', 130, y);
+            y += 10;
+            doc1.setFontSize(7);
+            doc1.setFontStyle('normal');
+            doc1.text("@lang('Power consumption') : " + powerconsumption +' [W]', 30, y);
+            doc1.text("@lang('Regulation') : " + regulation +  ' [%]', 130, y);
+            y += 10;
+            doc1.setFontSize(7);
+            doc1.setFontStyle('normal');
+            doc1.text("@lang('Unit SEL') : " + unitsel +' [J/m3]', 30, y);
+            doc1.text("@lang('PSFP') : " + psfp +  ' [J/m3]', 130, y);
 
 
-                doc1.rect(595 - 20 - 340, temp_y, 340, 180);
-                temp_y += 10;
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('THERMAL PERFORMANCE')", 595 - 20 - 340 / 2, temp_y, {align: 'center'});
-                temp_y += 5;
-                doc1.line(595 - 20 - 340, temp_y, 595 - 20, temp_y);
+            doc1.rect(595 - 20 - 340, temp_y, 340, 180);
+            temp_y += 10;
+            doc1.setFontSize(10);
+            doc1.setFontStyle('bold');
+            doc1.text("@lang('THERMAL PERFORMANCE')", 595 - 20 - 340 / 2, temp_y, {align: 'center'});
+            temp_y += 5;
+            doc1.line(595 - 20 - 340, temp_y, 595 - 20, temp_y);
 
-                // set font size to 10
+            // set font size to 10
 
-                var drawGridText = (pdf, arrText, y) => {
-                    var x0 = 245, x1 = 345, x2 = 365, x3 = 405, x4 = 505, x5 = 525;
-                    pdf.text(arrText[0], x0, y);
-                    pdf.text(arrText[1], x1, y);
-                    pdf.text(arrText[2], x2, y);
-                    pdf.text(arrText[3], x3, y);
-                    pdf.text(arrText[4], x4, y);
-                    pdf.text(arrText[5], x5, y);
-                };
+            var drawGridText = (pdf, arrText, y) => {
+                var x0 = 245, x1 = 345, x2 = 365, x3 = 405, x4 = 505, x5 = 525;
+                pdf.text(arrText[0], x0, y);
+                pdf.text(arrText[1], x1, y);
+                pdf.text(arrText[2], x2, y);
+                pdf.text(arrText[3], x3, y);
+                pdf.text(arrText[4], x4, y);
+                pdf.text(arrText[5], x5, y);
+            };
 
-                temp_y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('WINTER OPERATION')", 595 - 20 - 340 + 10, temp_y);
-                doc1.text(`@lang('imbalance ratio') : 90 %`, 595 - 20 - 340 + 100, temp_y);
+            temp_y += 10;
+            doc1.setFontSize(7);
+            doc1.setFontStyle('bold');
+            doc1.text("@lang('WINTER OPERATION')", 595 - 20 - 340 + 10, temp_y);
+            doc1.text(`@lang('imbalance ratio') : 90 %`, 595 - 20 - 340 + 100, temp_y);
 
-                doc1.setFontStyle('normal');
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Supply Temperature')", $('#TI-0').val(), '[°C]', "@lang('Fresh Temperature')", $('#TI-7').val(), '[°C]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Supply Humidity')", $('#TI-1').val(), '[%]', "@lang('Fresh Humidity')", $('#TI-8').val(), '[%]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Exhaust Temperature')", $('#TI-2').val(), '[°C]', "@lang('Efficiency')", $('#TI-9').val(), '[%]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Exahust Humidity')", $('#TI-3').val(), '[%]', "@lang('Heat Recovery')", $('#TI-10').val(), '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Water produced')", $('#TI-4').val(), '[l/h]', "@lang('Sensible Heat')", $('#TI-11').val(), '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Return Temperature')", $('#TI-5').val(), '[°C]', "@lang('Latent Heat')", $('#TI-12').val(), '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Return Humidity')", $('#TI-6').val(), '[%]', '', '', ''], temp_y);
+            doc1.setFontStyle('normal');
+            temp_y += 10;
+            drawGridText(doc1, ["@lang('Supply Temperature')", $('#TI-0').val(), '[°C]', "@lang('Fresh Temperature')", $('#TI-7').val(), '[°C]'], temp_y);
+            temp_y += 10;
+            drawGridText(doc1, ["@lang('Supply Humidity')", $('#TI-1').val(), '[%]', "@lang('Fresh Humidity')", $('#TI-8').val(), '[%]'], temp_y);
+            temp_y += 10;
+            drawGridText(doc1, ["@lang('Exhaust Temperature')", $('#TI-2').val(), '[°C]', "@lang('Efficiency')", $('#TI-9').val(), '[%]'], temp_y);
+            temp_y += 10;
+            drawGridText(doc1, ["@lang('Exahust Humidity')", $('#TI-3').val(), '[%]', "@lang('Heat Recovery')", $('#TI-10').val(), '[W]'], temp_y);
+            temp_y += 10;
+            drawGridText(doc1, ["@lang('Water produced')", $('#TI-4').val(), '[l/h]', "@lang('Sensible Heat')", $('#TI-11').val(), '[W]'], temp_y);
+            temp_y += 10;
+            drawGridText(doc1, ["@lang('Return Temperature')", $('#TI-5').val(), '[°C]', "@lang('Latent Heat')", $('#TI-12').val(), '[W]'], temp_y);
+            temp_y += 10;
+            drawGridText(doc1, ["@lang('Return Humidity')", $('#TI-6').val(), '[%]', '', '', ''], temp_y);
 
-                temp_y += 10;
-                doc1.setFontSize(7);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('SUMMER OPERATION')", 595 - 20 - 340 + 10, temp_y);
-                doc1.text(`@lang('imbalance ratio') : 70 %`, 595 - 20 - 340 + 100, temp_y);
+            temp_y += 10;
+            doc1.setFontSize(7);
+            doc1.setFontStyle('bold');
+            doc1.text("@lang('SUMMER OPERATION')", 595 - 20 - 340 + 10, temp_y);
+            doc1.text(`@lang('imbalance ratio') : 70 %`, 595 - 20 - 340 + 100, temp_y);
 
-                doc1.setFontStyle('normal');
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Supply Temperature')", '', '[°C]', "@lang('Fresh Temperature')", '', '[°C]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Supply Humidity')", '', '[%]', "@lang('Fresh Humidity')", '', '[%]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Exhaust Temperature')", '', '[°C]', "@lang('Efficiency')", '', '[%]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Exahust Humidity')", '', '[%]', "@lang('Heat Recovery')", '', '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Water produced')", '', '[l/h]', "@lang('Sensible Heat')", '', '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Return Temperature')", '', '[°C]', "@lang('Latent Heat')", '', '[W]'], temp_y);
-                temp_y += 10;
-                drawGridText(doc1, ["@lang('Return Humidity')", '', '[%]', '', '', ''], temp_y);
+            doc1.setFontStyle('normal');
+            temp_y += 10;
+            drawGridText(doc1, ["@lang('Supply Temperature')", '', '[°C]', "@lang('Fresh Temperature')", '', '[°C]'], temp_y);
+            temp_y += 10;
+            drawGridText(doc1, ["@lang('Supply Humidity')", '', '[%]', "@lang('Fresh Humidity')", '', '[%]'], temp_y);
+            temp_y += 10;
+            drawGridText(doc1, ["@lang('Exhaust Temperature')", '', '[°C]', "@lang('Efficiency')", '', '[%]'], temp_y);
+            temp_y += 10;
+            drawGridText(doc1, ["@lang('Exahust Humidity')", '', '[%]', "@lang('Heat Recovery')", '', '[W]'], temp_y);
+            temp_y += 10;
+            drawGridText(doc1, ["@lang('Water produced')", '', '[l/h]', "@lang('Sensible Heat')", '', '[W]'], temp_y);
+            temp_y += 10;
+            drawGridText(doc1, ["@lang('Return Temperature')", '', '[°C]', "@lang('Latent Heat')", '', '[W]'], temp_y);
+            temp_y += 10;
+            drawGridText(doc1, ["@lang('Return Humidity')", '', '[%]', '', '', ''], temp_y);
 
-                temp_y = y;
+            temp_y = y;
 
-                y += 10;
-                var _y = y;
-                y += 20;
-                doc1.line(20, y, 595 - 20, y);
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('PERFORMANCE CURVES')", 30, y - 7);
+            y += 10;
+            var _y = y;
+            y += 20;
+            doc1.line(20, y, 595 - 20, y);
+            doc1.setFontSize(10);
+            doc1.setFontStyle('bold');
+            doc1.text("@lang('PERFORMANCE CURVES')", 30, y - 7);
 
-                y += 10;
-                var drawGraphOnPDF = (pdf, id, x, y) => {                    
-                    var canvas = document.getElementById(id);
-                    canvas.getContext('2d');
-                    var image = canvas.toDataURL('image/png', 1.0);
-                    var cw = 150;
-                    var cy = cw * canvas.height / canvas.width;
-                    
-                    pdf.addImage(image, 'PNG', x, y, cw, cy, '', 'FAST');
-                    return cy;
-                }
-                h1 = drawGraphOnPDF(doc1, 'pressure_graph', 105, y);
-                h2 = drawGraphOnPDF(doc1, 'power_graph', 340, y);
-                y = Math.max(h1, h2) + y + 10;
+            y += 10;
+            var drawGraphOnPDF = (pdf, id, x, y) => {                    
+                var canvas = document.getElementById(id);
+                canvas.getContext('2d');
+                var image = canvas.toDataURL('image/png', 1.0);
+                var cw = 150;
+                var cy = cw * canvas.height / canvas.width;
+                pdf.addImage(image, 'PNG', x, y, cw, cy, '', 'FAST');
+                return cy;
+            }
+            h1 = drawGraphOnPDF(doc1, 'pressure_graph', 105, y);
+            h2 = drawGraphOnPDF(doc1, 'power_graph', 340, y);
+            y = Math.max(h1, h2) + y + 10;
 
-                h1 = drawGraphOnPDF(doc1, 'efficiency_graph', 105, y);
-                h2 = drawGraphOnPDF(doc1, 'psfp_graph', 340, y);
-                y = Math.max(h1, h2) + y + 10;
-                
-                doc1.rect(20, _y, 595 - 40, y - _y);
+            h1 = drawGraphOnPDF(doc1, 'efficiency_graph', 105, y);
+            h2 = drawGraphOnPDF(doc1, 'psfp_graph', 340, y);
+            y = Math.max(h1, h2) + y + 10;
+            
+            doc1.rect(20, _y, 595 - 40, y - _y);
 
-                y += 25;
+            y += 25;
 
-                tempy = y - 15;
+            tempy = y - 15;
 
-                doc1.line(20, y, 595 - 20, y);
+            doc1.line(20, y, 595 - 20, y);
 
-                // set font size to 10
-                doc1.setFontSize(10);
-                doc1.setFontStyle('bold');
-                doc1.text("@lang('ACOUSTIC CHARACTERISTICS')", 30, y - 3);
-                y += 10;
-                var h1 = drawGraphOnPDF(doc1, 'g_noise1', 20 + 105 / 4, y);
-                var h2 = drawGraphOnPDF(doc1, 'g_noise2', 20 + 105 / 2 + 150, y);
-                var h3 = drawGraphOnPDF(doc1, 'g_noise3', 20 + 105 / 4 * 3 + 150 * 2, y);
-                var nextY = Math.max(h1, h2, h3) + y + 10;
+            // set font size to 10
+            doc1.setFontSize(10);
+            doc1.setFontStyle('bold');
+            doc1.text("@lang('ACOUSTIC CHARACTERISTICS')", 30, y - 3);
+            y += 10;
+            var h1 = drawGraphOnPDF(doc1, 'g_noise1', 20 + 105 / 4, y);
+            var h2 = drawGraphOnPDF(doc1, 'g_noise2', 20 + 105 / 2 + 150, y);
+            var h3 = drawGraphOnPDF(doc1, 'g_noise3', 20 + 105 / 4 * 3 + 150 * 2, y);
+            var nextY = Math.max(h1, h2, h3) + y + 10;
 
-                h1 = drawGraphOnPDF(doc1, 'g_noise4', 20 + 105 / 4, nextY);
-                h2 = drawGraphOnPDF(doc1, 'g_noise5', 20 + 105 / 2 + 150, nextY);
-                h3 = drawGraphOnPDF(doc1, 'g_noise6', 20 + 105 / 4 * 3 + 150 * 2, nextY);
-                nextY = Math.max(h1, h2, h3) + nextY + 10;
-                doc1.rect(20, tempy, 595 - 40, nextY - tempy);
+            h1 = drawGraphOnPDF(doc1, 'g_noise4', 20 + 105 / 4, nextY);
+            h2 = drawGraphOnPDF(doc1, 'g_noise5', 20 + 105 / 2 + 150, nextY);
+            h3 = drawGraphOnPDF(doc1, 'g_noise6', 20 + 105 / 4 * 3 + 150 * 2, nextY);
+            nextY = Math.max(h1, h2, h3) + nextY + 10;
+            doc1.rect(20, tempy, 595 - 40, nextY - tempy);
+            
+            /** this action is required because canvas elements load all graph within a short time */
+            $('.chart-tab-content .tab-pane.chart-tab-active').removeClass('chart-tab-active');
 
-                return doc1;
+            return doc1;
         }
 
-        function generatePDF_2() {
+        function generatePDFforProject() {
 
             const project_name = $('#project_name').val().trim();
             const project_desc = $('#project_desc').val().trim();
@@ -2056,7 +2093,7 @@
                 //     return;
                 // }
 
-                var doc1 = generatePDF()
+                var doc1 = generatePDFforUNIT()
 
                 var filename = 'PREVIEW_REPORT_' + (new Date()).getTime() + '.pdf';
                 savedPreviewDoc = {
@@ -2093,16 +2130,6 @@
             }, 100);
         }
 
-        function saveproject(){
-            const project_name = $('#project_name').val().trim();
-            const project_desc = $('#project_desc').val().trim();
-            const project_refer = $('#project_reference').val();
-            const creation_date = $('#create_date').val().trim();
-            const modify_date = $('#modify_date').val().trim();
-        }
-
-
-
         function download_pdf(){
             var selectedModel = $(dTable.row({selected: true}).data());
             var valueZero = selectedModel[0];
@@ -2111,7 +2138,7 @@
             $('.chart-tab-content .tab-pane').addClass('chart-tab-active');
             setTimeout(() => {
                 
-                var doc1 = generatePDF();
+                var doc1 = generatePDFforUNIT();
 
                 var filename = 'PREVIEW_REPORT_' + (new Date()).getTime() + '.pdf';
                 savedPreviewDoc = {
@@ -2124,47 +2151,18 @@
                 swal.close();
             }, 100);
 
-        }
-
-
-        
+        }        
 
         function export2PDF(final = false) {
             console.log('export, pdf');
             $('.chart-tab-content .tab-pane').addClass('chart-tab-active');
-            // setTimeout(() => {
+
                 const project_name = $('#project_name').val().trim();
                 const project_desc = $('#project_desc').val().trim();
                 const project_refer = $('#project_reference').val();
                 const creation_date = $('#create_date').val().trim();
                 const modify_date = $('#modify_date').val().trim();
-
-                // var nextbtnval = $('.nextbtn2').data('value'); 
-                // if(nextbtnval == 1){
-                  
-                // }else{
-                //     document.querySelector('.nav-link[href="#tab0"]').click();
-                //     alert("@lang('Please type Project Name')");
-                //     $('#project_name').focus();
-                //     return;
-                // }
-
-                // if (project_name === ''){
-                //     document.querySelector('.nav-link[href="#tab0"]').click();
-                //     alert("@lang('Please type Project Name')");
-                //     $('#project_name').focus();
-                //     return;
-                // }
-
-               
-                // if (project_refer === ''){
-                //     document.querySelector('.nav-link[href="#tab0"]').click();
-                //     alert("@lang('Please type Project Reference')");
-                //     $('#project_reference').focus();
-                //     return;
-                // }
-                //let project_refer = $('#project_reference').val().trim(); // Using let instead of const
-                //  project_refer = '';
+         
                 
                      if (project_refer  == null || project_refer  == undefined ||  project_refer  == ''){
                         var count = $('#project_count').val()
@@ -2175,7 +2173,7 @@
                         
                      }
                 if (!final) {
-                    doc = generatePDF();
+                    doc = generatePDFforUNIT();
                     saveLoading = false;
                     $('#unitform').hide();
                     $('#tab_unit_selection').addClass('disabled');
@@ -2186,78 +2184,7 @@
                     $('.btn-unit-save').hide();
                 } else {
                      //doc.addPage(595, 842);
-                    doc = generatePDF_2();
-
-                    var filename = 'REPORT_' + (new Date()).getTime() + '.pdf';
-                    savedDoc = {
-                        'filename': filename,
-                        'doc': doc
-                    };
-                    // alert($('#p_w_Trin').val());
-                    // return;
-                    // prepare form data to send
-                    var formData = new FormData();
-                    // alert('{{$uid}}');
-                    formData.append('id', '{{$pid}}');
-                    formData.append('uid', '{{$uid}}');
-                    formData.append('company', '{{$company->id}}');
-                    formData.append('contact', '{{$contact->id}}');
-
-                    formData.append('name', $('#project_name').val());
-                    formData.append('description', $('#project_desc').val());
-                    formData.append('reference', $('#project_reference').val());
-                    formData.append('pdf', doc.output('blob'), filename);                
-
-                    formData.append('units', JSON.stringify(pdf_units));
-                    formData.append('unit_name',$('#unit_name').val());
-                    formData.append('layout',$('#p_layout').val());
-                    formData.append('indoor',$("input[name='indoor']:checked").val());
-                    formData.append('ex1',$('input[name=ex]:checked').val().split('|')[1]);
-                    formData.append('ex2',$('input[name=ex]:checked').val().split('|')[0]);
-                    formData.append('airflow',$('#p_airflow').val());
-                    formData.append('pressure',$('#p_pressure').val());
-                    formData.append('Tfin',$('#p_w_Trin').val());
-                    formData.append('Trin',$('#p_w_Hrin').val());
-                    formData.append('Hfin',$('#p_w_Tfin').val());
-                    formData.append('Hrin',$('#p_w_Hfin').val());
-                    formData.append('modelId',model_id);
-
-                    $(document).find('input.price-value').map((index, ele) => {
-                        if($(ele).prop('checked')) {
-                            formData.append('priceId',$(ele).val());
-                        }
-                    })
-
-                    var accessories = [];
-
-                    $(document).find('input.accessories').map((index, ele) => {
-                        if($(ele).prop('checked')) {
-                            accessories.push($(ele).val());
-                        }
-                    })
-
-                    formData.append('accessories',accessories.join(','));    
-                       
-                    showSwalLoading(); 
-                    $.ajax({
-                        type: 'POST',
-                        url: `{{route('admin.projects.store.project')}}`,
-                        data: formData,
-                        headers: {'x-csrf-token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')},
-                        processData: false,
-                        contentType: false,
-                        success: function(data) {
-                            swal.close();
-                            console.log('File uploaded successfully.');
-                            
-                            location.href = `{{route('admin.projects')}}`;
-
-                        },
-                        error: function(xhr, status, error) {
-                            swal.close();
-                            console.log('An error occurred while uploading the file.');
-                        }
-                    });
+                    storeProject()
                 }
 
                 $('.chart-tab-content .tab-pane.chart-tab-active').removeClass('chart-tab-active');
@@ -2319,71 +2246,7 @@
             let temp_unit_name = e.target.innerText;
             onViewUnit(temp_unit_name);
         });
-
-        function onSaveNewUnit() {
-
-            
-            console.log('show delivery time modal')
-            $('#staticBackdrop').modal('show');
-            $('#staticBackdrop .modal-content-add-unit').hide();
-            $('#staticBackdrop .modal-content-save-delivery-time').show();
-                $('.units-delivery-time-table tbody').html('');
-
-                var unit_name = $('input#unit_name').val();
-
-                    $('.units-delivery-time-table tbody').append(`
-                        <tr data-name="${unit_name}">
-                            <td>${unit_name}</td>
-                            <td>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <input type="number" class="form-control delivery-time" value="1" min="1" max="320" maxlength="3">
-                                    </div>
-                                    <div class="col-md-9">
-                                        <select class="form-control delivery-time-type">
-                                            <option value="0" selected disabled>Please select Time Type</option>
-                                            <option value="1">Days</option>
-                                            <option value="2">Weeks</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    `);
-
-                return;
-        }
-
-        function onSaveDeliveryTime() {
-
-           
-
-            var temp_units_array = $('.units-delivery-time-table tbody tr');
-            for (row of temp_units_array) {
-                let temp_unit_name = $(row).attr('data-name');
-                let temp_delivery_time = parseInt($(row).find('td:last-child .delivery-time').val());
-                if (temp_delivery_time <= 0 || temp_delivery_time == '') {
-                    $(row).find('td:last-child .delivery-time').focus();
-                    alert("@lang('Please type Time')");
-                    return;
-                }
-                let temp_delivery_time_type = $(row).find('td:last-child .delivery-time-type').val();
-                if (temp_delivery_time_type == 0) {
-                    $(row).find('td:last-child .delivery-time-type').focus();
-                    alert("@lang('Please select Time Type')");
-                    return;
-                }
-                pdf_units.map(row => {
-                    if (row.name == temp_unit_name) {
-                        row.delivery_time = `${temp_delivery_time}_${temp_delivery_time_type}`;
-                    }
-                });
-            }
-            $('#staticBackdrop').modal('hide');
-            //$('.unitfeatures tbody tr').addClass('selected');
-            // display_compatible_models(null);
-            onSaveOffer();
-        }
+        
         function onNextDeliveryTime() {
             var temp_units_array = $('.units-delivery-time-table tbody tr');
             for (row of temp_units_array) {
@@ -2472,9 +2335,9 @@
                     // initPriceTable(id, temp_unit.priceId);
                 }
             });
-        }else{
-            alert('cant access view');
-        }
+            }else{
+                alert('cant access view');
+            }
         }
 
         function onEditUnit(unit_name){
@@ -2508,9 +2371,9 @@
             $('#p_w_Tfin').val(temp_unit.Tfin);
             $('#p_w_Hfin').val(temp_unit.Trin);
             model_id = temp_unit.modelId;
-        }else{
-            alert('Cant access edit')
-        }
+            }else{
+                alert('Cant access edit')
+            }
         }
 
         function onSaveUnit() {
@@ -2654,9 +2517,9 @@
             document.querySelector('#tab1').scrollTop = 0;
             $('.btn-preview').hide();
             $('.btn-unit-save').hide();
-        }else{
-            alert('Cant access delete');
-        }
+            }else{
+                alert('Cant access delete');
+            }
         }
 
         function onSaveOffer() {
@@ -2733,25 +2596,37 @@
                     clearInterval(loadImageId);
                 }
             }, 1000);
-        }else{
-            alert('Cant add offer');
-        }
+            }else{
+                alert('Cant add offer');
+            }
         }
 
         $(document).ready(function() {
-        var read1 = $('#read_only').val();   
-            if(read1 === 'readonly'){
-                $('.heading').hide();
-            }else{
-                $('.heading').html('/'+' '+'project reference');
+
+            /** initialize project reference */
+            const project_refer = $('#project_reference').val();                
+            if (project_refer  == null || project_refer  == undefined ||  project_refer  == ''){
+                var count = $('#project_count').val();
+                var lastGeneratedNumber = count;
+                lastGeneratedNumber++;
+                var serialNumber = lastGeneratedNumber.toString().padStart(6, '0');
+                $('#project_reference').val(serialNumber);
             }
-        
-         $('.units-table').css('visibility', 'visible');
-         if (units.length > 0) {
-             $('.btn-first-unit-next').hide();
-         } else {
-             $('.btn-first-unit-next').show();
-         }
+            /** end project reference initializing */
+
+            var read1 = $('#read_only').val();   
+                if(read1 === 'readonly'){
+                    $('.heading').hide();
+                }else{
+                    $('.heading').html('/'+' '+'project reference');
+                }
+            
+            $('.units-table').css('visibility', 'visible');
+            if (units.length > 0) {
+                $('.btn-first-unit-next').hide();
+            } else {
+                $('.btn-first-unit-next').show();
+            }
 
             // Create a new Image object
             var img = new Image();
@@ -2781,8 +2656,9 @@
                 // Use the data URL as needed
 
                 canvas.remove();
-            };      
-//===================================for project reference================================================
+            };
+
+            //===================================for project reference================================================
             $('.nextbtn1').hide();
             $('.nextbtn2').hide();
 
@@ -2807,11 +2683,11 @@
                     $('.nextbtn1').show();
                     // $('.nextbtn2').hide();
                 } 
-           });
+            });
 
-//==========================================for unit selection=====================================================
+            //==========================================for unit selection=====================================================
 
-           $('.compatiblewithuname').hide();
+            $('.compatiblewithuname').hide();
             $('.compatiblewithoutuname').hide();
 
             var unitName = $('#unit_name').val().trim();
@@ -2824,72 +2700,259 @@
                 $('.compatiblewithuname').show();
             } 
             
-            $('#unit_name').on('input keyup keydown', function() {
-                var unitName = $(this).val().trim();
-        
-                if (unitName == "") {
-                    $('.compatiblewithuname').hide();
-                    $('.compatiblewithoutuname').show();
-                } 
-                else {
-                    $('.compatiblewithoutuname').hide();
-                    $('.compatiblewithuname').show();
-                } 
-           });
+            //     $('#unit_name').on('input keyup keydown', function() {
+            //         var unitName = $(this).val().trim();
+            
+            //         if (unitName == "") {
+            //             $('.compatiblewithuname').hide();
+            //             $('.compatiblewithoutuname').show();
+            //         } 
+            //         else {
+            //             $('.compatiblewithoutuname').hide();
+            //             $('.compatiblewithuname').show();
+            //         } 
+            //    });
            
 
-           });
-           $('#tab_results_table').on('click',function(){
+        });
+
+        $('#tab_results_table').on('click',function(){
             //   var readonly = ($('#read_only').val());
             //   if(readonly != ""){
                 display_compatible_models(null);
             //   }
 
-           })
+        })
 
-    //    
 
         $('.compatiblewithoutuname').on('dblclick',function(){
             $('.compatiblewithuname').show();
             $('.compatiblewithoutuname').hide();
         })
         
-       var read = $('#read_only').val(); 
+        var read = $('#read_only').val(); 
        
-    // if(read == 'readonly'){
-   
-    //    $('.nav-link').click(function(){
-    //       var title = $(this).data('title1');
+        // if(read == 'readonly'){
+    
+        //    $('.nav-link').click(function(){
+        //       var title = $(this).data('title1');
 
-    //      $('.heading').html("");
-    //    })
-    // }else{
-    //     $('.nav-link').click(function(){
-    //       var title = $(this).data('title1');
-    //     //   alert(title);
-    //      $('.heading').html('/'+' '+title);
-    //    })
-       
-    // }
-    
-    $('.nav-item a').click(function(){
-          var title = $(this).data('title1');
-          if(title == "" || title == undefined ){
-            
-          }else{
-            $('.heading').html('/'+' '+title);
-            
-          }
+        //      $('.heading').html("");
+        //    })
+        // }else{
+        //     $('.nav-link').click(function(){
+        //       var title = $(this).data('title1');
+        //     //   alert(title);
+        //      $('.heading').html('/'+' '+title);
+        //    })
         
-       })
+        // }
+        
+        $('.nav-item a').click(function(){
+            var title = $(this).data('title1');
+            if(title == "" || title == undefined ){
+                
+            }else{
+                $('.heading').html('/'+' '+title);
+                
+            }
+            
+        })
        
-    
+        /**======================================= ***************** ==================================== */
+
         /** if the unit selection tab is clicked, unitname and preview button should be disappeared*/
         $('#tab_unit_selection').on('click', function(){       
             $('#unitform').hide();
             $('.btn-preview').hide();
+            $('.tabs.graph-tabs').addClass("hidden");
         })
      
+        function backToUnitSelect() {
+            document.querySelector('.nav-link[id="tab_unit_selection"]').click();
+        }
+
+        function addMoreUnit() {
+            $('input[name=continue_flag]').val(1);
+            onSaveNewUnit(1);
+        }
+
+        function completeProcess() {
+            $('input[name=continue_flag]').val(0);
+            onSaveNewUnit(0);
+        }
+
+        function onSaveNewUnit() {
+            $('#staticBackdrop').modal('show');
+            $('#staticBackdrop .modal-content-add-unit').hide();
+            $('#staticBackdrop .modal-content-save-delivery-time').show();
+            $('.units-delivery-time-table tbody').html('');
+            var unit_name = $('input#unit_name').val();
+
+            $('.units-delivery-time-table tbody').append(`
+                <tr data-name="${unit_name}" class="units-delivery-time-table-tr">
+                    <td>${unit_name}</td>
+                    <td>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <input type="number" class="form-control delivery-time" value="1" min="1" max="320" maxlength="3">
+                            </div>
+                            <div class="col-md-9">
+                                <select class="form-control delivery-time-type">
+                                    <option value="0" selected disabled>Please select Time Type</option>
+                                    <option value="1">Days</option>
+                                    <option value="2">Weeks</option>
+                                </select>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `);
+
+            return;
+        }
+
+        function onSaveDeliveryTime() {
+
+            console.log($('.units-delivery-time-table-tr'));
+
+            var temp_units_array = $('.units-delivery-time-table tbody tr');
+            delivery_times = [];
+            for (row of temp_units_array) {
+                let temp_unit_name = $(row).attr('data-name');
+                let temp_delivery_time = parseInt($(row).find('td:last-child .delivery-time').val());
+                if (temp_delivery_time <= 0 || temp_delivery_time == '') {
+                    $(row).find('td:last-child .delivery-time').focus();
+                    alert("@lang('Please type Time')");
+                    return;
+                }
+                let temp_delivery_time_type = $(row).find('td:last-child .delivery-time-type').val();
+                if (temp_delivery_time_type == 0 || !temp_delivery_time_type) {
+                    $(row).find('td:last-child .delivery-time-type').focus();
+                    alert("@lang('Please select Time Type')");
+                    return;
+                }
+                delivery_times.push(`${temp_delivery_time}_${temp_delivery_time_type}`);
+                pdf_units.map(row => {
+                    if (row.name == temp_unit_name) {
+                        row.delivery_time = `${temp_delivery_time}_${temp_delivery_time_type}`;
+                    }
+                });
+            }
+
+            $('#staticBackdrop').modal('hide');
+
+            storeProject();
+        }
+
+
+        async function storeProject() {
+            
+            showSwalLoading();
+
+            var continue_flag = $('input[name=continue_flag]').val();
+
+            console.log('continue flag', continue_flag);
+
+            var formData = new FormData();
+
+            formData.append('id', $('#project_id').val());
+            formData.append('uid', '{{$uid}}');
+            formData.append('company', '{{$company->id}}');
+            formData.append('contact', '{{$contact->id}}');
+
+            formData.append('name', $('#project_name').val());
+            formData.append('description', $('#project_desc').val());
+            formData.append('reference', $('#project_reference').val());
+
+            if(continue_flag == 0) { // if final step, project pdf should be generated
+                var doc = generatePDFforProject();
+                var filename = 'REPORT_' + (new Date()).getTime() + '.pdf';
+                savedDoc = {
+                    'filename': filename,
+                    'doc': doc
+                };
+                formData.append('pdf', doc.output('blob'), filename);
+            }
+
+            /** generate unit pdf  */
+
+            var doc_unit = await generatePDFforUNIT();            
+            var filename_unit = 'UNIT_' + (new Date()).getTime() + '.pdf';
+            formData.append('unit_pdf', doc_unit.output('blob'), filename_unit);
+
+            // formData.append('units', JSON.stringify(pdf_units));
+            formData.append('unit_name',$('#unit_name').val());
+            formData.append('layout',$('#p_layout').val());
+            formData.append('indoor',$("input[name='indoor']:checked").val());
+            formData.append('ex1',$('input[name=ex]:checked').val().split('|')[1]);
+            formData.append('ex2',$('input[name=ex]:checked').val().split('|')[0]);
+            formData.append('airflow',$('#p_airflow').val());
+            formData.append('pressure',$('#p_pressure').val());
+            formData.append('Tfin',$('#p_w_Trin').val());
+            formData.append('Trin',$('#p_w_Hrin').val());
+            formData.append('Hfin',$('#p_w_Tfin').val());
+            formData.append('Hrin',$('#p_w_Hfin').val());
+            formData.append('modelId',model_id);
+            formData.append('unit_delivery_time',delivery_times[0]);
+
+            $(document).find('input.price-value').map((index, ele) => {
+                if($(ele).prop('checked')) {
+                    formData.append('priceId',$(ele).val());
+                }
+            })
+
+            var accessories = [];
+
+            $(document).find('input.accessories').map((index, ele) => {
+                if($(ele).prop('checked')) {
+                    accessories.push($(ele).val());
+                }
+            })
+
+            formData.append('accessories',accessories.join(','));
+
+            
+            $.ajax({
+                type: 'POST',
+                url: `{{route('admin.projects.store.project')}}`,
+                data: formData,
+                headers: {'x-csrf-token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')},
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    swal.close();
+                    $('input[name=project_id]').val(data.result.project_id);
+                    Swal.fire({
+                        title: "@lang('Saved...')",
+                        imageUrl: $('img#render').attr('src'),
+                        imageHeight: 300,
+                        imageAlt: "A tall image",
+                        allowOutsideClick: false,
+                        showConfirmButton:true,
+                        showCancelButton:false,
+                        allowEscapeKey: false,
+                        confirmButtonText: "Continue"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            if (continue_flag == 0) {
+                                location.href = `{{route('admin.projects')}}`;
+                            } else {
+                                backToUnitSelect();
+                            }
+                        }
+                    });
+                    console.log('File uploaded successfully.');
+                    
+                   
+
+                },
+                error: function(xhr, status, error) {
+                    swal.close();
+                    console.log('An error occurred while uploading the file.');
+                }
+            });
+        }
        
   
     </script>

@@ -68,6 +68,12 @@
     body.no-scroll {
       overflow: hidden;
     }
+    .go-to-unit-feature{
+        position: absolute;
+        right: 0;
+        top: 4px;
+        z-index: 1;
+    }
 
 </style>
 <?php
@@ -150,13 +156,21 @@
         </div>
 
         <div class="w-full">
+            @if( $pid == '0')
+                <a class="btn float-right button-boxed btn-first-unit-next" onclick="onNewUnit()">
+                    <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/>
+                </a>
+                <a class="btn float-right button-boxed go-to-unit-feature d-none">
+                    <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="35px" height="35px"/>
+                </a>
+            @endif
             <div class="tabs tabs-primary">
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item" role="presentation">               
                         <a class="nav-link  active"  id="tab_unit_home" href="#tab0" data-title1="Project reference" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('PROJECT REFERENCE')</a>
                     </li>
                     <li class="nav-item" role="presentation">               
-                        <a class="nav-link  @if($option == "")disabled @endif" id="tab_unit_selection" data-title1="Unit selection" href="#tab1" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('UNIT SELECTION')</a>
+                        <a class="nav-link" id="tab_unit_selection" data-title1="Unit selection" href="#tab1" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('UNIT SELECTION')</a>
                     </li>
                     <li class="nav-item" role="presentation">               
                         <a class="nav-link uname @if($option == "")disabled @else onclick='onViewUnit()' @endif" id="tab_results_table" data-title1="Unit features" href="#tab2" data-bs-toggle="tab" aria-selected="true"  role="tab">@lang('UNIT FEATURES')</a>
@@ -167,18 +181,15 @@
                         <div class="border border-dark rounded px-5 py-1 row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="project_name" class="text-xs">@lang('Project Name') <span style="color: red;">(*)</span></label>
+                                    <label for="project_name" class="text-xs">@lang('Project Name')</label>
                                     <input type="text" id="project_name" name="project_name" class="form-control" value="{{$project->name ?? ''}}">
                                 </div>
                                 <div class="form-group">
                                     <label for="project_desc" class="text-xs">@lang('Project Description')</label>
                                     <input type="text" id="project_desc" name="project_desc" class="form-control" value="{{$project->description ?? ''}}">
-                                </div>
+                                </div>                                
+                                <input type="hidden" id="project_reference" name="project_reference" class="form-control" value="{{$project->reference ?? ''}}">
                                 
-                                <!-- <div class="form-group">
-                                    <label for="project_reference" class="text-xs">@lang('Project Reference')</label> -->
-                                    <input type="hidden" id="project_reference" name="project_reference" class="form-control" value="{{$project->reference ?? ''}}">
-                                <!-- </div> -->
                                 @if($option == 'readonly')
                                 <div class="form-group">
                                     <label for="project_reference" class="text-xs">@lang('Project Reference')</label>
@@ -194,9 +205,9 @@
                                         if(isset($project->created_at))
                                         {
                                             $date = strtotime($project->created_at);
-                                            $c_date = date('m/d/Y', $date);
+                                            $c_date = date('d.m.Y', $date);
                                         } else {
-                                            $c_date = date('m/d/Y'); 
+                                            $c_date = date('d.m.Y'); 
                                         }
                                     ?>
                                     <input type="text" id="create_date" name="create_date" class="form-control" value="{{$c_date}}" readonly>
@@ -207,9 +218,9 @@
                                         if(isset($project->updated_at))
                                         {
                                             $date = strtotime($project->updated_at);
-                                            $m_date = date('m/d/Y', $date);
+                                            $m_date = date('d.m.Y', $date);
                                         } else {
-                                            $m_date = date('m/d/Y'); 
+                                            $m_date = date('d.m.Y'); 
                                         }
                                     ?>
                                     <label for="modify_date" class="text-xs">@lang('Last Modified Date')</label>
@@ -221,13 +232,8 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
-                                @if($option == "")
-                                        
-                                    @if( $pid == '0')
-                                        <a class="btn nextbtn1 button-boxed btn-first-unit-next" onclick="onNewUnit()" style="display: none; padding: 0px;" disabled>
-                                            <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/>
-                                        </a>
-                                    @else
+                                @if($option == "")                                        
+                                    @if( $pid != '0')
                                         @if($units_list)
                                             @foreach($units_list as $rows)
                                                 <a class="btn nextbtn1 button-boxed btn-first-unit-next" onclick="onEditUnit(`{{$rows->name}}`)" style="display: none; padding: 0px;" disabled>
@@ -241,10 +247,6 @@
                                         @endif   
 
                                     @endif
-                                
-                                    <!-- <a class="btn nextbtn2 button-boxed btn-first-unit-next" onclick="onNewUnit()" data-value="1" style="display: none; padding: 0px;" disabled>
-                                        <img class="new mb-2" src="{{asset('assets/icons/caret-circle-double-right-icon-original.png')}}" width="35px" height="35px"/>
-                                    </a> -->
                                 @endif
                             </div>
                         </div>
@@ -1132,26 +1134,13 @@
             // }
             // $("#preview_a_tag").removeClass('d-none');
         }
-
    
         $(document).on('click', '.accessories', function(){
-            initPriceTable(model_id)
+            // initPriceTable(model_id)
         })
 
-        function initPriceTable(id, price_id = 0, callback) {
-            if (id == null){
-                id = 0;
-            }
-            $.ajax({
-                type: 'GET',
-                url: "{{route('admin.projects.get.modelprice')}}",
-                data: {
-                    id: id,
-                },
-                success: function(res) {
-                    res = JSON.parse(res);
-                    console.log(1);
-                    $('#pricetable').html("<table class='table display compact datatable-t1'>\
+        function renderPriceTable(res, price_id=0, callback=null) {
+            $('#pricetable').html("<table class='table display compact datatable-t1'>\
                             <thead>\
                                 <tr>\
                                     <th></th>\
@@ -1208,6 +1197,21 @@
                     if(callback !== undefined && callback !== null) {
                         callback();
                     }
+        }
+
+        function initPriceTable(id, price_id = 0, callback) {
+            if (id == null){
+                id = 0;
+            }
+            $.ajax({
+                type: 'GET',
+                url: "{{route('admin.projects.get.modelprice')}}",
+                data: {
+                    id: id,
+                },
+                success: function(res) {
+                    res = JSON.parse(res);
+                    renderPriceTable(res)
                 },
                 error: function(error) {
                     console.error(error);
@@ -1243,6 +1247,8 @@
                     drawGraph(result[model]);
 
                     showaccessories(res.result.accessories)
+
+                    renderPriceTable(res.result.prices)
                     
                     $('.dataTable tr.selected').removeClass('selected');
                     if(!$('.dataTable tr td[data-id=' + model_id + ']').closest('tr').hasClass('selected'))
@@ -2195,6 +2201,7 @@
 
         function onNewUnit() {
             $('.btn-first-unit-next').hide();
+            $('.go-to-unit-feature').removeClass('d-none');
             // $('#unitform').show();
             isNew = true;
             isView = false;
@@ -2577,31 +2584,31 @@
             };
 
             //===================================for project reference================================================
-            $('.nextbtn1').hide();
-            $('.nextbtn2').hide();
+            // $('.nextbtn1').hide();
+            // $('.nextbtn2').hide();
 
-            var projectName = $('#project_name').val().trim();
-            if (projectName == "") {
-                $('.nextbtn2').show();
-                $('.nextbtn1').hide();
-            } 
-            else {
-                $('.nextbtn1').show();
-                $('.nextbtn2').hide();
-            } 
+            // var projectName = $('#project_name').val().trim();
+            // if (projectName == "") {
+            //     $('.nextbtn2').show();
+            //     $('.nextbtn1').hide();
+            // } 
+            // else {
+            //     $('.nextbtn1').show();
+            //     $('.nextbtn2').hide();
+            // } 
             
-            $('#project_name').on('input keyup keydown', function() {
-                var projectName = $(this).val().trim();
+            // $('#project_name').on('input keyup keydown', function() {
+            //     var projectName = $(this).val().trim();
         
-                if (projectName == "") {
-                    // $('.nextbtn2').show();
-                    $('.nextbtn1').hide();
-                } 
-                else {
-                    $('.nextbtn1').show();
-                    // $('.nextbtn2').hide();
-                } 
-            });
+            //     if (projectName == "") {
+            //         // $('.nextbtn2').show();
+            //         $('.nextbtn1').hide();
+            //     } 
+            //     else {
+            //         $('.nextbtn1').show();
+            //         // $('.nextbtn2').hide();
+            //     } 
+            // });
 
             //==========================================for unit selection=====================================================
 
@@ -2634,12 +2641,24 @@
 
         });
 
-        $('#tab_results_table').on('click',function(){
-            //   var readonly = ($('#read_only').val());
-            //   if(readonly != ""){
-                display_compatible_models(null);
-            //   }
+        $(document).on('click', '.go-to-unit-feature', function(){
+            $('.go-to-unit-feature').addClass('d-none');
+            document.querySelector('.nav-link[id="tab_results_table"]').click();
+        })
+        
+        $(document).on('click', '#tab_unit_home', function(){
+            $('.btn-first-unit-next').show()
+            $('.go-to-unit-feature').addClass('d-none');
+        })
 
+        $(document).on('click', '#tab_unit_selection', function(){
+            $('.btn-first-unit-next').hide()
+            $('.go-to-unit-feature').removeClass('d-none');
+        })
+
+        $('#tab_results_table').on('click',function(){
+            $('.go-to-unit-feature').addClass('d-none');
+            display_compatible_models(null);
         })
 
 
@@ -2686,18 +2705,21 @@
             $('.tabs.graph-tabs').addClass("hidden");
         })
      
-        function backToUnitSelect() {
+        function backToUnitSelect() {            
+            $('.go-to-unit-feature').removeClass('d-none');
             document.querySelector('.nav-link[id="tab_unit_selection"]').click();
         }
 
         function addMoreUnit() {
             $('input[name=continue_flag]').val(1);
-            onSaveNewUnit(1);
+            // onSaveNewUnit(1);
+            storeProject();
         }
 
         function completeProcess() {
             $('input[name=continue_flag]').val(0);
-            onSaveNewUnit(0);
+            // onSaveNewUnit(0);
+            storeProject();
         }
 
 

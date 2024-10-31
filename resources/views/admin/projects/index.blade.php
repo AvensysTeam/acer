@@ -51,11 +51,13 @@
                
             </div>
             </div> 
-            <div class="add-new"> 
+            <div class="add-new d-flex"> 
+                    <a href="#" class="multi-delete-projects d-none">
+                        <img class="new" src="{{asset('assets/icons/trash-icon-original.svg')}}" width="30px" height="30px"/>
+                    </a>
                     <a href="{{route('admin.projects.profile')}}" class="">
-                    <img class="new" src="{{asset('assets/icons/plus-circle-icon-original.svg')}}" width="30px" height="30px"/>
-               <!-- <small>@lang('New')</small> -->
-                </a>
+                        <img class="new" src="{{asset('assets/icons/plus-circle-icon-original.svg')}}" width="30px" height="30px"/>
+                    </a>
             </div>
             </div>
         </div>
@@ -98,18 +100,14 @@
                                 <td class="nowrap">{{$p->reference}}</td>
                                 <td class="nowrap">{{$p->description}}</td>
                                 <td class="nowrap">{{date("m/d/Y", strtotime($p->updated_at))}}</td>
-                                <td class="action_btn">
-                                    <!-- <a class="" onclick="modify2('{{$p->id}}','{{$p->company}}','{{$p->contact}}')"> -->
-                                        <a class="" onclick="goToDetail('{{$p->id}}','{{$p->company}}','{{$p->contact}}')">
-                                        <!-- <i class="fa fa-edit"></i>
-                                        <small>@lang('Modify')</small> -->
-                                        <img class="new mb-2" src="{{asset('assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"/>
+                                <td class="action_btn align-items-center ">
+                                    <a class="" onclick="goToDetail('{{$p->id}}','{{$p->company}}','{{$p->contact}}')">
+                                        <img class="new" src="{{asset('assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"/>
                                     </a>
                                     <a class="" onclick="del('{{$p->id}}')">
-                                        <!-- <i class="fa fa-trash"></i>
-                                        <small>@lang('Delete')</small> -->
-                                        <img class="new mb-2" src="{{asset('assets/icons/trash-icon-original.svg')}}" width="25px" height="25px"/>
+                                        <img class="new" src="{{asset('assets/icons/trash-icon-original.svg')}}" width="25px" height="25px"/>
                                     </a>
+                                    <input type="checkbox" name="deletable_projects[]" class="deletable-projects" value="{{$p->id}}" />
                                 </td>
                             </tr>
                             <?php
@@ -237,12 +235,61 @@
                cancelButtonText: '@lang("No")'
            }).then((result) => {
                if (result.isConfirmed) {
-                   location.href = '{{ route('admin.projects.profile') }}/' + pid + '/' + cid + '/' + uid;
+                   location.href = '{{ route("admin.projects.profile") }}/' + pid + '/' + cid + '/' + uid;
                }
            });
       }
 
+        $('.deletable-projects').on('change', function() {
+            // Check if at least one checkbox is checked
+            if ($('.deletable-projects:checked').length > 0) {
+                // Emit action if at least one is checked
+                console.log('At least one checkbox is checked.');
+                // Add your custom action here
+                $('.multi-delete-projects').removeClass("d-none");
+            } else {
+                console.log('No checkboxes are checked.');
+                $('.multi-delete-projects').addClass("d-none");
+            }
+        });
 
+        $('.multi-delete-projects').click(function(){
+            var pids = [];
+            $('.deletable-projects:checked').map((index, ele) => {
+                pids.push($(ele).val());
+            });
+            Swal.fire({
+                title: "Do you confirm to remove ?",
+                
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '@lang("Yes")'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        method: 'POST',
+                        url: '{{route("admin.projects.multi-delete.project")}}',
+                        headers: {'x-csrf-token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')},
+                        data: {ids: pids}
+                    }).done(function (res) {
+                        if(res.result && res.result > 0) {
+                            for( var pid of pids) {
+                                dTable.row('#mytr_'+pid).remove().draw(false);
+                            }
+                            $('.multi-delete-projects').addClass("d-none");
+                            Swal.fire(
+                                '@lang("Deleted!")',
+                                '@lang("Your projectx have been deleted.")',
+                                'success'
+                            );
+                        }
+                    });
+                }
+            });
+
+        })
         
         function del(pid) {
         Swal.fire({
@@ -257,7 +304,7 @@
         if (result.isConfirmed) {
             $.ajax({
                 method: 'POST',
-                url: '{{route('admin.projects.delete.project')}}',
+                url: '{{route("admin.projects.delete.project")}}',
                 headers: {'x-csrf-token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')},
                 data: {id: pid}
             }).done(function (res) {

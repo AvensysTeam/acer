@@ -2652,8 +2652,7 @@
         })
 
         $(document).on('click', '#tab_unit_selection', function(){
-            $('.btn-first-unit-next').hide()
-            $('.go-to-unit-feature').removeClass('d-none');
+            onNewUnit();
         })
 
         $('#tab_results_table').on('click',function(){

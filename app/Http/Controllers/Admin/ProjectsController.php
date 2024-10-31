@@ -197,9 +197,13 @@ class ProjectsController extends Controller
         
         curl_close($ch);
 
+
+        $prices = $this->get_model_price_by_id($request->id);
+
         $result = [
             'completedata' => json_decode($response),
-            'accessories' => json_decode($response2)
+            'accessories' => json_decode($response2),
+            'prices' => $prices
         ];
         
         return response()->json(['result' => $result]);
@@ -435,6 +439,11 @@ class ProjectsController extends Controller
         return response()->json(['result' => $res]);
     }
 
+    public function multi_delete_project(Request $request) {
+        $res = Project::whereIn('id', $request->ids)->delete();        
+        return response()->json(['result' => $res]);
+    }
+
     public function duplicate_project(Request $req) {
         // dd($req->all());
         $id = $req->id;
@@ -561,9 +570,8 @@ class ProjectsController extends Controller
         $res = $job->delete();
         return response()->json(['result' => $res]);
     }
-    
-    public function get_model_price(Request $req){
-        $id_model = $req->get('id');
+
+    public function get_model_price_by_id($id_model) {
         $res = Price::whereNull('deleted_at')
             ->where('id_model', $id_model)
             ->get();
@@ -589,6 +597,13 @@ class ProjectsController extends Controller
                 }
             }
         }
+        return $result;
+
+    }
+    
+    public function get_model_price(Request $req){
+        $id_model = $req->get('id');
+        $result = $this->get_model_price_by_id($id_model);
         echo json_encode($result);
     }
 

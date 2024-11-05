@@ -83,7 +83,25 @@
   {{Session::get('flash')}}
 @endif
 
+
+
 <div class="w-full my-3">
+    @if ($units_list && count($units_list) > 0)
+    <div class="action-btn-group float-right">
+        <a class="btn  button-boxed btn-backward">
+            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="25px" height="25px"></span>
+        </a>        
+        @if($option != 'readonly')
+        <a class="btn  button-boxed" onclick="addNewUnitInProject()">
+            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="25px" height="25px"></span>
+        </a>
+        @endif
+        <a class="btn  button-boxed btn-forward" >
+            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="25px" height="25px"></span>
+        </a>
+    </div>
+    @endif
+     
     <table class="display compact units-table datatable-t1 utable" style="visibility: hidden;">
       @if ($units_list)
          <thead>
@@ -99,30 +117,32 @@
             <tr class="unit-row" data-name="{{$row->name}}">
                 <td>{{$row->name}}</td>
                 <td align="center">
-                    <button type="button" class="btn btn-primary" onclick="onViewUnit(`{{$row->name}}`)">View</button>
+                    @if($option != 'readonly')
+                    <a class="btn  button-boxed" onclick="onViewUnit(`{{$row->name}}`)">
+                        <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
+                    </a>
+                    
+                    <a class="btn  button-boxed" onclick="onEditUnit(`{{$row->name}}`)">
+                        <span> <img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"></span>
+                    </a>
+                    
+                    <a class="btn  button-boxed" onclick="onDeleteUnit(`{{$row->name}}`)">
+                        <span> <img class="new mb-2" src="{{asset('/assets/icons/trash-icon-original.svg')}}" width="25px" height="25px"></span>
+                    </a>
+                    @endif
+                  
+                    <!-- <button type="button" class="btn btn-primary" onclick="onViewUnit(`{{$row->name}}`)">View</button>
                     <button type="button" class="btn btn-success" onclick="onEditUnit(`{{$row->name}}`)">Edit</button>
                     <button type="button" class="btn btn-danger" onclick="onDeleteUnit(`{{$row->name}}`)">Delete</button>
-                    <button type="button" class="btn btn-info" onclick="onAddOffer(`{{$row->name}}`)">Add Offer</button>
+                    <button type="button" class="btn btn-info" onclick="onAddOffer(`{{$row->name}}`)">Add Offer</button> -->
                 </td>
             </tr>
             @endforeach
             @endif
         </tbody>
-        <tfoot>
-            @if ($units_list && count($units_list) > 0)
-            <tr>
-                <td colspan="2" align="center">
-                    <a class="btn btn-success btn-block button-boxed" onclick="onNewUnit()">
-                        <i class="fa fa-plus"></i>
-                        <small>@lang('Add Unit')</small>
-                    </a>
-                </td>
-            </tr>
-            @endif
-        </tfoot>
     </table>
 </div>
-<div class="main-card project-detail p_details" style="width:95%; border: 3px solid orange;">    
+<div class="main-card project-detail p_details  @if( $pid != '0') d-none @endif" style="width:95%; border: 3px solid orange;">    
     <div class="body">
         <div class="row">
             <div class="col-md-5" id="unitform" style="display: none;">
@@ -1036,7 +1056,7 @@
             if ($('#tab1').hasClass('active')) {
                 // $('html, body').animate({ scrollTop: $('#tab1').offset().top }, 'slow');
                 $('main').css('overflow', 'hidden');
-                $(".w-full.my-3").remove();
+                // $(".w-full.my-3").remove();
             }else{
                 $('main').css('overflow', '');
             }
@@ -2227,6 +2247,7 @@
         }
 
         function onViewUnit(unit_name){
+            $('.p_details').removeClass('d-none');
             var readonly = $('#read_only').val().trim();
             if(readonly !== 'readonly'){
             $('.btn-unit-save').hide();
@@ -2266,6 +2287,7 @@
         }
 
         function onEditUnit(unit_name){
+            $('.p_details').removeClass('d-none');
             var readonly = $('#read_only').val();
             // alert(readonly); return;
             if(readonly !== 'readonly'){
@@ -2938,6 +2960,11 @@
                     console.log('An error occurred while uploading the file.');
                 }
             });
+        }
+
+        function addNewUnitInProject() {
+            $('.p_details').removeClass('d-none');
+            onNewUnit();
         }
        
   

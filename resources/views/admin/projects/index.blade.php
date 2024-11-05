@@ -414,20 +414,21 @@
         });
 
         function goToDetail(pid,company_id,contact_id) {
+            location.href = `{{route('admin.projects.detail')}}/${pid}/${company_id}/${contact_id}`;
            
-            Swal.fire({
-               title: "@lang('Do you confirm to modify ?')",
-               icon: 'question',
-               showCancelButton: true,
-               confirmButtonColor: '#3085d6',
-               cancelButtonColor: '#d33',
-               confirmButtonText: '@lang("Yes")',
-               cancelButtonText: '@lang("No")'
-           }).then((result) => {
-               if (result.isConfirmed) {
-                location.href = `{{route('admin.projects.detail')}}/${pid}/${company_id}/${contact_id}`;
-               }
-           });
+        //     Swal.fire({
+        //        title: "@lang('Do you confirm to modify ?')",
+        //        icon: 'question',
+        //        showCancelButton: true,
+        //        confirmButtonColor: '#3085d6',
+        //        cancelButtonColor: '#d33',
+        //        confirmButtonText: '@lang("Yes")',
+        //        cancelButtonText: '@lang("No")'
+        //    }).then((result) => {
+        //        if (result.isConfirmed) {
+        //         location.href = `{{route('admin.projects.detail')}}/${pid}/${company_id}/${contact_id}`;
+        //        }
+        //    });
            
         }
     </script>

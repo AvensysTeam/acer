@@ -75,6 +75,9 @@
         z-index: 1;
     }
 
+    .v-hidden {
+        visibility: hidden;
+    }
 </style>
 <?php
     $units_list = json_decode($units);
@@ -87,16 +90,14 @@
 
 <div class="w-full my-3">
     @if ($units_list && count($units_list) > 0)
-    <div class="action-btn-group float-right">
-        <a class="btn  button-boxed btn-backward">
+    <div class="action-btn-group float-right">        
+        <a class="btn  button-boxed btn-backward @if(!$previousItem) v-hidden @endif" onclick="gotoLink(`{{$previousItem}}`)">
             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="25px" height="25px"></span>
-        </a>        
-        @if($option != 'readonly')
-        <a class="btn  button-boxed" onclick="addNewUnitInProject()">
+        </a>
+        <a class="btn  button-boxed @if($option == 'readonly') v-hidden @endif " onclick="addNewUnitInProject()">
             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="25px" height="25px"></span>
         </a>
-        @endif
-        <a class="btn  button-boxed btn-forward" >
+        <a class="btn  button-boxed btn-forward @if(!$nextItem) v-hidden @endif" onclick="gotoLink(`{{$nextItem}}`)">
             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="25px" height="25px"></span>
         </a>
     </div>
@@ -2965,6 +2966,10 @@
         function addNewUnitInProject() {
             $('.p_details').removeClass('d-none');
             onNewUnit();
+        }
+
+        function gotoLink(link) {
+            location.href = `{{route('admin.projects.detail')}}/` + link;
         }
        
   

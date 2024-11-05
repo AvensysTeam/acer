@@ -26,14 +26,22 @@ class ProjectsController extends Controller
     public function index()
     {
         //$query = "SELECT P.id, P.company, P.contact, P.reference, C.`name` AS `customer`, CP.firstname AS `contact_name`, P.`name` AS `project_name`, P.description, P.updated_at, P.`status` FROM `project` AS `P` LEFT JOIN `company` AS `C` ON P.company = C.id LEFT JOIN `contact_people` AS `CP` ON P.contact = CP.id WHERE ISNULL(P.deleted_at) AND P.user=" . auth()->user()->id;
-        $query = "SELECT P.id, P.company, P.contact, P.reference, C.`name` AS `customer`, CP.firstname AS `contact_name`, P.`name` AS `project_name`, P.description, P.updated_at, P.`status` FROM `project` AS `P` LEFT JOIN `company` AS `C` ON P.company = C.id LEFT JOIN `contact_people` AS `CP` ON P.contact = CP.id WHERE ISNULL(P.deleted_at)" ;
+       
 
-        $result = DB::select($query);
-        
+        $result = $this->getProjectList();
+
         return view('admin.projects.index', [
             '_page_title' => trans('global.project.project_list'),
             'project_list' => $result
         ]);
+    }
+
+    private function getProjectList() {
+        $query = "SELECT P.id, P.company, P.contact, P.reference, C.`name` AS `customer`, CP.firstname AS `contact_name`, P.`name` AS `project_name`, P.description, P.updated_at, P.`status` FROM `project` AS `P` LEFT JOIN `company` AS `C` ON P.company = C.id LEFT JOIN `contact_people` AS `CP` ON P.contact = CP.id WHERE ISNULL(P.deleted_at)" ;
+
+        $result = DB::select($query);
+
+        return $result;
     }
 
     public function profile($pid=0, $cid=0, $uid=0)
@@ -128,6 +136,35 @@ class ProjectsController extends Controller
         $count_project = Project::withTrashed()->get();;
         $cp = $count_project->count();
         $contact_email = ContactPeople::select('email')->Where('id',$uid)->get();
+
+
+        $project_list = $this->getProjectList();
+        $next_prev = [];
+        foreach($project_list as $p) {
+            $next_prev[] =  $p->id . '/' . $p->company .'/' . $p->contact;
+        }
+
+        $current_project = $pid . '/' . $cid .'/' . $uid;
+
+        $previousItem = null;
+        $nextItem = null;
+
+        foreach ($next_prev as $index => $item) {
+            if ($item === $current_project) {
+                // Set previous item if it exists
+                if ($index > 0) {
+                    $previousItem = $next_prev[$index - 1];
+                }
+                // Set next item if it exists
+                if ($index < count($next_prev) - 1) {
+                    $nextItem = $next_prev[$index + 1];
+                }
+                break;
+            }
+        }
+
+
+
         //dump($contact_email);
         return view('admin.projects.detail',[
             '_page_title' => $title,
@@ -146,6 +183,9 @@ class ProjectsController extends Controller
             'units' => json_encode($units),
             'delivery_address' => $delivery_address,
             'delivery_condition' => $delivery_condition,
+
+            'nextItem' => $nextItem,
+            'previousItem' => $previousItem
         ]);
     }
 

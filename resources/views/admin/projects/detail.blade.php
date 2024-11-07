@@ -91,13 +91,13 @@
 <div class="w-full my-3">
     @if ($units_list && count($units_list) > 0)
     <div class="action-btn-group float-right">        
-        <a class="btn  button-boxed btn-backward @if(!$previousItem) v-hidden @endif" onclick="gotoLink(`{{$previousItem}}`)">
+        <a class="btn  button-boxed btn-backward @if($option == 'readonly') v-hidden @endif">
             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="25px" height="25px"></span>
         </a>
         <a class="btn  button-boxed @if($option == 'readonly') v-hidden @endif " onclick="addNewUnitInProject()">
             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="25px" height="25px"></span>
         </a>
-        <a class="btn  button-boxed btn-forward @if(!$nextItem) v-hidden @endif" onclick="gotoLink(`{{$nextItem}}`)">
+        <a class="btn  button-boxed btn-forward @if($option == 'readonly') v-hidden @endif" onclick="addDeliveryTime()">
             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="25px" height="25px"></span>
         </a>
     </div>
@@ -107,8 +107,10 @@
       @if ($units_list)
          <thead>
             <tr>
-                <th>@lang('Unit Name')</th>
-                <!-- <th></th> -->
+                <th class="text-center">@lang('Unit Name')</th>
+                <th class="text-center">@lang('PDF')</th>
+                <th class="text-center">@lang('Delivery Time')</th>
+                <th class="text-center" width="101px">@lang('Action')</th>
             </tr>
         </thead> 
         @endif
@@ -117,25 +119,24 @@
             @foreach ($units_list as $row)
             <tr class="unit-row" data-name="{{$row->name}}">
                 <td>{{$row->name}}</td>
-                <td align="center">
+                <td>
+                    <a href="/uploads/project/{{$row->pdf}}" target="_blank">{{$row->pdf}}</a>
+                </td>
+                <td>{{$row->delivery_time}}</td>
+                <td center>
                     @if($option != 'readonly')
-                    <a class="btn  button-boxed" onclick="onViewUnit(`{{$row->name}}`)">
+                    <a class="btn  button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'view')">
                         <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
                     </a>
                     
-                    <a class="btn  button-boxed" onclick="onEditUnit(`{{$row->name}}`)">
+                    <a class="btn  button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'edit')">
                         <span> <img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"></span>
                     </a>
                     
-                    <a class="btn  button-boxed" onclick="onDeleteUnit(`{{$row->name}}`)">
+                    <a class="btn  button-boxed p-0" onclick="onDeleteUnit(`{{$row->name}}`)">
                         <span> <img class="new mb-2" src="{{asset('/assets/icons/trash-icon-original.svg')}}" width="25px" height="25px"></span>
                     </a>
                     @endif
-                  
-                    <!-- <button type="button" class="btn btn-primary" onclick="onViewUnit(`{{$row->name}}`)">View</button>
-                    <button type="button" class="btn btn-success" onclick="onEditUnit(`{{$row->name}}`)">Edit</button>
-                    <button type="button" class="btn btn-danger" onclick="onDeleteUnit(`{{$row->name}}`)">Delete</button>
-                    <button type="button" class="btn btn-info" onclick="onAddOffer(`{{$row->name}}`)">Add Offer</button> -->
                 </td>
             </tr>
             @endforeach
@@ -426,13 +427,13 @@
                                                 <div class="col-md-6">
                                                     <label for="p_w_Tfin" class="text-xs">@lang("Fresh Air temperature")(°C)</label>
                                                     <div class="form-group">
-                                                        <input type="number" id="p_w_Tfin" name="p_w_Tfin" class="form-control" min="-20" max="40"  value="-10">
+                                                        <input type="number" id="p_w_Tfin" name="p_w_Tfin" class="form-control climatic-inner-data" min="-20" max="40"  value="-10">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="p_w_Trin" class="text-xs">@lang("Return Air temperature")(°C)</label>
                                                     <div class="form-group">
-                                                        <input type="number" id="p_w_Trin" name="p_w_Trin" class="form-control" min="-20" max="40"  value="20">
+                                                        <input type="number" id="p_w_Trin" name="p_w_Trin" class="form-control climatic-inner-data" min="-20" max="40"  value="20">
                                                     </div>
                                                 </div>
                                             </div>
@@ -440,13 +441,13 @@
                                                 <div class="col-md-6">
                                                     <label for="p_w_Hfin" class="text-xs">@lang("Fresh Air humidity")(%)</label>
                                                     <div class="form-group">
-                                                        <input type="number" id="p_w_Hfin" name="p_w_Hfin" class="form-control" min="5" max="98"  value="80">
+                                                        <input type="number" id="p_w_Hfin" name="p_w_Hfin" class="form-control climatic-inner-data" min="5" max="98"  value="80">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="p_w_Hrin" class="text-xs">@lang("Return Air humidity")(%)</label>
                                                     <div class="form-group">
-                                                        <input type="number" id="p_w_Hrin" name="p_w_Hrin" class="form-control" min="5" max="98"  value="60">
+                                                        <input type="number" id="p_w_Hrin" name="p_w_Hrin" class="form-control climatic-inner-data" min="5" max="98"  value="60">
                                                     </div>
                                                 </div>
                                             </div>
@@ -457,13 +458,13 @@
                                                 <div class="col-md-6">
                                                     <label for="p_s_Tfin" class="text-xs">@lang("Fresh Air temperature")(°C)</label>
                                                     <div class="form-group">
-                                                        <input type="number" id="p_s_Tfin" name="p_s_Tfin" class="form-control" min="-20" max="40"  value="-10">
+                                                        <input type="number" id="p_s_Tfin" name="p_s_Tfin" class="form-control climatic-inner-data" min="-20" max="40"  value="-10">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="p_s_Trin" class="text-xs">@lang("Return Air temperature")(°C)</label>
                                                     <div class="form-group">
-                                                        <input type="number" id="p_s_Trin" name="p_s_Trin" class="form-control" min="-20" max="40"  value="20">
+                                                        <input type="number" id="p_s_Trin" name="p_s_Trin" class="form-control climatic-inner-data" min="-20" max="40"  value="20">
                                                     </div>
                                                 </div>
                                             </div>
@@ -471,16 +472,21 @@
                                                 <div class="col-md-6">
                                                     <label for="p_s_Hfin" class="text-xs">@lang("Fresh Air humidity")(%)</label>
                                                     <div class="form-group">
-                                                        <input type="number" id="p_s_Hfin" name="p_s_Hfin" class="form-control" min="5" max="98"  value="80">
+                                                        <input type="number" id="p_s_Hfin" name="p_s_Hfin" class="form-control climatic-inner-data" min="5" max="98"  value="80">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="p_s_Hrin" class="text-xs">@lang("Return Air humidity")(%)</label>
                                                     <div class="form-group">
-                                                        <input type="number" id="p_s_Hrin" name="p_s_Hrin" class="form-control" min="5" max="98"  value="60">
+                                                        <input type="number" id="p_s_Hrin" name="p_s_Hrin" class="form-control climatic-inner-data" min="5" max="98"  value="60">
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div>
+                                            <input type="checkbox" name="climatic_standard" id="climatic_standard">                                            
+                                            <label for="climatic_standard">@lang('Standard')</label>
+                                            <p>(@lang('These parameters will remain for all projects.'))</p>
                                         </div>
                                     </div>
                                 </div>
@@ -853,6 +859,7 @@
         var loadImageId = null;
         var selected_price_id = null;
         var delivery_times = [];
+        var selected_model_full_name = null;
 
         <?php
             $user_multiplier = auth()->user()->multiplier;
@@ -901,7 +908,7 @@
             });   
         }
  
-        function display_compatible_models(callback, showLoading = true) {
+        function display_compatible_models(callback, _showLoading = true) {
 
            
 
@@ -976,6 +983,7 @@
             /** */
 
             w_Trin = $.trim($('#p_w_Trin').val());
+            console.log(w_Trin);
             if(w_Trin === '' || isNaN(parseFloat(w_Trin)) ||  parseFloat(w_Trin) < -20 ||  parseFloat(w_Trin) > 40) {
                 alert("@lang('Exhaust Air temperature(°C) must be greater than or equal to -20 and less than or equal to 40')");
                 $('#p_w_Trin').focus();
@@ -1008,7 +1016,7 @@
             params.Hfin = parseFloat(w_Hfin);
 
             // Todo: send and receive data from API
-            if (showLoading)
+            if (_showLoading)
                 showSwalLoading(); 
 
             $.ajax({
@@ -1024,24 +1032,25 @@
                 $('#tab_results_table').closest('.tabs').find('#tab0').removeClass('active'); 
                 $('#tab_results_table').closest('.tabs').find('#tab1').removeClass('active'); 
                 $('#tab_results_table').closest('.tabs').find('#tab2').addClass('active');
+                if (_showLoading)
+                    swal.close();
                 if (result != null && result != 'Empty')
                     initTable(result, callback);
-                if (showLoading)
-                    swal.close();
-            });
+            });    
+                
+            if ($('#project_reference').val()  == null || $('#project_reference').val()  == undefined ||  $('#project_reference').val()  == ''){
+                var count = $('#project_count').val()
+                var lastGeneratedNumber = count;
+                lastGeneratedNumber++;
+                var serialNumber = lastGeneratedNumber.toString().padStart(6, '0');
+                $('#project_reference').val(serialNumber);
+            }
 
-
-            if($('#project_name').val() == "" || $('#project_name').val() == null){
+            if ($('#project_name').val() == "" || $('#project_name').val() == null){
                 var project_name = generateRandomNumber();
-                $('.main-header h3').text("@lang('Project'): " + project_name + ' ' + $('#project_reference').val());
                 $('#project_name').val(project_name);
-
-            }else{
-
-                $('.main-header h3').text("@lang('Project'): " + $('#project_name').val().trim() + ' ' + $('#project_reference').val());
             }
         }
-
        
         function generateRandomNumber() {
             // Generate a 5-digit random number
@@ -1051,7 +1060,6 @@
             // Combine the random number and current year digits
             return parseInt(randomNumber.toString() + currentYearLastTwoDigits);
         }
-
 
         function tab1_active(){
             if ($('#tab1').hasClass('active')) {
@@ -1092,9 +1100,9 @@
                 $row.append('<td>' + data[model]["Lw"] + '</td>');
                 $dt.find('tbody').append($row);
 
-                if(callback !== undefined && callback !== null) {
-                    callback(data[model]["id"], model, data[model]["Reg"]);
-                }
+                // if(callback !== undefined && callback !== null) {
+                //     callback(data[model]["id"], model, data[model]["Reg"]);
+                // }
                 // document.querySelector('.nav-link[href="#tab3"]').click();
                 // $('.tabs.graph-tabs').addClass("hidden");
             }
@@ -1124,7 +1132,7 @@
                     }                    
                 }
             });
-            var pid = '{{$pid}}';
+            var pid = parseInt('{{$pid}}');
             if(pid > 0) {
                 var defaultRowIndex = 1;
                 dTable.row(defaultRowIndex).select();
@@ -1132,9 +1140,8 @@
                 var selectedRows = dTable.rows({ selected: true }).data();
                 for(var i=0; i<selectedRows.length;i++){
                     var modelid_default = selectedRows[i][0];
-                    var reg_default = selectedRows[i][8];
+                    var reg_default = $('.selected td:first-child').data('reg');
                     loadFromModel(id_default, reg_default, modelid_default);
-                    //   initPriceTable(id_default);
                 }
             }
             
@@ -1240,9 +1247,10 @@
             });
         }
 
-        function loadFromModel(id, reg, model, showLoading = true) {
+        function loadFromModel(id, reg, model, _showLoading = true) {
+
             model_id = id;
-            if (showLoading)
+            if (_showLoading)
                 showSwalLoading();
             $.ajax({
                 method: 'GET',
@@ -1265,6 +1273,8 @@
                     unitsel = result[model].Unit_SEL;
                     psfp = result[model].PSFP;
 
+                    selected_model_full_name = model;
+
                     drawGraph(result[model]);
 
                     showaccessories(res.result.accessories)
@@ -1282,14 +1292,13 @@
                         isView = true;
                         $('.btn-unit-save').show();
                     }
-                    if (showLoading)
+                    if (_showLoading)
                         swal.close();
                     
-                    $('#unitform').show();
                     $("#preview_a_tag").removeClass('d-none');
                     $('.btn-preview').show();
                 } else {
-                    if (showLoading)
+                    if (_showLoading)
                         swal.close();
                     Swal.fire({
                         title: 'There is no complete data',
@@ -1656,7 +1665,7 @@
             /** this action is required because canvas elements load all graph within a short time */
             $('.chart-tab-content .tab-pane').addClass('chart-tab-active');
 
-            await delay(100);
+            await delay(200);
 
             const project_name = $('#project_name').val().trim();
             const project_desc = $('#project_desc').val().trim();
@@ -2106,17 +2115,9 @@
                 const project_desc = $('#project_desc').val().trim();
                 const project_refer = $('#project_reference').val();
                 const creation_date = $('#create_date').val().trim();
-                const modify_date = $('#modify_date').val().trim();
-         
+                const modify_date = $('#modify_date').val().trim();         
                 
-                     if (project_refer  == null || project_refer  == undefined ||  project_refer  == ''){
-                        var count = $('#project_count').val()
-                        var lastGeneratedNumber = count;
-                        lastGeneratedNumber++;
-                        var serialNumber = lastGeneratedNumber.toString().padStart(6, '0');
-                        $('#project_reference').val(serialNumber);
-                        
-                     }
+
                 if (!final) {
                     doc = generatePDFforUNIT();
                     saveLoading = false;
@@ -2216,113 +2217,116 @@
             }
             $('#staticBackdrop').modal('hide');
             //$('.unitfeatures tbody tr').addClass('selected');
-            display_compatible_models(null);
+            // display_compatible_models(null);
             // onSaveOffer();
         }
 
         function onNewUnit() {
             $('.btn-first-unit-next').hide();
             $('.go-to-unit-feature').removeClass('d-none');
-            // $('#unitform').show();
+            $('#unitform').show();
+
             isNew = true;
             isView = false;
             $('#tab_unit_selection').removeClass('disabled');
             // $('#tab_results_table').addClass('disabled');
             $('#tab_results_table').removeClass('disabled');
-            document.querySelector('.nav-link[href="#tab1"]').click();
+            // document.querySelector('.nav-link[href="#tab1"]').click();
             document.querySelector('#tab1').scrollTop = 0;
+            var standard_climatic_data = localStorage.getItem('standard_climatic_data');
+            if(standard_climatic_data) {
+                var jsonValues = JSON.parse(standard_climatic_data);
+                console.log(jsonValues);
+                var input_name_values = ['p_s_Hfin','p_s_Hrin','p_s_Tfin','p_s_Trin','p_w_Hfin','p_w_Hrin','p_w_Tfin','p_w_Trin'];
+                input_name_values.forEach(name => {
+                    $('input[name=' + name + ']').val(jsonValues[name]);
+                })
+                $('input.climatic-inner-data').attr({'disabled': true});
+                $('input[name=climatic_standard]').prop("checked", true);
+            } else {
+                $('#p_w_Trin').val(20);
+                $('#p_w_Hrin').val(60);
+                $('#p_w_Tfin').val(-10);
+                $('#p_w_Hfin').val(80);
+            }
             $('.btn-unit-save').hide();
-            $('#unit_name').attr('disabled', false);
-            $('#unit_name').val('');
             $('#unit_name').focus();
             $('#p_layout').val('C');
             $(`input[name=indoor][value="I"]`).prop('checked', true);
             $(`input[name=ex][value="CF|LT"]`).prop('checked', true);
             $('#p_airflow').val(200);
             $('#p_pressure').val(50);
-            $('#p_w_Trin').val(20);
-            $('#p_w_Hrin').val(60);
-            $('#p_w_Tfin').val(-10);
-            $('#p_w_Hfin').val(80);
             tab1_active();
         }
 
-        function onViewUnit(unit_name){
-            $('.p_details').removeClass('d-none');
-            var readonly = $('#read_only').val().trim();
-            if(readonly !== 'readonly'){
-            $('.btn-unit-save').hide();
-            //$('#tab_unit_selection').removeClass('disabled');
-            $('#unitform').show();
-            isNew = false;
-            isView = true;
-            var temp_unit = null;
-            units.map(row => {
-                if (row.name == unit_name) {
-                    temp_unit = row;
-                }
-            });
+        // function onViewUnit(unit_name){
             
-            $('#unit_name').val(temp_unit.name);
-            $('#unit_name').attr('disabled', true);
-            $('#p_layout').val(temp_unit.layout);
-            $(`input[name=indoor][value="${temp_unit.indoor}"]`).prop('checked', true);
-            $(`input[name=ex][value="${temp_unit.ex2}|${temp_unit.ex1}"]`).prop('checked', true);
-            $('#p_airflow').val(temp_unit.airflow);
-            $('#p_pressure').val(temp_unit.pressure);
-            $('#p_w_Trin').val(temp_unit.Trin);
-            $('#p_w_Hrin').val(temp_unit.Hrin);
-            $('#p_w_Tfin').val(temp_unit.Tfin);
-            $('#p_w_Hfin').val(temp_unit.Trin);
-            model_id = temp_unit.modelId;
-            display_compatible_models(function(id, model, reg) {
-                if(id == model_id) {
-                    selected_model = model;
-                    loadFromModel(id, reg, model);
-                    // initPriceTable(id, temp_unit.priceId);
-                }
-            });
-            }else{
-                alert('cant access view');
-            }
-        }
+        // }
 
-        function onEditUnit(unit_name){
+        function editOrViewUnit(unit_name, flag='edit') {
+            if(flag == 'view') { // hide all store buttons
+                $('.btn-unit-save').hide();
+                isView = true;
+            } else {
+                isView = false;
+            }
+
             $('.p_details').removeClass('d-none');
             var readonly = $('#read_only').val();
             // alert(readonly); return;
             if(readonly !== 'readonly'){
-            $('#tab_unit_selection').removeClass('disabled');
-            $('#tab_results_table').addClass('disabled');
-            $('#unitform').show();
-            document.querySelector('#tab1').scrollTop = 0;
-            document.querySelector('.nav-link[href="#tab1"]').click();
-            isNew = false;
-            isView = false;
-            var temp_unit = null;
-            units.map((row, index) => {
-                if (row.name == unit_name) {
-                    temp_unit = row;
-                    edit_unit_index = index;
+                $('#tab_unit_selection').removeClass('disabled');
+                $('#tab_results_table').addClass('disabled');
+                $('#unitform').show();
+                document.querySelector('#tab1').scrollTop = 0;
+                document.querySelector('.nav-link[href="#tab1"]').click();
+                isNew = false;
+                var temp_unit = null;
+                units.map((row, index) => {
+                    if (row.name == unit_name) {
+                        temp_unit = row;
+                        edit_unit_index = index;
+                    }
+                });
+            // edit_unit_name = temp_unit.name;
+                $('#unit_name').attr('disabled', false);
+                $('#unit_name').val(temp_unit.name);
+                $('#p_layout').val(temp_unit.layout);
+                $(`input[name=indoor][value="${temp_unit.indoor}"]`).prop('checked', true);
+                $(`input[name=ex][value="${temp_unit.ex2}|${temp_unit.ex1}"]`).prop('checked', true);
+                $('#p_airflow').val(temp_unit.airflow);
+                $('#p_pressure').val(temp_unit.pressure);
+
+                $('#p_r_airflow').val(temp_unit.p_r_airflow);
+                $('#p_r_pressure').val(temp_unit.p_r_pressure);
+
+                $('#p_w_Trin').val(temp_unit.Trin);
+                $('#p_w_Hrin').val(temp_unit.Hrin);
+                $('#p_w_Tfin').val(temp_unit.Tfin);
+                $('#p_w_Hfin').val(temp_unit.Hfin);
+
+                $('#p_s_Trin').val(temp_unit.s_Trin);
+                $('#p_s_Hrin').val(temp_unit.s_Hrin);
+                $('#p_s_Tfin').val(temp_unit.s_Tfin);
+                $('#p_s_Hfin').val(temp_unit.s_Hfin);
+                
+                $('#p_sfp').val(temp_unit.p_sfp);
+                $('#m_rfl').val(temp_unit.m_rfl);
+
+                model_id = temp_unit.modelId;
+
+                if(flag == 'view') {
+                    display_compatible_models(null);
                 }
-            });
-           // edit_unit_name = temp_unit.name;
-            $('#unit_name').attr('disabled', false);
-            $('#unit_name').val(temp_unit.name);
-            $('#p_layout').val(temp_unit.layout);
-            $(`input[name=indoor][value="${temp_unit.indoor}"]`).prop('checked', true);
-            $(`input[name=ex][value="${temp_unit.ex2}|${temp_unit.ex1}"]`).prop('checked', true);
-            $('#p_airflow').val(temp_unit.airflow);
-            $('#p_pressure').val(temp_unit.pressure);
-            $('#p_w_Trin').val(temp_unit.Trin);
-            $('#p_w_Hrin').val(temp_unit.Hrin);
-            $('#p_w_Tfin').val(temp_unit.Tfin);
-            $('#p_w_Hfin').val(temp_unit.Trin);
-            model_id = temp_unit.modelId;
-            }else{
+
+            } else {
                 alert('Cant access edit')
             }
         }
+
+        // function onEditUnit(unit_name){
+            
+        // }
 
         function onSaveUnit() {
             unit_name = $('#unit_name').val().trim();
@@ -2475,80 +2479,6 @@
             $('.btn-offer-save').hide();
         }
 
-        function onAddOffer(unit_name) {
-            var readonly = $('#read_only').val();
-            if(readonly !== 'readonly'){
-            showSwalLoading();
-            saveLoading = true;
-            saveLoadingId = setInterval(() => {
-                if (!saveLoading) {
-                    swal.close();
-                    clearInterval(saveLoadingId);
-                }
-            }, 1000);
-            $(`.units-table tbody tr[data-name="${unit_name}"] td:last-child`).html('<button type="button" class="btn btn-primary" onclick="onViewUnit(`' + unit_name +'`)">View</button>');
-            isNew = false;
-            isView = false;
-            var temp_unit = null;
-            var unit_index = 0;
-            units.map((row, index) => {
-                if (row.name == unit_name) {
-                    temp_unit = row;
-                    unit_index = index;
-                }
-            });
-            $('#unit_name').val(temp_unit.name);
-            $('#unit_name').attr('disabled', true);
-            $('#p_layout').val(temp_unit.layout);
-            $(`input[name=indoor][value="${temp_unit.indoor}"]`).prop('checked', true);
-            $(`input[name=ex][value="${temp_unit.ex2}|${temp_unit.ex1}"]`).prop('checked', true);
-            $('#p_airflow').val(temp_unit.airflow);
-            $('#p_pressure').val(temp_unit.pressure);
-            $('#p_w_Trin').val(temp_unit.Trin);
-            $('#p_w_Hrin').val(temp_unit.Hrin);
-            $('#p_w_Tfin').val(temp_unit.Tfin);
-            $('#p_w_Hfin').val(temp_unit.Trin);
-            model_id = temp_unit.modelId;
-            isView = true;
-            display_compatible_models(function(id, model, reg) {
-                if(id == model_id) {
-                    selected_model = model;
-                    loadFromModel(id, reg, model, 0, false);
-                    /*
-                    initPriceTable(id, temp_unit.priceId, function () {
-                        var temp_price = $('input[name="price"]:checked').parents('tr').children('td');
-                        if (temp_price.length != 0) {
-                            units[unit_index].itemcode = temp_price[2].innerHTML;
-                            units[unit_index].description = temp_price[3].innerHTML + (temp_price[4].innerHTML != '' ? ( ' - ' + temp_price[4].innerHTML) : '');
-                        } else {
-                            units[unit_index].itemcode = '';
-                            units[unit_index].description = '';
-                        }
-                        pdf_units.push({
-                            ...units[unit_index]
-                        });
-                        if (units.length == pdf_units.length) {
-                            $('.btn-offer-save').show();
-                        } else {
-                            $('.btn-offer-save').hide();
-                        }
-                    });
-                    */
-                }
-            }, false);
-            
-            loadImageId = setInterval(() => {
-                if (isLoadImage) {
-                    isLoadImage = false;
-                    export2PDF();
-                    clearInterval(loadImageId);
-                }
-            }, 1000);
-            }else{
-                alert('Cant add offer');
-            }
-        }
-
         $(document).ready(function() {
 
             /** initialize project reference */
@@ -2606,33 +2536,6 @@
                 canvas.remove();
             };
 
-            //===================================for project reference================================================
-            // $('.nextbtn1').hide();
-            // $('.nextbtn2').hide();
-
-            // var projectName = $('#project_name').val().trim();
-            // if (projectName == "") {
-            //     $('.nextbtn2').show();
-            //     $('.nextbtn1').hide();
-            // } 
-            // else {
-            //     $('.nextbtn1').show();
-            //     $('.nextbtn2').hide();
-            // } 
-            
-            // $('#project_name').on('input keyup keydown', function() {
-            //     var projectName = $(this).val().trim();
-        
-            //     if (projectName == "") {
-            //         // $('.nextbtn2').show();
-            //         $('.nextbtn1').hide();
-            //     } 
-            //     else {
-            //         $('.nextbtn1').show();
-            //         // $('.nextbtn2').hide();
-            //     } 
-            // });
-
             //==========================================for unit selection=====================================================
 
             $('.compatiblewithuname').hide();
@@ -2646,20 +2549,7 @@
             else {
                 $('.compatiblewithoutuname').hide();
                 $('.compatiblewithuname').show();
-            } 
-            
-            //     $('#unit_name').on('input keyup keydown', function() {
-            //         var unitName = $(this).val().trim();
-            
-            //         if (unitName == "") {
-            //             $('.compatiblewithuname').hide();
-            //             $('.compatiblewithoutuname').show();
-            //         } 
-            //         else {
-            //             $('.compatiblewithoutuname').hide();
-            //             $('.compatiblewithuname').show();
-            //         } 
-            //    });
+            }
            
 
         });
@@ -2670,6 +2560,7 @@
         })
         
         $(document).on('click', '#tab_unit_home', function(){
+            $('#unitform').hide();
             $('.btn-first-unit-next').show()
             $('.go-to-unit-feature').addClass('d-none');
         })
@@ -2721,8 +2612,7 @@
         /**======================================= ***************** ==================================== */
 
         /** if the unit selection tab is clicked, unitname and preview button should be disappeared*/
-        $('#tab_unit_selection').on('click', function(){       
-            $('#unitform').hide();
+        $('#tab_unit_selection').on('click', function(){
             $('.btn-preview').hide();
             $('.tabs.graph-tabs').addClass("hidden");
         })
@@ -2763,60 +2653,36 @@
             }
 
             close_model();
-
-            // if(action == 'continue'){
-            //     $("#btn-continue").addClass('d-none');
-            //     $("#btn-edit").addClass('d-none');
-
-            //     $("#btn-download").removeClass('d-none');
-            //     $("#btn-sendemail").removeClass('d-none');
-
-            // }else if(action == 'download'){
-            //     download_pdf();
-            //     close_model();
-            // }else if(action == 'sendemail'){
-            //     Email_sending();
-            // }else if(action == 'edit'){
-
-            //     $("#preview_a_tag").addClass('d-none');
-            //     $("#tab_unit_selection").addClass('active');
-            //     $("#tab1").addClass('active');
-            //     $("#tab_results_table").removeClass('active');
-            //     $("#tab2").removeClass('active');
-                
-
-            //     tab1
-
-            //     close_model();
-            // }
-            }
+          
+        }
 
         function onSaveNewUnit() {
             $('#staticBackdrop').modal('show');
             $('#staticBackdrop .modal-content-add-unit').hide();
             $('#staticBackdrop .modal-content-save-delivery-time').show();
             $('.units-delivery-time-table tbody').html('');
-            var unit_name = $('input#unit_name').val();
 
-            $('.units-delivery-time-table tbody').append(`
-                <tr data-name="${unit_name}" class="units-delivery-time-table-tr">
-                    <td>${unit_name}</td>
-                    <td>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <input type="number" class="form-control delivery-time" value="1" min="1" max="320" maxlength="3">
+            units.map(unit => {
+                $('.units-delivery-time-table tbody').append(`
+                    <tr data-name="${unit.name}" data-id="${unit.id}" class="units-delivery-time-table-tr">
+                        <td>${unit.name}</td>
+                        <td>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control delivery-time" value="1" min="1" max="320" maxlength="3">
+                                </div>
+                                <div class="col-md-9">
+                                    <select class="form-control delivery-time-type">
+                                        <option value="0" selected disabled>Please select Time Type</option>
+                                        <option value="1">Days</option>
+                                        <option value="2">Weeks</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <select class="form-control delivery-time-type">
-                                    <option value="0" selected disabled>Please select Time Type</option>
-                                    <option value="1">Days</option>
-                                    <option value="2">Weeks</option>
-                                </select>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            `);
+                        </td>
+                    </tr>
+                `)
+            })
 
             return;
         }
@@ -2829,6 +2695,7 @@
             delivery_times = [];
             for (row of temp_units_array) {
                 let temp_unit_name = $(row).attr('data-name');
+                let temp_unit_id = $(row).data('id');
                 let temp_delivery_time = parseInt($(row).find('td:last-child .delivery-time').val());
                 if (temp_delivery_time <= 0 || temp_delivery_time == '') {
                     $(row).find('td:last-child .delivery-time').focus();
@@ -2841,7 +2708,10 @@
                     alert("@lang('Please select Time Type')");
                     return;
                 }
-                delivery_times.push(`${temp_delivery_time}_${temp_delivery_time_type}`);
+                delivery_times.push({
+                    "id" : temp_unit_id,
+                    "delivery_time" : `${temp_delivery_time}_${temp_delivery_time_type}`
+                });
                 pdf_units.map(row => {
                     if (row.name == temp_unit_name) {
                         row.delivery_time = `${temp_delivery_time}_${temp_delivery_time_type}`;
@@ -2851,7 +2721,37 @@
 
             $('#staticBackdrop').modal('hide');
 
-            storeProject();
+            // storeProject();
+            storeDeliveryTime();
+        }
+
+        function storeDeliveryTime() {
+            
+            showSwalLoading();
+
+            var formData = new FormData();
+            formData.append('unit_delivery_times',JSON.stringify(delivery_times));
+            
+            $.ajax({
+                type: 'POST',
+                url: `{{route('admin.projects.store.deliverytime')}}`,
+                data: formData,
+                headers: {'x-csrf-token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')},
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    swal.close();
+                    if(data == 'success') {
+                        location.reload();
+                    } else {                        
+                        alert('An error occurred while updating data., Please try again later');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    swal.close();
+                    console.log('An error occurred while updating data.');
+                }
+            });
         }
 
 
@@ -2870,7 +2770,12 @@
             formData.append('company', '{{$company->id}}');
             formData.append('contact', '{{$contact->id}}');
 
-            formData.append('name', $('#project_name').val());
+            var _name = $('#project_name').val();
+            if(_name == '') {
+                _name = 'P_' + $('#project_reference').val();
+            }
+            formData.append('name', _name);
+
             formData.append('description', $('#project_desc').val());
             formData.append('reference', $('#project_reference').val());
 
@@ -2891,19 +2796,39 @@
             formData.append('unit_pdf', doc_unit.output('blob'), filename_unit);
 
             // formData.append('units', JSON.stringify(pdf_units));
-            formData.append('unit_name',$('#unit_name').val());
+            var unit_name = $('#unit_name').val();
+            if (unit_name == '' && selected_model_full_name) {
+                unit_name = selected_model_full_name;
+            }
+            formData.append('unit_name',unit_name);
+
             formData.append('layout',$('#p_layout').val());
             formData.append('indoor',$("input[name='indoor']:checked").val());
             formData.append('ex1',$('input[name=ex]:checked').val().split('|')[1]);
             formData.append('ex2',$('input[name=ex]:checked').val().split('|')[0]);
             formData.append('airflow',$('#p_airflow').val());
             formData.append('pressure',$('#p_pressure').val());
-            formData.append('Tfin',$('#p_w_Trin').val());
-            formData.append('Trin',$('#p_w_Hrin').val());
-            formData.append('Hfin',$('#p_w_Tfin').val());
-            formData.append('Hrin',$('#p_w_Hfin').val());
+
+            formData.append('p_r_airflow',$('#p_r_airflow').val());
+            formData.append('p_r_pressure',$('#p_r_pressure').val());
+
+            formData.append('Tfin',$('#p_w_Tfin').val());
+            formData.append('Trin',$('#p_w_Trin').val());
+            formData.append('Hfin',$('#p_w_Hfin').val());
+            formData.append('Hrin',$('#p_w_Hrin').val());
+            
+            formData.append('s_Tfin',$('#p_s_Tfin').val());
+            formData.append('s_Trin',$('#p_s_Trin').val());
+            formData.append('s_Hfin',$('#p_s_Hfin').val());
+            formData.append('s_Hrin',$('#p_s_Hrin').val());
+
+            formData.append('p_sfp',$('#p_sfp').val());
+            formData.append('m_rfl',$('#m_rfl').val());
+
             formData.append('modelId',model_id);
             formData.append('unit_delivery_time',delivery_times[0]);
+
+            formData.append('standard_climatic',$('input[name=climatic_standard]').prop('checked')?1:0);
 
             $(document).find('input.price-value').map((index, ele) => {
                 if($(ele).prop('checked')) {
@@ -2968,9 +2893,45 @@
             onNewUnit();
         }
 
-        function gotoLink(link) {
-            location.href = `{{route('admin.projects.detail')}}/` + link;
+        function addDeliveryTime() {
+            onSaveNewUnit();
         }
+
+        $('input[name=climatic_standard]').on('change', function(){
+            if($(this).prop('checked')){
+                $('input.climatic-inner-data').attr({'disabled': true});
+
+                const inputs = document.querySelectorAll(".climatic-inner-data");
+
+                const jsonValues = {};
+
+                inputs.forEach(input => {
+                    const name = input.name;
+                    const value = input.value;
+                    jsonValues[name] = value;
+                });
+
+                localStorage.setItem('standard_climatic_data', JSON.stringify(jsonValues));
+
+            } else {
+                Swal.fire({
+                        text:'@lang("This will remove saved standard data, are you sure to remove that?")',
+                        icon: 'warning',
+                        allowOutsideClick: false,
+                        showConfirmButton:true,
+                        showCancelButton:true,
+                        allowEscapeKey: false,
+                        confirmButtonText: "Yes"
+                    }).then((result) => {
+                        if (result.isConfirmed) {                           
+                            $('input.climatic-inner-data').attr({'disabled': false});
+                            localStorage.removeItem('standard_climatic_data');
+                        } else {
+                            $('input[name=climatic_standard]').prop("checked", true);
+                        }
+                    });
+            }
+        })
        
   
     </script>

@@ -137,34 +137,6 @@ class ProjectsController extends Controller
         $cp = $count_project->count();
         $contact_email = ContactPeople::select('email')->Where('id',$uid)->get();
 
-
-        $project_list = $this->getProjectList();
-        $next_prev = [];
-        foreach($project_list as $p) {
-            $next_prev[] =  $p->id . '/' . $p->company .'/' . $p->contact;
-        }
-
-        $current_project = $pid . '/' . $cid .'/' . $uid;
-
-        $previousItem = null;
-        $nextItem = null;
-
-        foreach ($next_prev as $index => $item) {
-            if ($item === $current_project) {
-                // Set previous item if it exists
-                if ($index > 0) {
-                    $previousItem = $next_prev[$index - 1];
-                }
-                // Set next item if it exists
-                if ($index < count($next_prev) - 1) {
-                    $nextItem = $next_prev[$index + 1];
-                }
-                break;
-            }
-        }
-
-
-
         //dump($contact_email);
         return view('admin.projects.detail',[
             '_page_title' => $title,
@@ -182,10 +154,7 @@ class ProjectsController extends Controller
             'option' => $option,
             'units' => json_encode($units),
             'delivery_address' => $delivery_address,
-            'delivery_condition' => $delivery_condition,
-
-            'nextItem' => $nextItem,
-            'previousItem' => $previousItem
+            'delivery_condition' => $delivery_condition
         ]);
     }
 
@@ -323,6 +292,24 @@ class ProjectsController extends Controller
         $res = $contact->delete();
         return response()->json(['result' => $res]);
     }
+    
+
+    public function store_deliverytime(Request $request) {
+        
+        try {
+            if(!empty($request-> unit_delivery_times)) {
+                $time_data = json_decode($request-> unit_delivery_times, true);
+                foreach($time_data as $dt) {
+                    Unit::where('id', $dt['id'])->update($dt);
+                 }
+            }        
+            echo 'success';
+        } catch (\Throwable $th) {
+            echo 'fail';
+        }
+
+       
+    }
 
     public function save_project(Request $request) {
         //  dd($request->all());
@@ -435,7 +422,18 @@ class ProjectsController extends Controller
         $unit->modelId = $request->modelId;
         $unit->priceId = $request->priceId;
         $unit->delivery_time = $request->unit_delivery_time;
-       
+        $unit->standard_climatic = $request->standard_climatic;
+               
+        $unit->s_Tfin = $request->s_Tfin;
+        $unit->s_Trin = $request->s_Trin;
+        $unit->s_Hfin = $request->s_Hfin;
+        $unit->s_Hrin = $request->s_Hrin;
+        
+        $unit->p_r_airflow = $request->p_r_airflow;
+        $unit->p_r_pressure = $request->p_r_pressure;
+        $unit->p_sfp = $request->p_sfp;
+        $unit->m_rfl = $request->m_rfl;
+
         // Save the updated $unit object
         $unit->save();
 

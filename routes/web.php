@@ -197,6 +197,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('projects/store/contact', 'ProjectsController@store_contact')->name('projects.store.contact');
     Route::post('projects/delete/contact/{id?}', 'ProjectsController@delete_contact')->name('projects.delete.contact');
     Route::post('projects/store/project', 'ProjectsController@save_project')->name('projects.store.project');
+    Route::post('projects/store/deliverytime', 'ProjectsController@store_deliverytime')->name('projects.store.deliverytime');
     Route::post('projects/delete/project', 'ProjectsController@delete_project')->name('projects.delete.project');
     Route::post('projects/multi-delete/project', 'ProjectsController@multi_delete_project')->name('projects.multi-delete.project');
     Route::post('projects/duplicate/project', 'ProjectsController@duplicate_project')->name('projects.duplicate.project');

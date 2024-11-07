@@ -36,6 +36,15 @@ class Unit extends Model
         'priceId',
         'price',
         'delivery_time',
+        'standard_climatic',
+        's_Tfin',
+        's_Trin',
+        's_Hfin',
+        's_Hrin',
+        'p_r_airflow',
+        'p_r_pressure',
+        'p_sfp',
+        'm_rfl'
     ];
 
     protected function serializeDate(DateTimeInterface $date)

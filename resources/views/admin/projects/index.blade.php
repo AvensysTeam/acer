@@ -73,6 +73,7 @@
                         <th>@lang('Reference')</th>
                         <th>@lang('Description')</th>
                         <th>@lang('Modification Date')</th>
+                        <th>@lang('PDF')</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -99,7 +100,10 @@
                                 <td class="nowrap">{{$p->project_name}}</td>
                                 <td class="nowrap">{{$p->reference}}</td>
                                 <td class="nowrap">{{$p->description}}</td>
-                                <td class="nowrap">{{date("m/d/Y", strtotime($p->updated_at))}}</td>
+                                <td class="nowrap">{{date("d.m.Y", strtotime($p->updated_at))}}</td>
+                                <td>
+                                    <a href="/uploads/project/{{$p->p_pdf}}" target="_blank">{{$p->p_pdf}}</a>
+                                </td>
                                 <td class="action_btn align-items-center ">
                                     <a class="" onclick="goToDetail('{{$p->id}}','{{$p->company}}','{{$p->contact}}')">
                                         <img class="new" src="{{asset('assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"/>

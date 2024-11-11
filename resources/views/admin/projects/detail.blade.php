@@ -90,7 +90,10 @@
 
 <div class="w-full my-3">
     @if ($units_list && count($units_list) > 0)
-    <div class="action-btn-group float-right">        
+    <div class="action-btn-group float-right">
+        <a class="btn  button-boxed btn-backward" onclick="projectPDFPreview()">
+            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
+        </a>
         <a class="btn  button-boxed btn-backward @if($option == 'readonly') v-hidden @endif">
             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="25px" height="25px"></span>
         </a>
@@ -775,7 +778,6 @@
 </div>
 
 
-
 <div class="modal" id="pdf_on_iframe_model">
     <div class="modal-dialog modal-xl " role="document">
       <div class="modal-content">
@@ -784,9 +786,12 @@
         </div>
         <div class="modal-footer">
 
-            <button type="button" class="" id="btn-back" data-toggle="tooltip" data-placement="top" title="Back"   onclick="preview_pdf_model('back');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="25px" height="25px"></button>
-            <button type="button" class="" id="btn-addmore" data-toggle="tooltip" data-placement="top" title="Add More"  onclick="preview_pdf_model('addmore');" ><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="25px" height="25px"></button>
-            <button type="button" class="" id="btn-complete" data-toggle="tooltip" data-placement="top" title="Complete"       onclick="preview_pdf_model('complete');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="25px" height="25px"></button>
+            <button type="button" class="preview-unit-pdf" id="btn-back" data-toggle="tooltip" data-placement="top" title="Back"   onclick="preview_pdf_model('back');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="25px" height="25px"></button>
+            <button type="button" class="preview-unit-pdf" id="btn-addmore" data-toggle="tooltip" data-placement="top" title="Add More"  onclick="preview_pdf_model('addmore');" ><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="25px" height="25px"></button>
+            <button type="button" class="preview-unit-pdf" id="btn-complete" data-toggle="tooltip" data-placement="top" title="Complete"       onclick="preview_pdf_model('complete');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="25px" height="25px"></button>
+
+            <button type="button" class="preview-project-pdf upload-project-pdf" id="btn-addmore" data-toggle="tooltip" data-placement="top" title="Upload PDF"  onclick="preview_pdf_model('upload');" ><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/upload-simple-icon-original.svg')}}" width="25px" height="25px"></button>
+            <button type="button" class="preview-project-pdf" id="btn-complete" data-toggle="tooltip" data-placement="top" title="close"       onclick="preview_pdf_model('close');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="25px" height="25px"></button>
 
           <!-- <button type="button" class="" id="btn-continue" data-toggle="tooltip" data-placement="top" title="Continue"   onclick="preview_pdf_model('continue');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/check-circle-icon-original.svg')}}" width="25px" height="25px"></button>
           <button type="button" class="" id="btn-download"  data-toggle="tooltip" data-placement="top" title="Download"   onclick="preview_pdf_model('download');"><img class="new mb-2" src="{{asset('/assets/icons/download-simple-icon-original.svg')}}" width="25px" height="25px"></button>
@@ -812,20 +817,6 @@
 @endsection
 @section('scripts')
     @parent
-
-
-    
-    <script>
-        // $(function () {
-        //     $('[data-toggle="tooltip"]').tooltip()
-        // })
-
-        function close_model(){
-            $("#pdf_on_iframe_model").modal('hide');
-
-        }
-
-    </script>
 
     <script>
         let table = null;
@@ -1624,6 +1615,27 @@
             $('#staticBackdrop').modal('show');
         }
 
+        async function projectPDFPreview() {
+
+            showSwalLoading();          
+                
+            var doc1 = await generatePDFforProject();
+            
+
+            var filename = 'REPORT_' + (new Date()).getTime() + '.pdf';         
+
+            swal.close();
+
+            let pdfB64String = doc1.output('dataurlstring', filename);
+
+            $("#pdf_on_iframe").attr("src",pdfB64String);
+            $('.preview-unit-pdf').hide();
+            $('.upload-project-pdf').data('blob', doc1.output('blob'));
+            $('.upload-project-pdf').data('filename', filename);
+            $('#pdf_on_iframe_model').modal('show');
+
+        }
+
         async function preview2PDF() {
 
 
@@ -1649,7 +1661,9 @@
             let pdfB64String = doc1.output('dataurlstring', savedPreviewDoc.filename);
 
             $("#pdf_on_iframe").attr("src",pdfB64String);
+            $('.preview-project-pdf').hide();
             $('#pdf_on_iframe_model').modal('show');
+            
 
         }
 
@@ -1922,7 +1936,7 @@
             doc.text('{{$settings->conname ?? ""}}', 180, y);
 
             y += 10;
-            doc.text("{{$user->company_state ?? ""}}, {{$user->company_country ?? ""}}", 30, y);
+            doc.text("{{$user->company_state ?? ''}}, {{$user->company_country ?? ''}}", 30, y);
             doc.text("@lang('Tel. No.') : {{$user->company_tel ?? ''}}", 180, y);
             doc.text("@lang('Tel. No.') : {{$company->phone}} ", 595 / 2 + 10, y);
 
@@ -1950,7 +1964,7 @@
 
             doc.rect(20, y, 595 - 40, 25);
             y += 10;
-            doc.text("@lang('Project') : " + project_name  + ' - ' + project_desc, 30, y);
+            doc.text("@lang('Project') : " + project_name  + (project_desc?' - ':'') + project_desc, 30, y);
             doc.text("@lang('Project reference') : " + project_refer, 595 / 3 + 10, y);
             doc.text("@lang('Creation date') : " + creation_date, 595 * 2 / 3 + 10, y);
             y += 10;
@@ -1961,13 +1975,14 @@
             var startCharCode = 65;
             var i = 0;
             var totalprice = 0;
-            for (const unit of pdf_units) {
+            console.log('on pdf generate', units);
+            for (const unit of units) {
                 y += 10;
                 var char = String.fromCharCode(startCharCode + i);
                 i++;
                 doc.text(`${char}) ${unit.name}`, 30, y);
                 y += 10;
-                doc.text(`${unit.itemcode} - ${unit.description}`, 50, y);
+                doc.text(`${unit.p_itemcode} - ${unit.p_desc}`, 50, y);
                 doc.text(`€`, 250, y);
                 let temp = unit.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 doc.text(`${temp}`, 300, y, { align: "right" });
@@ -1989,7 +2004,7 @@
             doc.text(`${temp}`, 300, y, { align: "right" });
 
             y += 30;
-            doc.text("@lang('Delivery Terms'):  {{$delivery_address->address ?? ''}},  {{$delivery_condition->cond ?? ''}}", 595 / 2, y, { align: "center" });
+            // doc.text("@lang('Delivery Terms'):  {{$delivery_address->address ?? ''}},  {{$delivery_condition->cond ?? ''}}", 595 / 2, y, { align: "center" });
 
             y += 20;
             if (price_validity != '') {
@@ -2647,6 +2662,10 @@
                 case 'complete':
                     completeProcess();
                     break;
+                case 'upload':
+                    uploadPDF();
+                    break;
+
 
                 default:
                     break;
@@ -2779,15 +2798,15 @@
             formData.append('description', $('#project_desc').val());
             formData.append('reference', $('#project_reference').val());
 
-            if(continue_flag == 0) { // if final step, project pdf should be generated
-                var doc = generatePDFforProject();
-                var filename = 'REPORT_' + (new Date()).getTime() + '.pdf';
-                savedDoc = {
-                    'filename': filename,
-                    'doc': doc
-                };
-                formData.append('pdf', doc.output('blob'), filename);
-            }
+            // if(continue_flag == 0) { // if final step, project pdf should be generated
+            //     var doc = generatePDFforProject();
+            //     var filename = 'REPORT_' + (new Date()).getTime() + '.pdf';
+            //     savedDoc = {
+            //         'filename': filename,
+            //         'doc': doc
+            //     };
+            //     formData.append('pdf', doc.output('blob'), filename);
+            // }
 
             /** generate unit pdf  */
 
@@ -2932,7 +2951,70 @@
                     });
             }
         })
-       
+
+        function close_model(){
+            $("#pdf_on_iframe_model").modal('hide');
+        }
+
+        function uploadPDF() {
+
+            showSwalLoading();
+
+            var formData = new FormData();
+            var blob = $('.upload-project-pdf').data('blob');
+            var filename = $('.upload-project-pdf').data('filename');
+            formData.append('pdf', blob, filename);
+            
+            formData.append('id', $('#project_id').val());
+
+
+            $.ajax({
+                type: 'POST',
+                url: `{{route('admin.projects.upload.project-pdf')}}`,
+                data: formData,
+                headers: {'x-csrf-token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')},
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    swal.close();
+                    // $('input[name=project_id]').val(data.result.project_id);
+                    Swal.fire({
+                        title: "@lang('Uploaded...')",
+                        icon: 'success',
+                        allowOutsideClick: false,
+                        showConfirmButton:true,
+                        showCancelButton:false,
+                        allowEscapeKey: false,
+                        confirmButtonText: "Continue"
+                    }).then((result) => {
+                    //     if (result.isConfirmed) {
+                    //         if (continue_flag == 0) {
+                    //             location.href = `{{route('admin.projects')}}`;
+                    //         } else {
+                    //             backToUnitSelect();
+                    //         }
+                    //     }
+                    });
+                    // console.log('File uploaded successfully.');
+                    
+                   
+
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: "@lang('Something Wrong, Please try again later!')",
+                        icon: 'error',
+                        allowOutsideClick: false,
+                        showConfirmButton:true,
+                        showCancelButton:false,
+                        allowEscapeKey: false,
+                        confirmButtonText: "Continue"
+                    })
+                    swal.close();
+                    console.log('An error occurred while uploading the file.');
+                }
+            });
+        }
   
     </script>
 @endsection

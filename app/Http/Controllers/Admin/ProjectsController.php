@@ -37,7 +37,13 @@ class ProjectsController extends Controller
     }
 
     private function getProjectList() {
-        $query = "SELECT P.id, P.company, P.contact, P.reference, C.`name` AS `customer`, CP.firstname AS `contact_name`, P.`name` AS `project_name`, P.description, P.updated_at, P.`status` FROM `project` AS `P` LEFT JOIN `company` AS `C` ON P.company = C.id LEFT JOIN `contact_people` AS `CP` ON P.contact = CP.id WHERE ISNULL(P.deleted_at)" ;
+        $query = "SELECT P.id, P.company, P.contact, P.reference, P.pdf as p_pdf, 
+                        C.`name` AS `customer`, CP.firstname AS `contact_name`, 
+                        P.`name` AS `project_name`, P.description, P.updated_at, P.`status` 
+                FROM `project` AS `P` 
+                LEFT JOIN `company` AS `C` ON P.company = C.id 
+                LEFT JOIN `contact_people` AS `CP` ON P.contact = CP.id 
+                WHERE ISNULL(P.deleted_at)" ;
 
         $result = DB::select($query);
 
@@ -112,9 +118,12 @@ class ProjectsController extends Controller
         $units = null;
         if($pid > 0) {
             $project = Project::findOrFail($pid);
-            $units = Unit::where('pid', $pid)
-                ->whereNull('deleted_at')
-                ->get();
+            $units = Unit::join('prices', 'prices.id', '=', 'units.priceId')
+                        ->where('units.pid', $pid)
+                        ->whereNull('units.deleted_at')
+                        ->select(['units.*', 'prices.price as price', 
+                            'prices.itemcode as p_itemcode', 'prices.description as p_desc'])
+                        ->get();
         }
         // $units = Unit::all();
         $settings = Settings::where('user', auth()->user()->id)->first();
@@ -310,6 +319,30 @@ class ProjectsController extends Controller
 
        
     }
+
+    public function upload_project_pdf(Request $request) {
+        $p_id = $request->id;
+        if($p_id > 0) {
+            $project = Project::findOrFail($p_id);
+            if($request->hasFile('pdf')) {
+                if($p_id > 0 && $project->pdf) {
+                    $old_file_path = $this->get_project_dir_path() . '/' . $project->pdf;
+                    if (file_exists($old_file_path))
+                        unlink($old_file_path);
+                }
+                $filename = $request->pdf->getClientOriginalName();
+                $request->pdf->move($this->get_project_dir_path(), $filename);            
+                $project->pdf = $filename;
+                $project->save();
+            }
+        } else {
+            echo 'no project';
+            return;            
+        }
+       
+    }
+
+
 
     public function save_project(Request $request) {
         //  dd($request->all());

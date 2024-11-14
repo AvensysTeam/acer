@@ -1988,11 +1988,13 @@
                 doc.text(`${temp}`, 300, y, { align: "right" });
                 totalprice += unit.price;
                 doc.text(`@lang('Delivery Time'):`, 320, y);
-                temp = unit.delivery_time.split('_');
-                if (temp[1] == 1) {
-                    doc.text(`${temp[0]} @lang('Days')`, 400, y, { align: "right" });
-                } else {
-                    doc.text(`${temp[0]} @lang('Weeks')`, 400, y, { align: "right" });
+                if('undefined' != unit.delivery_time) {
+                    temp = unit.delivery_time.split('_');
+                    if (temp[1] == 1) {
+                        doc.text(`${temp[0]} @lang('Days')`, 400, y, { align: "right" });
+                    } else {
+                        doc.text(`${temp[0]} @lang('Weeks')`, 400, y, { align: "right" });
+                    }
                 }
             }
 

@@ -36,6 +36,15 @@
       .next{
         float:right;
       }
+      input#mobile_no::placeholder{
+        color:#8080804f
+      }
+      .contact #error-msg {
+        color: red
+      }
+      .border-color-red {
+        border-color: red;
+      }
 </style>
 <div class="row">
     <div class="col-md-6">
@@ -194,7 +203,6 @@
            
             <div class="form-group">
                 <label for="mobile_no" class="text-xs">@lang('Phone Mobile')<span style="padding-left:5px;">(*)</span></label>
-                <!-- <input type="number" id="mobile_no" name="mobile_no" class="form-control"> -->
                <div class="contact">
                 <input type="tel" id="mobile_no" name="mobile_no" class="form-control" style="width:425px;">
                  <span id="valid-msg" class="hide">
@@ -551,8 +559,11 @@ input.addEventListener('keyup', reset);
                       if(_v === "") {
                       alert("@lang('You must input all fields.')");
                       $(this).focus();
+                      $(this).addClass('border-color-red')
                       flag = false;
                       return false;
+                    } else {
+                        $(this).removeClass('border-color-red')
                     }
                 
                 

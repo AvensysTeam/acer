@@ -140,9 +140,13 @@
                 </td>
                 <td center>
                     @if($option != 'readonly')
-                    <a class="btn  button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'view')">
+                    <a class="btn  button-boxed p-0" href="/uploads/project/{{$row->pdf}}" target="_blank">
                         <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
                     </a>
+
+                    <!-- <a class="btn  button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'view')">
+                        <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
+                    </a> -->
                     
                     <a class="btn  button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'edit')">
                         <span> <img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"></span>

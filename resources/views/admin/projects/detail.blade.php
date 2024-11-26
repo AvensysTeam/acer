@@ -113,7 +113,7 @@
                 <th class="text-center">@lang('Unit Name')</th>
                 <th class="text-center">@lang('PDF')</th>
                 <th class="text-center">@lang('Delivery Time')</th>
-                <th class="text-center" width="101px">@lang('Action')</th>
+                <th class="text-center" width="110px">@lang('Action')</th>
             </tr>
         </thead> 
         @endif

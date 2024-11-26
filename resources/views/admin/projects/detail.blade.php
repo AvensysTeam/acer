@@ -94,9 +94,9 @@
         <a class="btn  button-boxed btn-backward" onclick="projectPDFPreview()">
             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
         </a>
-        <a class="btn  button-boxed btn-backward @if($option == 'readonly') v-hidden @endif">
+        <!-- <a class="btn  button-boxed btn-backward @if($option == 'readonly') v-hidden @endif">
             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="25px" height="25px"></span>
-        </a>
+        </a> -->
         <a class="btn  button-boxed @if($option == 'readonly') v-hidden @endif " onclick="addNewUnitInProject()">
             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="25px" height="25px"></span>
         </a>

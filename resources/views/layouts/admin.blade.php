@@ -151,9 +151,13 @@
         .heading{
            /* font-size: 1.75rem; */
            font-size: 19px;
-           margin-top: -4px;
+           /* margin-top: -4px; */
            margin-left: 5px;
         }
+        .emailName {
+            margin-bottom: 0px;
+        }
+
         .items-center h6{
            margin-right: 116px;
         }

@@ -125,7 +125,19 @@
                 <td>
                     <a href="/uploads/project/{{$row->pdf}}" target="_blank">{{$row->pdf}}</a>
                 </td>
-                <td>{{$row->delivery_time}}</td>
+                <td>
+                    <?php
+                    if ($row->delivery_time != 'undefined') {
+                        $deliverytime = explode('_', $row->delivery_time);
+                    
+                        if ($deliverytime[1] == 1) {
+                            echo $deliverytime[1] . ' ' .  __('Day(s)');
+                        } else {
+                            echo $deliverytime[1] . ' ' . __('Week(s)');
+                        }
+                    }
+                    ?>
+                </td>
                 <td center>
                     @if($option != 'readonly')
                     <a class="btn  button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'view')">

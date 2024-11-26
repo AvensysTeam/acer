@@ -58,13 +58,19 @@
                     <tbody>
                         @foreach($users as $key => $user)
                             <tr data-entry-id="{{ $user->id }}">
-                                <td><input type="checkbox" name="ids[]" value="{{ $user->id }}"></td>
+                                <td>
+                                    @if ($user->approved != 'contact_people')
+                                    <input type="checkbox" name="ids[]" value="{{ $user->id }}">
+                                    @endif
+                                </td>
                                 <td align="center">{{ $user->id ?? '' }}</td>
                                 <td align="center"><a href="/admin/users/{{ $user->id ?? '' }}/edit">{{ $user->name ?? '' }}</a></td>
                                 <td align="center">{{ $user->email ?? '' }}</td>
                                 <td align="center">
                                     <?php
-                                        if($user->approved == 0) {
+                                        if ($user->approved == 'contact_people') {
+                                            echo '<span class="bg-success badge text-white">'.trans('CONTACT PEOPLE').'</>';
+                                        } else if($user->approved == 0) {
                                             echo '<span class="badge bg-danger text-white">'.trans('inactive').'</>';
                                         } else {
                                             echo '<span class="bg-success badge text-white">'.trans('active').'</>';
@@ -73,7 +79,9 @@
                                 </td>
                                 <td align="center">
                                     <?php
-                                        if(!$user->email_verified_at) {
+                                        if($user->email_verified_at == 'verified'){
+                                            echo '<span class="bg-success badge text-white">'.trans('COMPANY').'</>';
+                                        }else if(!$user->email_verified_at) {
                                             echo '<span class="badge bg-danger text-white">'.trans('not yet').'</>';
                                         } else {
                                             echo '<span class="bg-success badge text-white">'.trans('done').'</>';
@@ -101,10 +109,18 @@
                                 <td align="center">{{ $user->delivery_condition_data ?? '' }}</td> -->
                                 <td align="center">
                                     @can('user_show')
-                                        <a class="btn-sm btn-indigo" href="{{ route('admin.users.show', $user->id) }}">{{ trans('global.view') }}</a>
+                                        @if ($user->approved != 'contact_people')
+                                        <a class="btn  button-boxed btn-backward" href="{{ route('admin.users.show', $user->id) }}">
+                                            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
+                                        </a>
+                                        @endif
                                     @endcan
                                     @can('user_edit')
-                                        <a class="btn-sm btn-blue" href="{{ route('admin.users.edit', $user->id) }}">{{ trans('global.edit') }}</a>
+                                        @if ($user->approved != 'contact_people')
+                                        <a class="btn  button-boxed p-0" href="{{ route('admin.users.edit', $user->id) }}">
+                                            <span> <img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"></span>
+                                        </a>
+                                        @endif
                                     @endcan
                                     <!-- @can('user_delete')
                                         <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">

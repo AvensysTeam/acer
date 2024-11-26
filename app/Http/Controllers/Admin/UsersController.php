@@ -10,6 +10,7 @@ use App\Role;
 use App\User;
 use App\Pricetype;
 use App\PricetypesUser;
+use App\ContactPeople;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,16 +29,33 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $users = $results = DB::select("
-            SELECT users.*, delivery_conditions.cond as delivery_condition_data
-            FROM (
-                SELECT users.*, delivery_addresses.address as delivery_address_data
-                FROM users
-                LEFT JOIN delivery_addresses ON users.delivery_address = delivery_addresses.id
-                WHERE users.deleted_at IS NULL
-            ) as users
-            LEFT JOIN delivery_conditions ON users.delivery_condition = delivery_conditions.id
-        ");
+        $query = "SELECT * FROM (
+            SELECT id, name, email, approved, email_verified_at, phone, company_name, 
+            company_address, company_vat, position, created_at 
+            FROM users  WHERE deleted_at IS NULL
+            UNION
+            SELECT CONCAT('contact_', contact_people.id) as id, CONCAT(IFNULL(firstname, ''), ' ', IFNULL(secondname, '')) AS name, 
+            email, 'contact_people' AS approved, 'verified' AS email_verified_at, mobile AS phone,  
+            company.name AS company_name, company.address AS compnay_address, company.VAT AS company_vat , job_position AS position,  contact_people.`created_at`
+            FROM contact_people
+            LEFT JOIN company ON company.id = contact_people.`company_id`
+            WHERE company.deleted_at IS NULL
+            ) AS p
+            ORDER BY p.created_at DESC;";
+
+        // $users = $results = DB::select("
+        //     SELECT users.*, delivery_conditions.cond as delivery_condition_data
+        //     FROM (
+        //         SELECT users.*, delivery_addresses.address as delivery_address_data
+        //         FROM users
+        //         LEFT JOIN delivery_addresses ON users.delivery_address = delivery_addresses.id
+        //         WHERE users.deleted_at IS NULL
+        //     ) as users
+        //     LEFT JOIN delivery_conditions ON users.delivery_condition = delivery_conditions.id
+        // ");
+
+        $users = DB::select($query);
+
         $n = count($users);
         for ($i = 0; $i < $n ; $i++) {
             $users[$i]->roles = DB::table('role_user')

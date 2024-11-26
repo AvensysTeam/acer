@@ -160,7 +160,7 @@
                         // alert(pid);
                         // alert(cid);
                         // alert(uid);
-                        location.href = '{{route('admin.projects.detail')}}/' + pid + '/' + cid + '/' + uid + '?o=readonly';
+                        location.href = '{{route('admin.projects.detail')}}/' + pid + '/' + cid + '/' + uid ;//+ '?o=readonly';
                         
                     });
                 }

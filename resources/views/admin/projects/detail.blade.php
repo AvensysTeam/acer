@@ -797,7 +797,7 @@
 <div class="modal" id="pdf_on_iframe_model">
     <div class="modal-dialog modal-xl " role="document">
       <div class="modal-content">
-        <div class="modal-body" style="height: 32rem;">
+        <div class="modal-body" style="height: calc(85vh);">
             <iframe id="pdf_on_iframe" src="" height="100%" width="100%"></iframe>
         </div>
         <div class="modal-footer">

@@ -32,14 +32,14 @@
     .nextbtn1{
         float:right;
         padding: 0px;
-    margin-top: 15px;
-    margin-right: 5%;
+        margin-top: 15px;
+        margin-right: 5%;
     }
     .nextbtn2{
         float:right;
         padding: 0px;
-    margin-top: 15px;
-    margin-right: 5%;
+        margin-top: 15px;
+        margin-right: 5%;
     }
     .box1{
         padding:0px;
@@ -57,16 +57,15 @@
     .p_details{
         width: 95%;
         position: relative;
-    left: 20px;
+        left: 20px;
     }
     .utable{
         width: 95%;
         position: relative;
         left: 20px;
     }
-
     body.no-scroll {
-      overflow: hidden;
+        overflow: hidden;
     }
     .go-to-unit-feature{
         position: absolute;
@@ -74,9 +73,11 @@
         top: 4px;
         z-index: 1;
     }
-
     .v-hidden {
         visibility: hidden;
+    }
+    .unit-thumbnail {
+        height: 50px;
     }
 </style>
 <?php
@@ -90,10 +91,7 @@
 
 <div class="w-full my-3">
     @if ($units_list && count($units_list) > 0)
-    <div class="action-btn-group float-right">
-        <a class="btn  button-boxed btn-backward" onclick="projectPDFPreview()">
-            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
-        </a>
+    <div class="action-btn-group float-right">       
         <!-- <a class="btn  button-boxed btn-backward @if($option == 'readonly') v-hidden @endif">
             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="25px" height="25px"></span>
         </a> -->
@@ -111,20 +109,36 @@
          <thead>
             <tr>
                 <th class="text-center">@lang('Unit Name')</th>
+                <th class="text-center">@lang('Thumbnail')</th>
                 <th class="text-center">@lang('Technical PDF')</th>
+                <th class="text-center">@lang('Commercial PDF')</th>
                 <th class="text-center">@lang('Delivery Time')</th>
                 <th class="text-center" width="110px">@lang('Action')</th>
             </tr>
-        </thead> 
+        </thead>
         @endif
         <tbody>
             @if ($units_list)
-            @foreach ($units_list as $row)
-            <tr class="unit-row" data-name="{{$row->name}}">
+            @foreach ($units_list as $key => $row)
+            <tr class="unit-row text-center" data-name="{{$row->name}}">
                 <td>{{$row->name}}</td>
                 <td>
-                    <a href="/uploads/project/{{$row->pdf}}" target="_blank">{{$row->pdf}}</a>
+                    @if($row->thumbnail)
+                        <img class="unit-thumbnail" src="{{$row->thumbnail}}" alt="{{$row->name}}">
+                    @endif
                 </td>
+                <td>
+                    <a class="btn  button-boxed p-0" href="/uploads/project/{{$row->pdf}}" target="_blank">
+                        <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
+                    </a>
+                </td>
+                <?php if($key == 0) { ?>
+                    <td rowspan="{{count($units_list)}}">
+                        <a class="btn  button-boxed btn-backward" onclick="projectPDFPreview()">
+                            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
+                        </a>
+                    </td>
+                <?php } ?>
                 <td>
                     <?php
                     if ($row->delivery_time != 'undefined') {
@@ -140,18 +154,12 @@
                 </td>
                 <td center>
                     @if($option != 'readonly')
-                    <a class="btn  button-boxed p-0" href="/uploads/project/{{$row->pdf}}" target="_blank">
-                        <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
-                    </a>
-
                     <!-- <a class="btn  button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'view')">
                         <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
-                    </a> -->
-                    
+                    </a> -->                    
                     <a class="btn  button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'edit')">
                         <span> <img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"></span>
                     </a>
-                    
                     <a class="btn  button-boxed p-0" onclick="onDeleteUnit(`{{$row->name}}`)">
                         <span> <img class="new mb-2" src="{{asset('/assets/icons/trash-icon-original.svg')}}" width="25px" height="25px"></span>
                     </a>
@@ -214,7 +222,7 @@
                         <a class="nav-link" id="tab_unit_selection" data-title1="Unit selection" href="#tab1" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('UNIT SELECTION')</a>
                     </li>
                     <li class="nav-item" role="presentation">               
-                        <a class="nav-link uname @if($option == "")disabled @else onclick='onViewUnit()' @endif" id="tab_results_table" data-title1="Unit features" href="#tab2" data-bs-toggle="tab" aria-selected="true"  role="tab">@lang('UNIT FEATURES')</a>
+                        <a class="nav-link uname @if($option == '') disabled @else onclick='onViewUnit()' @endif" id="tab_results_table" data-title1="Unit features" href="#tab2" data-bs-toggle="tab" aria-selected="true"  role="tab">@lang('UNIT FEATURES')</a>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -2865,6 +2873,7 @@
             formData.append('modelId',model_id);
             formData.append('unit_delivery_time',delivery_times[0]);
 
+            formData.append('thumbnail', document.getElementById('render').src);
             formData.append('standard_climatic',$('input[name=climatic_standard]').prop('checked')?1:0);
 
             $(document).find('input.price-value').map((index, ele) => {

@@ -14,7 +14,7 @@ class AddThumbnailToUnitsTable extends Migration
     public function up()
     {
         Schema::table('units', function (Blueprint $table) {            
-            $table->string('thumbnail');
+            $table->string('thumbnail')->nullable();
         });
     }
 

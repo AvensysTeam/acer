@@ -467,6 +467,8 @@ class ProjectsController extends Controller
         $unit->p_sfp = $request->p_sfp;
         $unit->m_rfl = $request->m_rfl;
 
+        $unit->thumbnail = $request->thumbnail;
+
         // Save the updated $unit object
         $unit->save();
 

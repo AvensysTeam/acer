@@ -44,7 +44,8 @@ class Unit extends Model
         'p_r_airflow',
         'p_r_pressure',
         'p_sfp',
-        'm_rfl'
+        'm_rfl',
+        'thumbnail'
     ];
 
     protected function serializeDate(DateTimeInterface $date)

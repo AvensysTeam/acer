@@ -60,9 +60,9 @@
         left: 20px;
     }
     .utable{
-        width: 95%;
+        width: 100%;
         position: relative;
-        left: 20px;
+        /* left: 20px; */
     }
     body.no-scroll {
         overflow: hidden;
@@ -91,16 +91,16 @@
 
 <div class="w-full my-3">
     @if ($units_list && count($units_list) > 0)
-    <div class="action-btn-group float-right">       
+    <div class="action-btn-group text-right">       
         <!-- <a class="btn  button-boxed btn-backward @if($option == 'readonly') v-hidden @endif">
             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="25px" height="25px"></span>
         </a> -->
-        <a class="btn  button-boxed @if($option == 'readonly') v-hidden @endif " onclick="addNewUnitInProject()">
+        <a class="btn  button-boxed @if($option == 'readonly') v-hidden @endif " onclick="addNewUnitInProject()" title="@lang('add new unit')">
             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="25px" height="25px"></span>
         </a>
-        <a class="btn  button-boxed btn-forward @if($option == 'readonly') v-hidden @endif" onclick="addDeliveryTime()">
+        <!-- <a class="btn  button-boxed btn-forward @if($option == 'readonly') v-hidden @endif" onclick="addDeliveryTime()">
             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="25px" height="25px"></span>
-        </a>
+        </a> -->
     </div>
     @endif
      
@@ -128,13 +128,13 @@
                     @endif
                 </td>
                 <td>
-                    <a class="btn  button-boxed p-0" href="/uploads/project/{{$row->pdf}}" target="_blank">
+                    <a class="btn  button-boxed p-0" href="/uploads/project/{{$row->pdf}}" target="_blank" title="@lang('Show Technical PDF')">
                         <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
                     </a>
                 </td>
                 <?php if($key == 0) { ?>
                     <td rowspan="{{count($units_list)}}">
-                        <a class="btn  button-boxed btn-backward" onclick="projectPDFPreview()">
+                        <a class="btn  button-boxed btn-backward" onclick="projectPDFPreview()"  title="@lang('Show Commercial PDF')">
                             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
                         </a>
                     </td>
@@ -149,6 +149,12 @@
                         } else {
                             echo $deliverytime[1] . ' ' . __('Week(s)');
                         }
+                    } else { ?>
+
+                         <a class="btn  button-boxed btn-forward @if($option == 'readonly') v-hidden @endif" onclick="addDeliveryTime()"  title="@lang('Add Delivery Time')">
+                            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="25px" height="25px"></span>
+                        </a>
+                    <?php 
                     }
                     ?>
                 </td>
@@ -157,10 +163,10 @@
                     <!-- <a class="btn  button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'view')">
                         <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
                     </a> -->                    
-                    <a class="btn  button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'edit')">
+                    <a class="btn  button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'edit')"  title="@lang('Edit Unit')">
                         <span> <img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"></span>
                     </a>
-                    <a class="btn  button-boxed p-0" onclick="onDeleteUnit(`{{$row->name}}`)">
+                    <a class="btn  button-boxed p-0" onclick="onDeleteUnit(`{{$row->name}}`)"  title="@lang('Delete Unit')">
                         <span> <img class="new mb-2" src="{{asset('/assets/icons/trash-icon-original.svg')}}" width="25px" height="25px"></span>
                     </a>
                     @endif

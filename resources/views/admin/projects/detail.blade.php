@@ -55,9 +55,11 @@
         padding-left:5px;
     }
     .p_details{
-        width: 95%;
         position: relative;
-        left: 20px;
+        border: 3px solid orange;
+        max-height: 80vh;
+        overflow: scroll;
+        width: 100%;
     }
     .utable{
         width: 100%;
@@ -66,12 +68,6 @@
     }
     body.no-scroll {
         overflow: hidden;
-    }
-    .go-to-unit-feature{
-        position: absolute;
-        right: 0;
-        top: 4px;
-        z-index: 1;
     }
     .v-hidden {
         visibility: hidden;
@@ -91,16 +87,10 @@
 
 <div class="w-full my-3">
     @if ($units_list && count($units_list) > 0)
-    <div class="action-btn-group text-right">       
-        <!-- <a class="btn  button-boxed btn-backward @if($option == 'readonly') v-hidden @endif">
-            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="25px" height="25px"></span>
-        </a> -->
-        <a class="btn  button-boxed @if($option == 'readonly') v-hidden @endif " onclick="addNewUnitInProject()" title="@lang('add new unit')">
-            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="25px" height="25px"></span>
+    <div class="action-btn-group text-right">
+        <a class="btn button-boxed @if($option == 'readonly') v-hidden @endif " onclick="addNewUnitInProject()" title="@lang('add new unit')">
+            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="35px" height="35px"></span>
         </a>
-        <!-- <a class="btn  button-boxed btn-forward @if($option == 'readonly') v-hidden @endif" onclick="addDeliveryTime()">
-            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="25px" height="25px"></span>
-        </a> -->
     </div>
     @endif
      
@@ -128,14 +118,14 @@
                     @endif
                 </td>
                 <td>
-                    <a class="btn  button-boxed p-0" href="/uploads/project/{{$row->pdf}}" target="_blank" title="@lang('Show Technical PDF')">
-                        <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
+                    <a class="btn button-boxed p-0" href="/uploads/project/{{$row->pdf}}" target="_blank" title="@lang('Show Technical PDF')">
+                        <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="35px" height="35px"></span>
                     </a>
                 </td>
                 <?php if($key == 0) { ?>
                     <td rowspan="{{count($units_list)}}">
-                        <a class="btn  button-boxed btn-backward" onclick="projectPDFPreview()"  title="@lang('Show Commercial PDF')">
-                            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
+                        <a class="btn button-boxed btn-backward" onclick="projectPDFPreview()"  title="@lang('Show Commercial PDF')">
+                            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="35px" height="35px"></span>
                         </a>
                     </td>
                 <?php } ?>
@@ -151,8 +141,8 @@
                         }
                     } else { ?>
 
-                         <a class="btn  button-boxed btn-forward @if($option == 'readonly') v-hidden @endif" onclick="addDeliveryTime()"  title="@lang('Add Delivery Time')">
-                            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="25px" height="25px"></span>
+                         <a class="btn button-boxed btn-forward @if($option == 'readonly') v-hidden @endif" onclick="addDeliveryTime()"  title="@lang('Add Delivery Time')">
+                            <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="35px" height="35px"></span>
                         </a>
                     <?php 
                     }
@@ -160,14 +150,14 @@
                 </td>
                 <td center>
                     @if($option != 'readonly')
-                    <!-- <a class="btn  button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'view')">
-                        <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
+                    <!-- <a class="btn button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'view')">
+                        <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="35px" height="35px"></span>
                     </a> -->                    
-                    <a class="btn  button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'edit')"  title="@lang('Edit Unit')">
-                        <span> <img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"></span>
+                    <a class="btn button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'edit')"  title="@lang('Edit Unit')">
+                        <span> <img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="35px" height="35px"></span>
                     </a>
-                    <a class="btn  button-boxed p-0" onclick="onDeleteUnit(`{{$row->name}}`)"  title="@lang('Delete Unit')">
-                        <span> <img class="new mb-2" src="{{asset('/assets/icons/trash-icon-original.svg')}}" width="25px" height="25px"></span>
+                    <a class="btn button-boxed p-0" onclick="onDeleteUnit(`{{$row->name}}`)"  title="@lang('Delete Unit')">
+                        <span> <img class="new mb-2" src="{{asset('/assets/icons/trash-icon-original.svg')}}" width="35px" height="35px"></span>
                     </a>
                     @endif
                 </td>
@@ -177,62 +167,58 @@
         </tbody>
     </table>
 </div>
-<div class="main-card project-detail p_details  @if( $pid != '0') d-none @endif" style="width:95%; border: 3px solid orange;">    
+<!-- project unit edit part -->
+<div class="main-card project-detail p_details  @if( $pid != '0') d-none @endif">    
     <div class="body">
         <div class="row">
-            <div class="col-md-5" id="unitform" style="display: none;">
-                <div class="form-group row">
+            <div class="col-md-6" >
+                <div class="form-group row" id="unitform" style="display: none;">
                     <label for="unit_name" class="col-md-3 col-form-label">@lang('Unit Name')</label>
                     <div class="col-md-8" style="display:flex;">
-                    <input type="text" class="form-control" id="unit_name" name="uname" placeholder="Unit Name" value="">
-                        <!-- <a class="btn  button-right" data-value="1" onclick="onSaveDeliveryTime()"  style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a> -->
-                        <!-- <a class="btn compatiblewithuname button-right" data-value="1" onclick="onSaveNewUnit()" style="margin-top: -4px;"><img class="new mb-2" src="{{asset('/assets/icons/nextArrow.png')}}" width="45px" height="45px"></a> -->
-                        <!-- <a class="btn compatiblewithoutuname button-right" data-value="0"onclick="onNextDeliveryTime()" style="margin-top: -4px;" ><img class="new mb-2" src="{{asset('assets/icons/caret-circle-double-right-icon-original.png')}}" width="45px" height="45px"/></a> -->
+                        <input type="text" class="form-control" id="unit_name" name="uname" placeholder="Unit Name" value="">
                     </div>
                 </div>
             </div>
+            
 
-            <div class="col-md-5 d-none" id="preview_a_tag" style=" text-align: end;">
+            <div class="col-md-6" style=" text-align: end;">
 
-                <a class="btn  button-boxed btn-preview" onclick="backToUnitSelect()">
-                    <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="25px" height="25px"></span>
+                <a class="btn button-boxed preview-unit-pdf-btn d-none step-action-btn" onclick="preview2PDF()" step="0">
+                    <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="35px" height="35px"></span>
                 </a>
-                <a class="btn  button-boxed btn-preview" onclick="preview2PDF()">
-                    <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
+                <a class="btn button-boxed add-more-unit-btn d-none step-action-btn" onclick="addMoreUnit()" step="0">
+                    <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="35px" height="35px"></span>
+                </a> 
+                <a class="btn button-boxed prev-step-btn d-none step-action-btn" step="0">
+                    <span> <img class="new mb-2 " src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="35px" height="35px"></span>
                 </a>
-                <a class="btn  button-boxed btn-preview" onclick="addMoreUnit()">
-                    <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="25px" height="25px"></span>
+                <a class="btn button-boxed next-step-btn d-none step-action-btn" step="0">
+                    <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="35px" height="35px"></span>
                 </a>
-                <a class="btn  button-boxed btn-preview" onclick="completeProcess()">
-                    <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="25px" height="25px"></span>
-                </a>
+
+
+                onNewUnit()
+                onEditUnit()
+                completeProcess()
             </div>
             
         </div>
 
         <div class="w-full">
-            @if( $pid == '0')
-                <a class="btn float-right button-boxed btn-first-unit-next" onclick="onNewUnit()">
-                    <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/>
-                </a>
-                <a class="btn float-right button-boxed go-to-unit-feature d-none">
-                    <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="35px" height="35px"/>
-                </a>
-            @endif
             <div class="tabs tabs-primary">
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item" role="presentation">               
-                        <a class="nav-link  active"  id="tab_unit_home" href="#tab0" data-title1="Project reference" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('PROJECT REFERENCE')</a>
+                        <a class="nav-link  active"  id="tab_unit_home" href="#project_tab" data-title1="Project reference" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('PROJECT REFERENCE')</a>
                     </li>
                     <li class="nav-item" role="presentation">               
-                        <a class="nav-link" id="tab_unit_selection" data-title1="Unit selection" href="#tab1" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('UNIT SELECTION')</a>
+                        <a class="nav-link" id="tab_unit_selection" data-title1="Unit selection" href="#unit_tab" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('UNIT SELECTION')</a>
                     </li>
                     <li class="nav-item" role="presentation">               
-                        <a class="nav-link uname @if($option == '') disabled @else onclick='onViewUnit()' @endif" id="tab_results_table" data-title1="Unit features" href="#tab2" data-bs-toggle="tab" aria-selected="true"  role="tab">@lang('UNIT FEATURES')</a>
+                        <a class="nav-link uname @if($option == '') disabled @else onclick='onViewUnit()' @endif" id="tab_results_table" data-title1="Unit features" href="#unit_feature_tab" data-bs-toggle="tab" aria-selected="true"  role="tab">@lang('UNIT FEATURES')</a>
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div id="tab0" class="tab-pane active pt-3" role="tabpanel">
+                    <div id="project_tab" class="tab-pane active pt-3" role="tabpanel">
                         <div class="border border-dark rounded px-5 py-1 row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -284,29 +270,9 @@
                                
                             </div>
                             
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                @if($option == "")                                        
-                                    @if( $pid != '0')
-                                        @if($units_list)
-                                            @foreach($units_list as $rows)
-                                                <a class="btn nextbtn1 button-boxed btn-first-unit-next" onclick="onEditUnit(`{{$rows->name}}`)" style="display: none; padding: 0px;" disabled>
-                                                    <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/>
-                                                </a>
-                                            @endforeach
-                                        @else
-                                            <a class="btn nextbtn1 button-boxed btn-first-unit-next" onclick="onEditUnit()" style="display: none; padding: 0px;" disabled>
-                                                <img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/>
-                                            </a>
-                                        @endif   
-
-                                    @endif
-                                @endif
-                            </div>
-                        </div>
+                        </div>                        
                     </div>
-                    <div id="tab1" class="tab-pane pt-3 px-3" role="tabpanel">
+                    <div id="unit_tab" class="tab-pane pt-3 px-3" role="tabpanel">
                         
 
                         <div class="row" style="justify-content: space-around;">
@@ -633,7 +599,7 @@
                             <a class="btn btn-outline-secondary button-right btn-display-models" onclick="display_compatible_models(null)">@lang('Display compatible models')</a>
                         </div> -->
                     </div>
-                    <div id="tab2" class="tab-pane" role="tabpanel">
+                    <div id="unit_feature_tab" class="tab-pane" role="tabpanel">
                         <div class="w-full mt-3 models-tbl-container">
                             <table class="display compact project-table datatable-t1 unitfeaturs">
                                 <thead>
@@ -650,34 +616,34 @@
                             <div class="tabs tabs-primary graph-tabs hidden">
                                 <ul class="nav nav-tabs" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <a class="nav-link active" href="#tab8" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('TECHNICAL INFORMATION')</a>
+                                        <a class="nav-link active" href="#tech_info" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('TECHNICAL INFORMATION')</a>
                                     </li>
                                     <li class="nav-item" role="presentation">               
-                                        <a class="nav-link" href="#tab3" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('PRESSURE CURVE')</a>
+                                        <a class="nav-link" href="#pressure_curve" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('PRESSURE CURVE')</a>
                                     </li>
                                     <li class="nav-item" role="presentation">               
-                                        <a class="nav-link" href="#tab4" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">@lang('POWER CONSUMPTION CURVE')</a>
+                                        <a class="nav-link" href="#power_consumer" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">@lang('POWER CONSUMPTION CURVE')</a>
                                     </li>
                                     <li class="nav-item" role="presentation">               
-                                        <a class="nav-link" href="#tab5" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">@lang('PSFP CURVE')</a>
+                                        <a class="nav-link" href="#psfp_curve" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">@lang('PSFP CURVE')</a>
                                     </li>
                                     <li class="nav-item" role="presentation">               
-                                        <a class="nav-link" href="#tab6" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">@lang('EFFICIENCY CURVE')</a>
+                                        <a class="nav-link" href="#efficency_curve" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">@lang('EFFICIENCY CURVE')</a>
                                     </li>
                                     <li class="nav-item" role="presentation">               
-                                        <a class="nav-link" href="#tab7" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">@lang('NOISE LEVEL')</a>
+                                        <a class="nav-link" href="#noise_level" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">@lang('NOISE LEVEL')</a>
                                     </li>
                                     <li class="nav-item" role="presentation">               
-                                        <a class="nav-link" href="#tab9" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('ACCESSORIES')</a>
+                                        <a class="nav-link" href="#accessories_tab" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('ACCESSORIES')</a>
                                     </li>
                                     <li class="nav-item" role="presentation">               
-                                        <a class="nav-link" href="#tab10" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('PRICE')</a>
+                                        <a class="nav-link" href="#price_tab" data-bs-toggle="tab" aria-selected="true" role="tab">@lang('PRICE')</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content chart-tab-content">
-                                    <div id="tab8" class="tab-pane active p-3" role="tabpanel">
+                                    <div id="tech_info" class="tab-pane active p-3" role="tabpanel">
                                     </div>
-                                    <div id="tab3" class="tab-pane pt-3" role="tabpanel">
+                                    <div id="pressure_curve" class="tab-pane pt-3" role="tabpanel">
                                         <div class="w-fill px-3 graph-container">
                                             <div class="row">
                                                 <div class="col-md-4">
@@ -696,7 +662,7 @@
                                             </div>
                                         </div>                                        
                                     </div>
-                                    <div id="tab4" class="tab-pane pt-3" role="tabpanel">
+                                    <div id="power_consumer" class="tab-pane pt-3" role="tabpanel">
                                         <div class="w-fill px-3 graph-container">
                                             <div class="row">
                                                 <div class="col-md-5">
@@ -713,7 +679,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="tab5" class="tab-pane pt-3" role="tabpanel">
+                                    <div id="psfp_curve" class="tab-pane pt-3" role="tabpanel">
 									    <div class="w-fill px-3 graph-container">
                                             <div class="row">
                                                 <div class="col-md-5">
@@ -730,7 +696,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="tab6" class="tab-pane pt-3" role="tabpanel">
+                                    <div id="efficency_curve" class="tab-pane pt-3" role="tabpanel">
                                         <div class="w-fill px-3 graph-container">
                                             <div class="row">
                                                 <div class="col-md-5">
@@ -746,13 +712,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="tab7" class="tab-pane pt-3" role="tabpanel">
+                                    <div id="noise_level" class="tab-pane pt-3" role="tabpanel">
                                     </div>
-                                    <div id="tab9" class="tab-pane p-3" role="tabpanel">
+                                    <div id="accessories_tab" class="tab-pane p-3" role="tabpanel">
                                         <div class="w-full" id="accessoriestable">
                                         </div>
                                     </div>
-                                    <div id="tab10" class="tab-pane p-3" role="tabpanel">
+                                    <div id="price_tab" class="tab-pane p-3" role="tabpanel">
                                         <div class="w-full" id="pricetable">
                                         </div>
                                     </div>
@@ -816,17 +782,17 @@
         </div>
         <div class="modal-footer">
 
-            <button type="button" class="preview-unit-pdf" id="btn-back" data-toggle="tooltip" data-placement="top" title="Back"   onclick="preview_pdf_model('back');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="25px" height="25px"></button>
-            <button type="button" class="preview-unit-pdf" id="btn-addmore" data-toggle="tooltip" data-placement="top" title="Add More"  onclick="preview_pdf_model('addmore');" ><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="25px" height="25px"></button>
-            <button type="button" class="preview-unit-pdf" id="btn-complete" data-toggle="tooltip" data-placement="top" title="Complete"       onclick="preview_pdf_model('complete');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="25px" height="25px"></button>
+            <button type="button" class="preview-unit-pdf" id="btn-back" data-toggle="tooltip" data-placement="top" title="Back"   onclick="preview_pdf_model('back');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-left-thin.svg')}}" width="35px" height="35px"></button>
+            <button type="button" class="preview-unit-pdf" id="btn-addmore" data-toggle="tooltip" data-placement="top" title="Add More"  onclick="preview_pdf_model('addmore');" ><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="35px" height="35px"></button>
+            <button type="button" class="preview-unit-pdf" id="btn-complete" data-toggle="tooltip" data-placement="top" title="Complete"       onclick="preview_pdf_model('complete');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="35px" height="35px"></button>
 
-            <button type="button" class="preview-project-pdf upload-project-pdf" id="btn-addmore" data-toggle="tooltip" data-placement="top" title="Upload PDF"  onclick="preview_pdf_model('upload');" ><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/upload-simple-icon-original.svg')}}" width="25px" height="25px"></button>
-            <button type="button" class="preview-project-pdf" id="btn-complete" data-toggle="tooltip" data-placement="top" title="close"       onclick="preview_pdf_model('close');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="25px" height="25px"></button>
+            <button type="button" class="preview-project-pdf upload-project-pdf" id="btn-addmore" data-toggle="tooltip" data-placement="top" title="Upload PDF"  onclick="preview_pdf_model('upload');" ><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/upload-simple-icon-original.svg')}}" width="35px" height="35px"></button>
+            <button type="button" class="preview-project-pdf" id="btn-complete" data-toggle="tooltip" data-placement="top" title="close"       onclick="preview_pdf_model('close');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="35px" height="35px"></button>
 
-          <!-- <button type="button" class="" id="btn-continue" data-toggle="tooltip" data-placement="top" title="Continue"   onclick="preview_pdf_model('continue');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/check-circle-icon-original.svg')}}" width="25px" height="25px"></button>
-          <button type="button" class="" id="btn-download"  data-toggle="tooltip" data-placement="top" title="Download"   onclick="preview_pdf_model('download');"><img class="new mb-2" src="{{asset('/assets/icons/download-simple-icon-original.svg')}}" width="25px" height="25px"></button>
-          <button type="button" class="" id="btn-sendemail" data-toggle="tooltip" data-placement="top" title="Send Mail"  onclick="preview_pdf_model('sendemail');" ><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/share-network-icon-original.svg')}}" width="25px" height="25px"></button>
-          <button type="button" class="" id="btn-edit"     data-toggle="tooltip" data-placement="top" title="Edit"       onclick="preview_pdf_model('edit');"><img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"></button> -->
+          <!-- <button type="button" class="" id="btn-continue" data-toggle="tooltip" data-placement="top" title="Continue"   onclick="preview_pdf_model('continue');"><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/check-circle-icon-original.svg')}}" width="35px" height="35px"></button>
+          <button type="button" class="" id="btn-download"  data-toggle="tooltip" data-placement="top" title="Download"   onclick="preview_pdf_model('download');"><img class="new mb-2" src="{{asset('/assets/icons/download-simple-icon-original.svg')}}" width="35px" height="35px"></button>
+          <button type="button" class="" id="btn-sendemail" data-toggle="tooltip" data-placement="top" title="Send Mail"  onclick="preview_pdf_model('sendemail');" ><img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/share-network-icon-original.svg')}}" width="35px" height="35px"></button>
+          <button type="button" class="" id="btn-edit"     data-toggle="tooltip" data-placement="top" title="Edit"       onclick="preview_pdf_model('edit');"><img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="35px" height="35px"></button> -->
         </div>
       </div>
     </div>
@@ -903,6 +869,137 @@
         var edit_unit_name = '';
         var edit_unit_index = 0;
 
+
+        $(document).ready(function() {
+
+            $('.next-step-btn').removeClass('d-none');
+
+            /** initialize project reference */
+            const project_refer = $('#project_reference').val();                
+            if (project_refer  == null || project_refer  == undefined ||  project_refer  == ''){
+                var count = $('#project_count').val();
+                var lastGeneratedNumber = count;
+                lastGeneratedNumber++;
+                var serialNumber = lastGeneratedNumber.toString().padStart(6, '0');
+                $('#project_reference').val(serialNumber);
+            }
+            /** end project reference initializing */
+
+            var read1 = $('#read_only').val();   
+                if(read1 === 'readonly'){
+                    $('.heading').hide();
+                }else{
+                    $('.heading').html('/'+' '+'project reference');
+                }
+
+            $('.units-table').css('visibility', 'visible');
+            if (units.length > 0) {
+                $('.btn-first-unit-next').hide();
+            } else {
+                $('.btn-first-unit-next').show();
+            }
+
+            // Create a new Image object
+            var img = new Image();
+
+            // Set the image source to your URL            
+            img.src = "<?=isset($settings) ? asset('/uploads/' . $settings->image) : asset('img/logo_dark.png') ?>";
+            // Wait for the image to load
+            img.onload = function() {                
+                // Create a canvas element
+                var canvas = document.createElement('canvas');
+                
+                // Set the canvas dimensions to the image dimensions
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                // Draw the image onto the canvas
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+
+                // Get the data URL from the canvas
+                logoImgData = {
+                    dataURL: canvas.toDataURL(),
+                    width: img.width,
+                    height: img.height
+                };
+
+                // Use the data URL as needed
+
+                canvas.remove();
+            };
+
+            //==========================================for unit selection=====================================================
+
+            $('.compatiblewithuname').hide();
+            $('.compatiblewithoutuname').hide();
+
+            var unitName = $('#unit_name').val().trim();
+            if (unitName == "") {
+                $('.compatiblewithuname').hide();
+                $('.compatiblewithoutuname').show();
+            } 
+            else {
+                $('.compatiblewithoutuname').hide();
+                $('.compatiblewithuname').show();
+            }
+        });
+
+        $(document).on('click', '.next-step-btn', function(){
+            var current_step = $(this).attr('step');
+            if (current_step == 0 ) {
+                document.querySelector('.nav-link[id="tab_unit_selection"]').click(); //unit tab click
+            } else if (current_step == 1) {
+                document.querySelector('.nav-link[id="tab_results_table"]').click();
+            }
+
+        })
+
+        $(document).on('click', '.prev-step-btn', function(){
+            var current_step = $(this).attr('step');
+            console.log(current_step);
+            if (current_step == 1 ) {
+                document.querySelector('.nav-link[id="tab_unit_home"]').click(); //project tab click
+            } else if (current_step == 2) {
+                document.querySelector('.nav-link[id="tab_unit_selection"]').click();
+            }
+        })
+
+        $(document).on('click', '#tab_unit_home', function(){
+            $('.step-action-btn').attr('step', 0);
+            $('.prev-step-btn').addClass('d-none');
+            $('#unitform').hide();
+            $('#tab_results_table').addClass("disabled");
+        })
+        
+        $(document).on('click', '#tab_unit_selection', function(){
+            $('.step-action-btn').attr('step', 1);
+            $('.prev-step-btn').removeClass('d-none');
+            onNewUnit();
+        })
+
+        $(document).on('click', '#tab_results_table', function(){
+            $('.step-action-btn').attr('step', 2);
+            display_compatible_models(null);
+        })
+        
+
+        function addMoreUnit() {
+            $('input[name=continue_flag]').val(1);
+            // onSaveNewUnit(1);
+            storeProject();
+        }
+
+        function completeProcess() {
+            $('input[name=continue_flag]').val(0);
+            // onSaveNewUnit(0);
+            storeProject();
+        }
+        
+       
+
+       
+
         function initBox() {
             $('.box .box-header .btn').on('click', function() {
                 $(this).closest('.box').find('.box-body').slideToggle();
@@ -941,7 +1038,7 @@
            if(compatiblewithoutuname == 1){
               unit_name = $('#unit_name').val().trim();
               if (unit_name === ''){
-                  document.querySelector('.nav-link[href="#tab1"]').click();
+                  document.querySelector('.nav-link[href="#unit_tab"]').click();
                   alert("@lang('Please type Unit Name')");
                   $('#unit_name').focus();
                   return;
@@ -1050,27 +1147,14 @@
                 $('#tab_results_table').removeClass("disabled");
                 $('#tab_results_table').closest('ul.nav-tabs').find('.nav-link.active').removeClass('active');
                 $('#tab_results_table').addClass('active');
-                $('#tab_results_table').closest('.tabs').find('#tab0').removeClass('active'); 
-                $('#tab_results_table').closest('.tabs').find('#tab1').removeClass('active'); 
-                $('#tab_results_table').closest('.tabs').find('#tab2').addClass('active');
+                $('#tab_results_table').closest('.tabs').find('#project_tab').removeClass('active'); 
+                $('#tab_results_table').closest('.tabs').find('#unit_tab').removeClass('active'); 
+                $('#tab_results_table').closest('.tabs').find('#unit_feature_tab').addClass('active');
                 if (_showLoading)
                     swal.close();
                 if (result != null && result != 'Empty')
                     initTable(result, callback);
-            });    
-                
-            if ($('#project_reference').val()  == null || $('#project_reference').val()  == undefined ||  $('#project_reference').val()  == ''){
-                var count = $('#project_count').val()
-                var lastGeneratedNumber = count;
-                lastGeneratedNumber++;
-                var serialNumber = lastGeneratedNumber.toString().padStart(6, '0');
-                $('#project_reference').val(serialNumber);
-            }
-
-            if ($('#project_name').val() == "" || $('#project_name').val() == null){
-                var project_name = generateRandomNumber();
-                $('#project_name').val(project_name);
-            }
+            });
         }
        
         function generateRandomNumber() {
@@ -1083,8 +1167,8 @@
         }
 
         function tab1_active(){
-            if ($('#tab1').hasClass('active')) {
-                // $('html, body').animate({ scrollTop: $('#tab1').offset().top }, 'slow');
+            if ($('#unit_tab').hasClass('active')) {
+                // $('html, body').animate({ scrollTop: $('#unit_tab').offset().top }, 'slow');
                 $('main').css('overflow', 'hidden');
                 // $(".w-full.my-3").remove();
             }else{
@@ -1181,7 +1265,6 @@
             //         $('#DataTables_Table_0 tbody tr#row_' + i).hide();
             //     }
             // }
-            // $("#preview_a_tag").removeClass('d-none');
         }
    
         $(document).on('click', '.accessories', function(){
@@ -1316,8 +1399,8 @@
                     if (_showLoading)
                         swal.close();
                     
-                    $("#preview_a_tag").removeClass('d-none');
-                    $('.btn-preview').show();
+                    $(".feature-tab-enable").removeClass('d-none');
+                    $('.feature-tab-disable').addClass('d-none');
                 } else {
                     if (_showLoading)
                         swal.close();
@@ -1438,10 +1521,10 @@
             initGraph('efficiency_graph', efficiency_graph_data, "@lang('Airflow rate') [m³/h]", "@lang('Efficiency') [%] - EN 13141-7");
 
             // Draw Histogram Noise Level - GRAPH
-            $('#tab7').empty();
-            $('#tab7').append('<div class="row"><div class="col-md-6 col-lg-6 col-xl-4 p-3"><canvas height="200" id="g_noise1"></canvas></div><div class="col-md-6 col-lg-6 col-xl-4 p-3"><canvas height="200" id="g_noise2"></canvas></div></div>');
-            $('#tab7').append('<div class="row"><div class="col-md-6 col-lg-6 col-xl-4 p-3"><canvas height="200" id="g_noise3"></canvas></div><div class="col-md-6 col-lg-6 col-xl-4 p-3"><canvas height="200" id="g_noise4"></canvas></div></div>');
-            $('#tab7').append('<div class="row"><div class="col-md-6 col-lg-6 col-xl-4 p-3"><canvas height="200" id="g_noise5"></canvas></div><div class="col-md-6 col-lg-6 col-xl-4 p-3"><canvas height="200" id="g_noise6"></canvas></div></div>');
+            $('#noise_level').empty();
+            $('#noise_level').append('<div class="row"><div class="col-md-6 col-lg-6 col-xl-4 p-3"><canvas height="200" id="g_noise1"></canvas></div><div class="col-md-6 col-lg-6 col-xl-4 p-3"><canvas height="200" id="g_noise2"></canvas></div></div>');
+            $('#noise_level').append('<div class="row"><div class="col-md-6 col-lg-6 col-xl-4 p-3"><canvas height="200" id="g_noise3"></canvas></div><div class="col-md-6 col-lg-6 col-xl-4 p-3"><canvas height="200" id="g_noise4"></canvas></div></div>');
+            $('#noise_level').append('<div class="row"><div class="col-md-6 col-lg-6 col-xl-4 p-3"><canvas height="200" id="g_noise5"></canvas></div><div class="col-md-6 col-lg-6 col-xl-4 p-3"><canvas height="200" id="g_noise6"></canvas></div></div>');
 
             initNoiseGraph('g_noise1', data.Soundtable.Breakout,  "@lang('Breakout noise level')", "@lang('Sound Level') [dB(A)] EN ISO 3744", "rgba(215, 38, 61, 0.8)");
             initNoiseGraph('g_noise2', data.Soundtable.Return, "@lang('Return in-duct noise level')", "@lang('Sound Level') [dB(A)]", "rgba(244, 96, 54, 0.8)");
@@ -1615,7 +1698,7 @@
 
         function showTechInfo(data) {
             var makeFormControl = (label, value) => {
-                var id = "TI-" + $('#tab8 input.form-control').length;
+                var id = "TI-" + $('#tech_info input.form-control').length;
                 return `<div class="form-group row">
                     <label for="${id}" class="col-sm-6 col-form-label">${label}</label>
                     <div class="col-sm-6">
@@ -1624,21 +1707,21 @@
                 </div>`;
             }            
 
-            $('#tab8').empty();
-            $('#tab8').append('<div class="row"><div class="col-md-6 col-xl-3"></div><div class="col-md-6 col-xl-3"></div></div>');
-            $('#tab8').find('.col-md-6:first-child').append(makeFormControl("@lang('Supply Temperature') [°C]", data.Supply_outlet_temp));
-            $('#tab8').find('.col-md-6:first-child').append(makeFormControl("@lang('Supply Humidity') [%]", data.Supply_outlet_rh));
-            $('#tab8').find('.col-md-6:first-child').append(makeFormControl("@lang('Exhaust Temperature') [°C]", data.Exhaust_outlet_temp));
-            $('#tab8').find('.col-md-6:first-child').append(makeFormControl("@lang('Exahust Humidity') [%]", data.Exhaust_outlet_rh));
-            $('#tab8').find('.col-md-6:first-child').append(makeFormControl("@lang('Water produced') [l/h]", data.water_produced));
-            $('#tab8').find('.col-md-6:first-child').append(makeFormControl("@lang('Return Temperature') [°C]", data.Return_inlet_temp));
-            $('#tab8').find('.col-md-6:first-child').append(makeFormControl("@lang('Return Humidity') [%]", data.Return_inlet_rh));
-            $('#tab8').find('.col-md-6:last-child').append(makeFormControl("@lang('Fresh Temperature') [°C]", data.Fresh_inlet_temp));
-            $('#tab8').find('.col-md-6:last-child').append(makeFormControl("@lang('Fresh Humidity') [%]", data.Fresh_inlet_rh));
-            $('#tab8').find('.col-md-6:last-child').append(makeFormControl("@lang('Efficiency') [%]", data.efficiency));
-            $('#tab8').find('.col-md-6:last-child').append(makeFormControl("@lang('Heat Recovery') [W]", data.heat_recovery));
-            $('#tab8').find('.col-md-6:last-child').append(makeFormControl("@lang('Sensible Heat') [W]", data.sensible_heat));
-            $('#tab8').find('.col-md-6:last-child').append(makeFormControl("@lang('Latent Heat') [W]", data.latent_heat));
+            $('#tech_info').empty();
+            $('#tech_info').append('<div class="row"><div class="col-md-6 col-xl-3"></div><div class="col-md-6 col-xl-3"></div></div>');
+            $('#tech_info').find('.col-md-6:first-child').append(makeFormControl("@lang('Supply Temperature') [°C]", data.Supply_outlet_temp));
+            $('#tech_info').find('.col-md-6:first-child').append(makeFormControl("@lang('Supply Humidity') [%]", data.Supply_outlet_rh));
+            $('#tech_info').find('.col-md-6:first-child').append(makeFormControl("@lang('Exhaust Temperature') [°C]", data.Exhaust_outlet_temp));
+            $('#tech_info').find('.col-md-6:first-child').append(makeFormControl("@lang('Exahust Humidity') [%]", data.Exhaust_outlet_rh));
+            $('#tech_info').find('.col-md-6:first-child').append(makeFormControl("@lang('Water produced') [l/h]", data.water_produced));
+            $('#tech_info').find('.col-md-6:first-child').append(makeFormControl("@lang('Return Temperature') [°C]", data.Return_inlet_temp));
+            $('#tech_info').find('.col-md-6:first-child').append(makeFormControl("@lang('Return Humidity') [%]", data.Return_inlet_rh));
+            $('#tech_info').find('.col-md-6:last-child').append(makeFormControl("@lang('Fresh Temperature') [°C]", data.Fresh_inlet_temp));
+            $('#tech_info').find('.col-md-6:last-child').append(makeFormControl("@lang('Fresh Humidity') [%]", data.Fresh_inlet_rh));
+            $('#tech_info').find('.col-md-6:last-child').append(makeFormControl("@lang('Efficiency') [%]", data.efficiency));
+            $('#tech_info').find('.col-md-6:last-child').append(makeFormControl("@lang('Heat Recovery') [W]", data.heat_recovery));
+            $('#tech_info').find('.col-md-6:last-child').append(makeFormControl("@lang('Sensible Heat') [W]", data.sensible_heat));
+            $('#tech_info').find('.col-md-6:last-child').append(makeFormControl("@lang('Latent Heat') [W]", data.latent_heat));
         }
 
         function showMultipleModal() {
@@ -1719,7 +1802,7 @@
 
 
             if (project_name === ''){
-                document.querySelector('.nav-link[href="#tab0"]').click();
+                document.querySelector('.nav-link[href="#project_tab"]').click();
                 alert("@lang('Please type Project Name')");
                 $('#project_name').focus();
                 return;
@@ -2082,13 +2165,13 @@
                 const modify_date = $('#modify_date').val().trim();
 
                 if (project_name === ''){
-                    document.querySelector('.nav-link[href="#tab0"]').click();
+                    document.querySelector('.nav-link[href="#project_tab"]').click();
                     alert("@lang('Please type Project Name')");
                     $('#project_name').focus();
                     return;
                 }
                 // if (project_refer === ''){
-                //     document.querySelector('.nav-link[href="#tab0"]').click();
+                //     document.querySelector('.nav-link[href="#project_tab"]').click();
                 //     alert("@lang('Please type Project Reference')");
                 //     $('#project_reference').focus();
                 //     return;
@@ -2171,8 +2254,8 @@
                     $('#unitform').hide();
                     $('#tab_unit_selection').addClass('disabled');
                     $('#tab_results_table').addClass('disabled');
-                    document.querySelector('.nav-link[href="#tab0"]').click();
-                    document.querySelector('#tab1').scrollTop = 0;
+                    document.querySelector('.nav-link[href="#project_tab"]').click();
+                    document.querySelector('#unit_tab').scrollTop = 0;
                     $('.btn-preview').hide();
                     $('.btn-unit-save').hide();
                 } else {
@@ -2270,16 +2353,28 @@
 
         function onNewUnit() {
             $('.btn-first-unit-next').hide();
-            $('.go-to-unit-feature').removeClass('d-none');
             $('#unitform').show();
+
+            if ($('#project_reference').val()  == null || $('#project_reference').val()  == undefined ||  $('#project_reference').val()  == ''){
+                var count = $('#project_count').val()
+                var lastGeneratedNumber = count;
+                lastGeneratedNumber++;
+                var serialNumber = lastGeneratedNumber.toString().padStart(6, '0');
+                $('#project_reference').val(serialNumber);
+            }
+
+            if ($('#project_name').val() == "" || $('#project_name').val() == null){
+                var project_name = generateRandomNumber();
+                $('#project_name').val(project_name);
+            }
 
             isNew = true;
             isView = false;
             $('#tab_unit_selection').removeClass('disabled');
             // $('#tab_results_table').addClass('disabled');
             $('#tab_results_table').removeClass('disabled');
-            // document.querySelector('.nav-link[href="#tab1"]').click();
-            document.querySelector('#tab1').scrollTop = 0;
+            document.querySelector('.nav-link[href="#unit_tab"]').click();
+            document.querySelector('#unit_tab').scrollTop = 0;
             var standard_climatic_data = localStorage.getItem('standard_climatic_data');
             if(standard_climatic_data) {
                 var jsonValues = JSON.parse(standard_climatic_data);
@@ -2325,8 +2420,8 @@
                 $('#tab_unit_selection').removeClass('disabled');
                 $('#tab_results_table').addClass('disabled');
                 $('#unitform').show();
-                document.querySelector('#tab1').scrollTop = 0;
-                document.querySelector('.nav-link[href="#tab1"]').click();
+                document.querySelector('#unit_tab').scrollTop = 0;
+                document.querySelector('.nav-link[href="#unit_tab"]').click();
                 isNew = false;
                 var temp_unit = null;
                 units.map((row, index) => {
@@ -2486,7 +2581,7 @@
             $('#unitform').hide();
             $('#tab_unit_selection').addClass('disabled');
             $('#tab_results_table').addClass('disabled');
-            document.querySelector('.nav-link[href="#tab0"]').click();
+            document.querySelector('.nav-link[href="#project_tab"]').click();
             $('.btn-unit-save').hide();
             $('.btn-preview').hide();
         }
@@ -2512,8 +2607,8 @@
             $('#unitform').hide();
             $('#tab_unit_selection').addClass('disabled');
             $('#tab_results_table').addClass('disabled');
-            document.querySelector('.nav-link[href="#tab0"]').click();
-            document.querySelector('#tab1').scrollTop = 0;
+            document.querySelector('.nav-link[href="#project_tab"]').click();
+            document.querySelector('#unit_tab').scrollTop = 0;
             $('.btn-preview').hide();
             $('.btn-unit-save').hide();
             }else{
@@ -2525,101 +2620,9 @@
              export2PDF(true);
             $('.btn-offer-save').hide();
         }
-
-        $(document).ready(function() {
-
-            /** initialize project reference */
-            const project_refer = $('#project_reference').val();                
-            if (project_refer  == null || project_refer  == undefined ||  project_refer  == ''){
-                var count = $('#project_count').val();
-                var lastGeneratedNumber = count;
-                lastGeneratedNumber++;
-                var serialNumber = lastGeneratedNumber.toString().padStart(6, '0');
-                $('#project_reference').val(serialNumber);
-            }
-            /** end project reference initializing */
-
-            var read1 = $('#read_only').val();   
-                if(read1 === 'readonly'){
-                    $('.heading').hide();
-                }else{
-                    $('.heading').html('/'+' '+'project reference');
-                }
-            
-            $('.units-table').css('visibility', 'visible');
-            if (units.length > 0) {
-                $('.btn-first-unit-next').hide();
-            } else {
-                $('.btn-first-unit-next').show();
-            }
-
-            // Create a new Image object
-            var img = new Image();
-
-            // Set the image source to your URL            
-            img.src = "<?=isset($settings) ? asset('/uploads/' . $settings->image) : asset('img/logo_dark.png') ?>";
-            // Wait for the image to load
-            img.onload = function() {                
-                // Create a canvas element
-                var canvas = document.createElement('canvas');
-                
-                // Set the canvas dimensions to the image dimensions
-                canvas.width = img.width;
-                canvas.height = img.height;
-
-                // Draw the image onto the canvas
-                var ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-
-                // Get the data URL from the canvas
-                logoImgData = {
-                    dataURL: canvas.toDataURL(),
-                    width: img.width,
-                    height: img.height
-                };
-
-                // Use the data URL as needed
-
-                canvas.remove();
-            };
-
-            //==========================================for unit selection=====================================================
-
-            $('.compatiblewithuname').hide();
-            $('.compatiblewithoutuname').hide();
-
-            var unitName = $('#unit_name').val().trim();
-            if (unitName == "") {
-                $('.compatiblewithuname').hide();
-                $('.compatiblewithoutuname').show();
-            } 
-            else {
-                $('.compatiblewithoutuname').hide();
-                $('.compatiblewithuname').show();
-            }
-           
-
-        });
-
-        $(document).on('click', '.go-to-unit-feature', function(){
-            $('.go-to-unit-feature').addClass('d-none');
-            document.querySelector('.nav-link[id="tab_results_table"]').click();
-        })
         
-        $(document).on('click', '#tab_unit_home', function(){
-            $('#unitform').hide();
-            $('.btn-first-unit-next').show()
-            $('.go-to-unit-feature').addClass('d-none');
-        })
 
-        $(document).on('click', '#tab_unit_selection', function(){
-            onNewUnit();
-        })
-
-        $('#tab_results_table').on('click',function(){
-            $('.go-to-unit-feature').addClass('d-none');
-            display_compatible_models(null);
-        })
+       
 
 
         $('.compatiblewithoutuname').on('dblclick',function(){
@@ -2663,30 +2666,12 @@
             $('.btn-preview').hide();
             $('.tabs.graph-tabs').addClass("hidden");
         })
-     
-        function backToUnitSelect() {            
-            $('.go-to-unit-feature').removeClass('d-none');
-            document.querySelector('.nav-link[id="tab_unit_selection"]').click();
-        }
-
-        function addMoreUnit() {
-            $('input[name=continue_flag]').val(1);
-            // onSaveNewUnit(1);
-            storeProject();
-        }
-
-        function completeProcess() {
-            $('input[name=continue_flag]').val(0);
-            // onSaveNewUnit(0);
-            storeProject();
-        }
-
 
         function preview_pdf_model(action){
 
             switch (action) {
                 case 'back':
-                    backToUnitSelect();
+                    document.querySelector('.nav-link[id="tab_unit_selection"]').click();
                     break;
                 case 'addmore':
                     addMoreUnit();
@@ -2924,7 +2909,7 @@
                             if (continue_flag == 0) {
                                 location.href = `{{route('admin.projects')}}`;
                             } else {
-                                backToUnitSelect();
+                                document.querySelector('.nav-link[id="tab_unit_selection"]').click();
                             }
                         }
                     });
@@ -3024,7 +3009,7 @@
                     //         if (continue_flag == 0) {
                     //             location.href = `{{route('admin.projects')}}`;
                     //         } else {
-                    //             backToUnitSelect();
+                    //             document.querySelector('.nav-link[id="tab_unit_selection"]').click();
                     //         }
                     //     }
                     });

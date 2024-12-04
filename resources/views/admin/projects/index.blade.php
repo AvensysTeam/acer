@@ -7,9 +7,12 @@
         justify-content:space-around;
         height:38px;
     }
-    .dataTables_paginate{
-        display:none;
+    .dataTables_filter{
+        display: none;
     }
+    /* .dataTables_paginate{
+        display:none;
+    } */
     .next_previous{
         display: flex;
         justify-content: end;
@@ -120,10 +123,10 @@
                     ?>
                 </tbody>
             </table>
-            <div class="next_previous">
+            <!-- <div class="next_previous">
               <button id="customPreviousBtn" style="rotate: -90deg;"><img class="new mb-2" src="{{asset('assets/icons/arrow-circle-up-icon-original.svg')}}" width="35px" height="35px"/></button>
               <button id="customNextBtn" style="margin-top:8px;"><img class="new mb-2" src="{{asset('assets/icons/nextArrow.png')}}" width="35px" height="35px"/></button>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
@@ -135,7 +138,7 @@
         var dTable;
         $(function () {
             $.extend(true, $.fn.dataTable.defaults, {
-                dom:'tp',
+                // dom:'tp',
                 orderCellsTop: true,
                 order: [[ 1, 'desc' ]],
                 //paging: false,
@@ -165,14 +168,14 @@
                     });
                 }
             });
-            $('#customPreviousBtn').on('click', function () {
-        dTable.page('previous').draw('page');
-    });
+            // $('#customPreviousBtn').on('click', function () {
+            //     dTable.page('previous').draw('page');
+            // });
 
-    // Custom Next button functionality
-    $('#customNextBtn').on('click', function () {
-        dTable.page('next').draw('page');
-    });
+            // // Custom Next button functionality
+            // $('#customNextBtn').on('click', function () {
+            //     dTable.page('next').draw('page');
+            // });
 
             // Add custom search function
             $.fn.dataTable.ext.search.push(

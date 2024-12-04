@@ -75,6 +75,12 @@
     .unit-thumbnail {
         height: 50px;
     }
+    .highlighted-unit td {
+        background: #89bdff;
+    }
+    .highlighted-unit td.exclude-highlight {
+        background: none; /* Exclude rowspan cells */
+    }
 </style>
 <?php
     $units_list = json_decode($units);
@@ -110,7 +116,7 @@
         <tbody>
             @if ($units_list)
             @foreach ($units_list as $key => $row)
-            <tr class="unit-row text-center" data-name="{{$row->name}}">
+            <tr class="unit-row text-center" data-name="{{$row->name}}" data-id="{{$row->id}}">
                 <td>{{$row->name}}</td>
                 <td>
                     @if($row->thumbnail)
@@ -153,7 +159,7 @@
                     <!-- <a class="btn button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'view')">
                         <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="35px" height="35px"></span>
                     </a> -->                    
-                    <a class="btn button-boxed p-0" onclick="editOrViewUnit(`{{$row->name}}`, 'edit')"  title="@lang('Edit Unit')">
+                    <a class="btn button-boxed p-0" onclick="editOrViewUnit(`{{$row->id}}`, 'edit')"  title="@lang('Edit Unit')">
                         <span> <img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="35px" height="35px"></span>
                     </a>
                     <a class="btn button-boxed p-0" onclick="onDeleteUnit(`{{$row->name}}`)"  title="@lang('Delete Unit')">
@@ -195,11 +201,6 @@
                 <a class="btn button-boxed next-step-btn d-none step-action-btn" step="0">
                     <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/caret-circle-right-icon-original.svg')}}" width="35px" height="35px"></span>
                 </a>
-
-
-                onNewUnit()
-                onEditUnit()
-                completeProcess()
             </div>
             
         </div>
@@ -841,6 +842,8 @@
         var totalpage = 3;
         var isNew = true;
         var isView = false;
+        var isEdit = false;
+        var selected_unit = 0;
         var pdf_units = [];
         var isLoadImage = false;
         var loadImageId = null;
@@ -951,6 +954,8 @@
                 document.querySelector('.nav-link[id="tab_unit_selection"]').click(); //unit tab click
             } else if (current_step == 1) {
                 document.querySelector('.nav-link[id="tab_results_table"]').click();
+            } else if (current_step == 3) { // after getting complete data
+                completeProcess();
             }
 
         })
@@ -970,11 +975,18 @@
             $('.prev-step-btn').addClass('d-none');
             $('#unitform').hide();
             $('#tab_results_table').addClass("disabled");
+
+            $('.add-more-unit-btn').addClass('d-none');
+            $('.preview-unit-pdf-btn').addClass('d-none');
         })
         
         $(document).on('click', '#tab_unit_selection', function(){
             $('.step-action-btn').attr('step', 1);
             $('.prev-step-btn').removeClass('d-none');
+            
+            $('.add-more-unit-btn').addClass('d-none');
+            $('.preview-unit-pdf-btn').addClass('d-none');
+
             onNewUnit();
         })
 
@@ -1166,17 +1178,6 @@
             return parseInt(randomNumber.toString() + currentYearLastTwoDigits);
         }
 
-        function tab1_active(){
-            if ($('#unit_tab').hasClass('active')) {
-                // $('html, body').animate({ scrollTop: $('#unit_tab').offset().top }, 'slow');
-                $('main').css('overflow', 'hidden');
-                // $(".w-full.my-3").remove();
-            }else{
-                $('main').css('overflow', '');
-            }
-
-        }
-
         function initTable(data, callback) {
             $('.models-tbl-container').empty();
             var $dt = $(`<table class="display compact project-table datatable-t1">\
@@ -1195,8 +1196,8 @@
                 </table>`);
             $('.models-tbl-container').html($dt);
             for(var i=0;i<Object.keys(data).length;i++) {
-                var $row = $('<tr class="uname" id=row_'+i+' onclick="select_row(' + i + ');"></tr>');
                 var model = Object.keys(data)[i];
+                var $row = $(`<tr class="uname" id="row_${i}" onclick="select_row(${i});" data-model="${data[model]["id"]}"></tr>`);
                 $row.append(`<td data-id="${data[model]["id"]}" data-reg="${data[model]["Reg"]}">${model}</td>`);
                 $row.append('<td>' + data[model]["Airflow"] + '</td>');
                 $row.append('<td>' + data[model]["Pressure"] + '</td>');
@@ -1238,9 +1239,20 @@
                 }
             });
             var pid = parseInt('{{$pid}}');
-            if(pid > 0) {
-                var defaultRowIndex = 1;
-                dTable.row(defaultRowIndex).select();
+            // if the pid > 0 and also if the unit is selected this should be called.
+            if (pid > 0 && !isNew) {
+                // var defaultRowIndex = 0;
+                dTable.rows().every(function (rowIdx, tableLoop, rowLoop) {
+                    let rowNode = this.node(); // Get the <tr> element
+                    if ($(rowNode).data('model') === model_id) { // Check the data-model attribute
+                        console.log('Found row with data-model=', model_id, rowNode);
+                        this.row(rowIdx).select();
+                        return false; // Stop iteration if found
+                    }
+                });
+
+
+                // dTable.row(defaultRowIndex).select();
                 var id_default = $('.selected td:first-child').data('id');
                 var selectedRows = dTable.rows({ selected: true }).data();
                 for(var i=0; i<selectedRows.length;i++){
@@ -1370,6 +1382,9 @@
                     Hfin: w_Hfin
                 }
             }).done(function (res) {
+                $('.next-step-btn').attr('step', 3);
+                $('.add-more-unit-btn').removeClass('d-none');
+                $('.preview-unit-pdf-btn').removeClass('d-none');
                 if(res.result) {
                     var result = res.result.completedata;
                     powerconsumption = result[model].Power;
@@ -1378,6 +1393,10 @@
                     psfp = result[model].PSFP;
 
                     selected_model_full_name = model;
+
+                    if(isEdit) {
+                        $('input#unit_name').val(model);
+                    }
 
                     drawGraph(result[model]);
 
@@ -2398,14 +2417,23 @@
             $(`input[name=ex][value="CF|LT"]`).prop('checked', true);
             $('#p_airflow').val(200);
             $('#p_pressure').val(50);
-            tab1_active();
+
+
+            // tab1_active
+            // if ($('#unit_tab').hasClass('active')) {
+            //     // $('html, body').animate({ scrollTop: $('#unit_tab').offset().top }, 'slow');
+            //     $('main').css('overflow', 'hidden');
+            //     // $(".w-full.my-3").remove();
+            // }else{
+            //     $('main').css('overflow', '');
+            // }
         }
 
         // function onViewUnit(unit_name){
             
         // }
 
-        function editOrViewUnit(unit_name, flag='edit') {
+        function editOrViewUnit(unit_id, flag='edit') {
             if(flag == 'view') { // hide all store buttons
                 $('.btn-unit-save').hide();
                 isView = true;
@@ -2415,7 +2443,17 @@
 
             $('.p_details').removeClass('d-none');
             var readonly = $('#read_only').val();
-            // alert(readonly); return;
+            isEdit = true;
+            selected_unit = unit_id;
+
+            $(`tr.unit-row`).removeClass('highlighted-unit');
+            $(`tr.unit-row td[rowspan]`).addClass('exclude-highlight');
+            let targetRow = $(`tr.unit-row[data-id="${unit_id}"]`);
+
+            if (targetRow.length > 0) {
+                targetRow.addClass('highlighted-unit'); // Example: Add a CSS class
+            }
+
             if(readonly !== 'readonly'){
                 $('#tab_unit_selection').removeClass('disabled');
                 $('#tab_results_table').addClass('disabled');
@@ -2425,7 +2463,7 @@
                 isNew = false;
                 var temp_unit = null;
                 units.map((row, index) => {
-                    if (row.name == unit_name) {
+                    if (row.id == unit_id) {
                         temp_unit = row;
                         edit_unit_index = index;
                     }
@@ -2465,10 +2503,6 @@
                 alert('Cant access edit')
             }
         }
-
-        // function onEditUnit(unit_name){
-            
-        // }
 
         function onSaveUnit() {
             unit_name = $('#unit_name').val().trim();
@@ -2802,7 +2836,7 @@
             var formData = new FormData();
 
             formData.append('id', $('#project_id').val());
-            formData.append('uid', '{{$uid}}');
+            // formData.append('uid', '{{$uid}}');
             formData.append('company', '{{$company->id}}');
             formData.append('contact', '{{$contact->id}}');
 
@@ -2826,6 +2860,8 @@
             // }
 
             /** generate unit pdf  */
+
+            formData.append('unit_id',selected_unit);
 
             var doc_unit = await generatePDFforUNIT();            
             var filename_unit = 'UNIT_' + (new Date()).getTime() + '.pdf';
@@ -2907,16 +2943,19 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             if (continue_flag == 0) {
-                                location.href = `{{route('admin.projects')}}`;
+                                var reload = `{{route('admin.projects')}}`;
+                                var pid = parseInt('{{$pid}}');
+                                if (pid > 0) {
+                                    reload = `{{route('admin.projects.detail', ['pid' => $pid, 'cid' => $cid, 'uid' => $uid])}}`;
+                                }
+                                location.href = reload;
                             } else {
+                                selected_unit = 0;
                                 document.querySelector('.nav-link[id="tab_unit_selection"]').click();
                             }
                         }
                     });
                     console.log('File uploaded successfully.');
-                    
-                   
-
                 },
                 error: function(xhr, status, error) {
                     swal.close();

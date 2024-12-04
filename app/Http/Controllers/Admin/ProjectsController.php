@@ -430,8 +430,13 @@ class ProjectsController extends Controller
         //     }
         // }
 
-        $unit = new Unit();
-        
+        $unit_id = $request->unit_id;
+
+        if($unit_id > 0) {
+            $unit = Unit::findOrFail($unit_id);
+        } else
+            $unit = new Unit();
+
         // Update the attributes for the $unit object
         $unit->pid = $pid;
         $unit->name = $request->unit_name;

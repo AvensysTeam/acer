@@ -41,9 +41,9 @@
                             </td>
                             <td align="center">
                                 @if($language->is_default == 1)
-                                    <span class="badge green">Default</span>
+                                    <span class="badge green">@lang('Default')</span>
                                 @else
-                                    <span class="badge red">Selectable</span>
+                                    <span class="badge red">@lang('Selectable')</span>
                                 @endif
                             </td>
                             <td align="center">

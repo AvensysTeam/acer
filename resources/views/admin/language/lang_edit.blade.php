@@ -2,7 +2,7 @@
 @section('content')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
 @can('scooter_create')
-    <div class="block my-4">
+    <div class="flex my-4 gap-1">
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addnewkeymodal">
             {{ trans('global.add') }} New Key
         </button>
@@ -13,8 +13,32 @@
         <button type="button" class="btn btn-info" onclick="exportExcel()">
             Export Excel
         </button>
+
+        <form action="{{ route('admin.language.detectmissed', ['id' => $lang->id]) }}" method="POST">
+            @csrf <!-- This adds the CSRF token -->
+            <button type="submit" class="btn btn-dark">@lang('Add Missed Keys')</button>
+        </form>
+
+        <form action="{{ route('admin.language.removeunused', ['id' => $lang->id]) }}" method="POST">
+            @csrf <!-- This adds the CSRF token -->
+            <button type="submit" class="btn btn-warning">@lang('Remove Unused Keys')</button>
+        </form>
+
     </div>
 @endcan
+
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
 <div class="main-card">
     <div class="header">
         Language Keywords of {{ $lang->name }}

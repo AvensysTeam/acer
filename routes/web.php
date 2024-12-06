@@ -152,6 +152,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::get('pricecompares/allcom-test/{uid?}', 'PricecompareController@allcompetitorsTest')->name('pricecompares.allcom-test');
     Route::get('language-test/{uid?}', 'LanguageController@indexTest')->name('language-test');
     
+    Route::post('language/check/missedkey/{id}', 'LanguageController@detectMissedKeys')->name('language.detectmissed');
+    Route::post('language/check/removekeys/{id}', 'LanguageController@removeUnusedKeys')->name('language.removeunused');
     Route::get('languages/{id}', 'LanguageController@langedit')->name('language.langedit');
     Route::post('languages/store/key/{id}', 'LanguageController@storeLanguageJson')->name('languages.store.key');
     Route::post('languages/delete/{id}', 'LanguageController@deleteLanguageJson')->name('languages.key.delete');

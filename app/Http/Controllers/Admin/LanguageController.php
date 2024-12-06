@@ -322,4 +322,157 @@ class LanguageController extends Controller
 
         return back();
     }
+
+
+    public function removeUnusedKeys($id){
+        $totalKeys = [];
+        // Get all Blade files
+        $bladeFiles = \File::allFiles(resource_path('views'));
+
+        foreach ($bladeFiles as $file) {
+            $content = \File::get($file);
+
+            preg_match_all("/(?:@lang|__|trans)\(['\"]([^'\"]+)['\"]\)/", $content, $matches);
+
+            $keys = $matches[1];
+
+            foreach ($keys as $key) {                
+                if($key && !in_array($key, $totalKeys)) {
+                    $totalKeys[] = $key;
+                }
+            }
+
+        }
+
+
+        $controllerPath = app_path('Http/Controllers'); // Path to the controllers directory
+        // Recursively get all files
+        $controllerFiles = \File::allFiles($controllerPath);
+
+        foreach ($controllerFiles as $file) {
+            $content = \File::get($file);
+
+            preg_match_all("/(?:@lang|__|trans)\(['\"]([^'\"]+)['\"]\)/", $content, $matches);
+
+            $keys = $matches[1];
+
+            foreach ($keys as $key) {                
+                if($key && !in_array($key, $totalKeys)) {
+                    $totalKeys[] = $key;
+                }
+            }
+
+        }
+
+
+
+        $lang = Language::findOrFail($id);
+        $json = file_get_contents(resource_path('lang/').$lang->code.'.json');
+
+        $jsonarry = [];
+        if(!empty($json)) {
+            $jsonarry = json_decode($json, true);
+        }
+
+          
+        $totalstoredkeys = [];
+        $unusedKeys = [];
+
+        foreach($jsonarry as $langkey => $language) {
+            $totalstoredkeys[] = $langkey;
+            if(!in_array($langkey, $totalKeys)){
+                $unusedKeys[] = $langkey;
+                unset($jsonarry[$langkey]);
+            }
+        }
+      
+
+        file_put_contents(resource_path('lang/').$lang->code.'.json', json_encode($jsonarry));
+
+        // Process the request
+        return redirect()->back()->with('success', __(count($unusedKeys) . ' keys are removed'));
+    }
+
+    
+    public function detectMissedKeys($id){
+
+       
+
+        $totalKeys = [];
+        // Get all Blade files
+        $bladeFiles = \File::allFiles(resource_path('views'));
+
+        foreach ($bladeFiles as $file) {
+            $content = \File::get($file);
+
+            preg_match_all("/(?:@lang|__|trans)\(['\"]([^'\"]+)['\"]\)/", $content, $matches);
+
+            $keys = $matches[1];
+
+            foreach ($keys as $key) {                
+                if($key && !in_array($key, $totalKeys)) {
+                    $totalKeys[] = $key;
+                }
+            }
+
+        }
+
+
+        $controllerPath = app_path('Http/Controllers'); // Path to the controllers directory
+        // Recursively get all files
+        $controllerFiles = \File::allFiles($controllerPath);
+
+        foreach ($controllerFiles as $file) {
+            $content = \File::get($file);
+
+            preg_match_all("/(?:@lang|__|trans)\(['\"]([^'\"]+)['\"]\)/", $content, $matches);
+
+            $keys = $matches[1];
+
+            foreach ($keys as $key) {                
+                if($key && !in_array($key, $totalKeys)) {
+                    $totalKeys[] = $key;
+                }
+            }
+
+        }
+
+
+
+        $lang = Language::findOrFail($id);
+        $json = file_get_contents(resource_path('lang/').$lang->code.'.json');
+
+        $jsonarry = [];
+        if(!empty($json)) {
+            $jsonarry = json_decode($json, true);
+        }
+
+          
+        $totalstoredkeys = [];
+        $unusedKeys = [];
+
+        foreach($jsonarry as $langkey => $language) {
+            $totalstoredkeys[] = $langkey;
+            if(!in_array($langkey, $totalKeys)){
+                $unusedKeys[] = $langkey;
+            }
+
+        }
+
+        $missingKeys = [];
+
+
+        foreach($totalKeys as $key) {
+            if(!in_array($key, $totalstoredkeys)){
+                $missingKeys[] = $key;
+                $jsonarry[$key] = "";
+            }
+        }
+
+        file_put_contents(resource_path('lang/').$lang->code.'.json', json_encode($jsonarry));
+
+        // Process the request
+        return redirect()->back()->with('success', __(count($missingKeys) . ' keys are added'));
+      
+    }
 }

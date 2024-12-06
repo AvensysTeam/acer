@@ -851,5 +851,7 @@
   "Upload PDF": "Ladda upp PDF",
   "Add More": "Lägg till fler",
   "Complete": "Slutför",
-  "close": "stäng"
+  "close": "stäng",
+    "Settings":"Inställningar",
+    "Translate":"Översätta"
 }

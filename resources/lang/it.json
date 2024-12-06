@@ -851,5 +851,7 @@
   "Upload PDF": "Carica PDF",
   "Add More": "Aggiungi Altro",
   "Complete": "Completa",
-  "close": "chiudi"
+  "close": "chiudi",
+    "Settings":"Impostazioni",
+    "Translate":"Tradurre"
 }

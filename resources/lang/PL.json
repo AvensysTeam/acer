@@ -851,5 +851,7 @@
   "Upload PDF": "Prześlij PDF",
   "Add More": "Dodaj więcej",
   "Complete": "Zakończ",
-  "close": "zamknij"
+  "close": "zamknij",
+    "Settings":"Ustawienia",
+    "Translate":"Tłumaczyć"
 }

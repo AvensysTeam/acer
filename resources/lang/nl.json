@@ -695,5 +695,7 @@
   "Upload PDF": "Upload PDF",
   "Add More": "Voeg meer toe",
   "Complete": "Voltooien",
-  "close": "sluiten"
+  "close": "sluiten",
+    "Settings":"Instellingen",
+    "Translate":"Vertalen"
 }

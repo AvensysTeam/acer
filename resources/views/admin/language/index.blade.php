@@ -49,7 +49,7 @@
                             <td align="center">
                                 @can('scooter_show')
                                     <a class="btn-sm btn-green" href="{{ route('admin.language.langedit', $language->id) }}">
-                                        Translate
+                                        @lang('Translate')
                                     </a>
                                 @endcan
                                 @can('scooter_show')

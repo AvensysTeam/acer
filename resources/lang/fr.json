@@ -837,5 +837,7 @@
     "Upload PDF": "Télécharger un PDF",
     "Add More": "Ajouter plus",
     "Complete": "Terminer",
-    "close": "fermer"
+    "close": "fermer",
+    "Settings":"Paramètres",
+    "Translate":"Traduire"
 }

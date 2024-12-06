@@ -128,7 +128,7 @@
         @can('projects_access')                        
             <a class="nav-link border-success{{ request()->is('admin/projects*') ? ' active' : '' }}" href="{{ route('admin.projects') }}">
                 <i class="fas fa-fw fa-toolbox"></i>
-                <span class="mx-4">@lang('Offer tool')</span>
+                <span class="mx-4">@lang('offer tool')</span>
             </a>
         @endcan
         @can('customer_access')

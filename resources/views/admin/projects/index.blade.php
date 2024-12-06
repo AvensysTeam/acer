@@ -105,7 +105,11 @@
                                 <td class="nowrap">{{$p->description}}</td>
                                 <td class="nowrap">{{date("d.m.Y", strtotime($p->updated_at))}}</td>
                                 <td>
-                                    <a href="/uploads/project/{{$p->p_pdf}}" target="_blank">{{$p->p_pdf}}</a>
+                                    @if($p->p_pdf)
+                                    <a class="btn button-boxed p-0" href="/uploads/project/{{$p->p_pdf}}" target="_blank" title="@lang('Show Commercial PDF')">
+                                        <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/preview-eye.png')}}" width="25px" height="25px"></span>
+                                    </a>
+                                    @endif
                                 </td>
                                 <td class="action_btn align-items-center ">
                                     <a class="" onclick="goToDetail('{{$p->id}}','{{$p->company}}','{{$p->contact}}')">

@@ -135,17 +135,20 @@
                         </a>
                     </td>
                 <?php } ?>
-                <td>
+                <td class="align-items-center flex justify-between">
                     <?php
                     if ($row->delivery_time != 'undefined') {
                         $deliverytime = explode('_', $row->delivery_time);
                     
                         if ($deliverytime[1] == 1) {
-                            echo $deliverytime[1] . ' ' .  __('Day(s)');
+                            echo $deliverytime[0] . ' ' .  __('Day(s)');
                         } else {
-                            echo $deliverytime[1] . ' ' . __('Week(s)');
-                        }
-                    } else { ?>
+                            echo $deliverytime[0] . ' ' . __('Week(s)');
+                        }?>
+                        <a class="btn button-boxed btn-forward" onclick="addDeliveryTime()"  title="@lang('Edit Delivery Time')">
+                            <span> <img class="new mb-2" src="{{asset('/assets/icons/pencil-line-icon-original.svg')}}" width="25px" height="25px"></span>
+                        </a>
+                    <?php } else { ?>
 
                          <a class="btn button-boxed btn-forward @if($option == 'readonly') v-hidden @endif" onclick="addDeliveryTime()"  title="@lang('Add Delivery Time')">
                             <span> <img class="new mb-2" src="{{asset('/assets/icons/set_creazilla/plus-circle-icon-original.svg')}}" width="35px" height="35px"></span>
@@ -2733,19 +2736,29 @@
             $('.units-delivery-time-table tbody').html('');
 
             units.map(unit => {
+                var delivery_time_type = 0;
+                var delivery_time =1;
+                if(unit.delivery_time) {
+                    console.log(unit.delivery_time);
+                    var d = unit.delivery_time.split('_');
+                    if (d.length > 1) {
+                        delivery_time_type = d[1];
+                        delivery_time = d[0];
+                    }
+                }
                 $('.units-delivery-time-table tbody').append(`
                     <tr data-name="${unit.name}" data-id="${unit.id}" class="units-delivery-time-table-tr">
                         <td>${unit.name}</td>
                         <td>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <input type="number" class="form-control delivery-time" value="1" min="1" max="320" maxlength="3">
+                                    <input type="number" class="form-control delivery-time" value="${delivery_time}" min="1" max="320" maxlength="3">
                                 </div>
                                 <div class="col-md-9">
                                     <select class="form-control delivery-time-type">
                                         <option value="0" selected disabled>Please select Time Type</option>
-                                        <option value="1">Days</option>
-                                        <option value="2">Weeks</option>
+                                        <option value="1" ${delivery_time_type == 1?'selected': ''}>Days</option>
+                                        <option value="2" ${delivery_time_type == 2?'selected': ''}>Weeks</option>
                                     </select>
                                 </div>
                             </div>

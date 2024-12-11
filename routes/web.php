@@ -92,7 +92,7 @@ Route::get('/thanks', function() {
     return view('auth.thanks');
 })->name('thanks'); 
 
-
+Route::post('autofill-company', 'Admin\ProjectsController@getautofilldata')->name('autofill.company');
 
 
 

@@ -60,7 +60,8 @@ class User extends Authenticatable
         'company_size',
         'operational_address',
         'contact_person_name',
-        'position'
+        'position',
+        'company_id'
     ];
 
     protected function serializeDate(DateTimeInterface $date)

@@ -711,5 +711,32 @@ class ProjectsController extends Controller
         });
 
     }
+
+    public function getautofilldata(Request $req){
+        $vatNumber = $req->input('vat_number');
+        $company = Company::where('VAT', $vatNumber)->first();
+    
+        if ($company) {
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'name' => $company->name,
+                    'address' => $company->address,
+                    'phone' => $company->phone,
+                    'legal_form' => $company->legal_form,
+                    'sector_activity' => $company->sector_activity,
+                    'company_size' => $company->company_size,
+                    'operational_address' => $company->operational_address,
+                    'contact_person_name' => $company->contact_person_name,
+                    'id' => $company->id
+                ],
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Company not found.',
+            ], 200);
+        }
+    }
 }
 

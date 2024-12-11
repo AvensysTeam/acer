@@ -8,6 +8,7 @@ use App\Permission;
 use App\Providers\RouteServiceProvider;
 use App\Role;
 use App\User;
+use App\Company;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\JsonResponse;
@@ -83,6 +84,8 @@ class RegisterController extends Controller
 
         $messages = [
             'mobile_phone'    => 'The :attribute should be an European Country Number',
+            'password' => 'The :attribute should be an European Country Number',
+            'min'    => ':attribute length must be at least :min characters.',
         ];
 
         return Validator::make($data, [
@@ -107,21 +110,43 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $company_id = $data['company_id'];
+        if ($company_id != 0) {
+            $company = Company::findOrFail($company_id);
+        } else {
+            $company = new Company();
+        }
+            
+        $company->name = $data['company_name'];
+        $company->address = $data['legal_address'];
+        $company->phone = $data['full_mobile_phone']; // including phone code
+        $company->VAT = $data['VAT'];
+        $company->legal_form = $data['legal_form'];
+        $company->sector_activity = $data['sector_activity'];
+        $company->operational_address = $data['operational_address'];
+        $company->company_size = $data['company_size'];
+        $company->contact_person_name = $data['contact_person_name'];
+        $company->country_code = $data['country_code'];
+        $company->description = '';
+        $company->save();
+        $company_id = $company->id;
+
         $user = User::create([
             'name'     => $data['username'],
             'email'    => $data['email'],
-            'phone'    => $data['mobile_phone'],
+            'phone'    => $data['full_mobile_phone'],
             'company_name'    => $data['company_name'],
             'company_vat'    => $data['VAT'],
             'company_address' => $data['legal_address'],
             'pc_info' => 'required|string',
-            'legal_form' => $data['legal_form'],
-            'sector_activity' => $data['sector_activity'],
-            'company_size' => $data['company_size'],
-            'operational_address' => $data['operational_address'],
-            'contact_person_name' => $data['contact_person_name'],
+            // 'legal_form' => $data['legal_form'],
+            // 'sector_activity' => $data['sector_activity'],
+            // 'company_size' => $data['company_size'],
+            // 'operational_address' => $data['operational_address'],
+            // 'contact_person_name' => $data['contact_person_name'],
             'position' => $data['position'],
             'password' => Hash::make($data['password']),
+            'company_id' => $company_id,
         ]);
 
         $isDefaultRole = Role::with('permissions')->where('title', 'default')->first();

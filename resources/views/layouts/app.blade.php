@@ -72,7 +72,7 @@
     </div>
     <div class="flex justify-center items-center h-screen bg-gray-200 px-6" id="main-content">
         @yield("content")
-    </div>    
+    </div>
     @yield('scripts')
     <script>
         var allowed = sessionStorage.getItem('allowed');

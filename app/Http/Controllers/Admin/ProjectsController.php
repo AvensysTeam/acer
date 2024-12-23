@@ -18,11 +18,19 @@ use App\DeliveryAddress;
 use App\DeliveryCondition;
 use Session;
 use Mail;
+use App\Services\ViesService;
 
 use Illuminate\Support\Facades\Storage;
 
 class ProjectsController extends Controller
 {    
+    protected $viesService;
+
+    public function __construct(ViesService $viesService)
+    {
+        $this->viesService = $viesService;
+    }
+
     public function index()
     {
         //$query = "SELECT P.id, P.company, P.contact, P.reference, C.`name` AS `customer`, CP.firstname AS `contact_name`, P.`name` AS `project_name`, P.description, P.updated_at, P.`status` FROM `project` AS `P` LEFT JOIN `company` AS `C` ON P.company = C.id LEFT JOIN `contact_people` AS `CP` ON P.contact = CP.id WHERE ISNULL(P.deleted_at) AND P.user=" . auth()->user()->id;
@@ -53,8 +61,8 @@ class ProjectsController extends Controller
     public function profile($pid=0, $cid=0, $uid=0)
     {
 
-        $company_list = Company::where('user', auth()->user()->id)->get();
-        //$company_list = Company::all();
+        // $company_list = Company::where('user', auth()->user()->id)->get();
+        $company_list = Company::all();
         $job_list = JobPosition::all();
         
         Session::put('pid', $pid);
@@ -713,12 +721,30 @@ class ProjectsController extends Controller
     }
 
     public function getautofilldata(Request $req){
+
+        // IE&vatNumber=6388047V
+
         $vatNumber = $req->input('vat_number');
         $company = Company::where('VAT', $vatNumber)->first();
+
+        if(!$vatNumber) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No VAT NUMBER'
+            ], 200); 
+        }
+
+        // Extract "IT" (country code)
+        $countryCode = substr($vatNumber, 0, 2);
+
+        // Extract "01258963" (numeric part)
+        $numericPart = substr($vatNumber, 2);
+
     
         if ($company) {
             return response()->json([
                 'status' => 'success',
+                'source' => 'database',
                 'data' => [
                     'name' => $company->name,
                     'address' => $company->address,
@@ -732,11 +758,32 @@ class ProjectsController extends Controller
                 ],
             ]);
         } else {
+
+            $result = $this->viesService->validateVAT($countryCode, $numericPart);        
+            
             return response()->json([
                 'status' => 'error',
                 'message' => 'Company not found.',
+                'source' => 'validation',
+                'data' => $result
+
             ], 200);
         }
+    }
+
+    public function validateVAT(Request $request)
+    {
+        $request->validate([
+            'countryCode' => 'required|string|size:2',
+            'vatNumber'   => 'required|string',
+        ]);
+
+        $countryCode = $request->input('countryCode');
+        $vatNumber   = $request->input('vatNumber');
+
+        $result = $this->viesService->validateVAT($countryCode, $vatNumber);
+
+        return response()->json($result);
     }
 }
 

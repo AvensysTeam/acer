@@ -56,7 +56,11 @@ class RegisterController extends Controller
     public function showRegistrationForm() {
         $roleObject = new Role();
         $roles = $roleObject->getOtherRoles();
-        return view('auth.register', compact('roles'));
+        
+        $legalForms = Company::$compay_legal_form;
+        $servicesActivitys = Company::$sectors_of_activity;
+        $company_sizes = Company::$company_sizes;
+        return view('auth.register', compact('roles', 'legalForms', 'servicesActivitys', 'company_sizes'));
     }
 
     /**

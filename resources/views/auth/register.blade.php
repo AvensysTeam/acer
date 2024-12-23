@@ -35,6 +35,57 @@
   .input-group1 {
     position: relative;
   }
+
+  .register-form {
+    max-width: 50rem !important;
+    max-height: 95vh;
+    overflow-y: auto;
+  }
+
+
+  #loader {
+    position: absolute;
+    right: 7px;
+    top: 9px;
+  }
+
+  /** css spinner */
+  #loader .lds-dual-ring {
+    color: #1c4c5b
+  }
+
+  #loader .lds-dual-ring,
+  .lds-dual-ring:after {
+    box-sizing: border-box;
+  }
+
+  #loader .lds-dual-ring {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+  }
+
+  #loader .lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: 0px;
+    border-radius: 50%;
+    border: 3.4px solid currentColor;
+    border-color: currentColor transparent currentColor transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+  }
+
+  @keyframes lds-dual-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 </style>
 @endsection
 @section('content')
@@ -44,7 +95,7 @@ $pc_info = "{$clientIP}";
 $pc_info = hash('sha256', $pc_info);
 ?>
 
-<div class="auth-card" style="max-width: 50rem !important;">
+<div class="auth-card register-form" style="">
   <div class="flex flex-shrink-0 justify-center">
     <a href="{{ route('login') }}">
       <img class="responsive" src="{{ asset('img/logo.png') }}" alt="logo" width="150">
@@ -71,6 +122,9 @@ $pc_info = hash('sha256', $pc_info);
         <div class="input-group1">
           <input type="text" class="form-control {{ $errors->has('VAT') ? ' is-invalid' : '' }}" id="validationCustom02"
             placeholder="IT12345678901" name="VAT" id="VAT" required value="{{ old('VAT') }}">
+          <div id="loader" class="d-none">
+            <div class="lds-dual-ring"></div>
+          </div>
           @if ($errors->has('VAT'))
           <p class="invalid-feedback">{{ $errors->first('VAT') }}</p>
           @endif
@@ -80,7 +134,7 @@ $pc_info = hash('sha256', $pc_info);
         <label for="validationCustom01">@lang('global.company_name')</label>
         <div class="input-group1">
           <input type="text" class="form-control {{ $errors->has('company_name') ? ' is-invalid' : '' }}" id="validationCustom01"
-            placeholder="Tech Solutions LLC" name="company_name" required value="{{ old('company_name') }}">
+            placeholder="Tech Solutions LLC" name="company_name" required value="{{ old('company_name') }}" readonly>
           @if ($errors->has('company_name'))
           <p class="invalid-feedback">{{ $errors->first('company_name') }}</p>
           @endif
@@ -101,32 +155,31 @@ $pc_info = hash('sha256', $pc_info);
       <div class="col-md-4 ">
         <div class="form-group">
           <label for="exampleSelect">@lang('Legal Form')</label>
+          <input type="hidden" name="old_legal_form" value="{{ old('legal_form') }}">
           <select class="form-control" id="legal_form" name="legal_form" required>
-            <option value="">Select a legal form</option>
+            <option value="">@lang('Select a legal form')</option>
           </select>
         </div>
       </div>
       <div class="col-md-4 ">
         <div class="form-group">
           <label for="exampleSelect">@lang('Sector of Activity')</label>
-          <select class="form-control" id="sector_activity" name="sector_activity">
-            <option value="1">Technology and IT</option>
-            <option value="2">Engineering</option>
-            <option value="3">Mechanics</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
+          <select class="form-control" id="sector_activity" name="sector_activity" required>
+            <option value="">@lang('Select a sector of Activity')</option>
+            @foreach($servicesActivitys as $key => $service_activity)
+            <option value="{{$key}}" @if(old("sector_activity") && old("sector_activity")==$key) selected @endif>{{$service_activity['name']}}</option>
+            @endforeach
           </select>
         </div>
       </div>
       <div class="col-md-4 ">
         <div class="form-group">
           <label for="exampleSelect">@lang('Company Size')</label>
-          <select class="form-control" id="company_size" name="company_size">
-            <option value="1">1 ~ 9 employees</option>
-            <option value="2">10 ~ 50 employees</option>
-            <option value="3">51 ~ 100 employees</option>
-            <option value="4">101 ~ 500 employees</option>
-            <option value="5">over 501 employees</option>
+          <select class="form-control" id="company_size" name="company_size" required>
+            <option value="">@lang('Select a company size')</option>
+            @foreach($company_sizes as $key => $size)
+            <option value="{{$key}}" @if(old("company_size") && old("company_size")==$key) selected @endif>{{$size . ' ' . trans('employees')}}</option>
+            @endforeach
           </select>
         </div>
       </div>
@@ -136,7 +189,7 @@ $pc_info = hash('sha256', $pc_info);
         <label for="validationCustom03">@lang('Legal Address')</label>
         <div class="input-group1">
           <input type="text" class="form-control {{ $errors->has('legal_address') ? ' is-invalid' : '' }}"
-            placeholder="10 Rome Street, 00100 Rome (RM)" name="legal_address" required value="{{ old('legal_address') }}">
+            placeholder="10 Rome Street, 00100 Rome (RM)" name="legal_address" required value="{{ old('legal_address') }}" readonly>
           @if ($errors->has('legal_address'))
           <p class="invalid-feedback">{{ $errors->first('legal_address') }}</p>
           @endif
@@ -180,7 +233,7 @@ $pc_info = hash('sha256', $pc_info);
         <label for="validationCustom04">@lang('Business Mobile Phone')</label>
         <div class="input-group1">
           <input type="tel" class="form-control {{ $errors->has('mobile_phone') ? ' is-invalid' : '' }}"
-            name="mobile_phone" id="mobile_phone" required value="{{ old('mobile_phone') }}">
+            name="mobile_phone" id="mobile_phone" required value="{{ old('full_mobile_phone') }}">
           @if ($errors->has('mobile_phone'))
           <p class="invalid-feedback">{{ $errors->first('mobile_phone') }}</p>
           @endif
@@ -203,7 +256,7 @@ $pc_info = hash('sha256', $pc_info);
         <label for="validationCustom04">@lang('global.login_password')</label>
         <div class="input-group1">
           <input type="password" name="password"
-            class="form-input{{ $errors->has('password') ? ' is-invalid' : '' }}" required>
+            class="form-input{{ $errors->has('password') ? ' is-invalid' : '' }}" required placeholder="*********">
           @if ($errors->has('password'))
           <p class="invalid-feedback">{{ $errors->first('password') }}</p>
           @endif
@@ -213,7 +266,7 @@ $pc_info = hash('sha256', $pc_info);
       <div class="col-md-6">
         <label for="validationCustom04">@lang('global.login_password_confirmation')</label>
         <div class="input-group1">
-          <input type="password" name="password_confirmation" class="form-input" required>
+          <input type="password" name="password_confirmation" class="form-input" required placeholder="*********">
           @if ($errors->has('password_confirmation'))
           <p class="invalid-feedback">{{ $errors->first('password_confirmation') }}</p>
           @endif
@@ -258,6 +311,7 @@ $pc_info = hash('sha256', $pc_info);
     <input type="hidden" name="company_id" value="{{ old('company_id')?old('company_id'):0 }}" id="company_id">
     <input type="hidden" name="country_code" value="{{ old('country_code')}}" id="country_code">
     <input type="hidden" name="full_mobile_phone" value="{{ old('full_mobile_phone')}}" id="full_mobile_phone">
+    <input type="hidden" name="vat_valid" value="{{ old('vat_valid')?old('vat_valid'):0 }}" id="vat_valid">
   </form>
 </div>
 @endsection
@@ -275,56 +329,15 @@ $pc_info = hash('sha256', $pc_info);
   const result = jsvat.checkVAT('DE123456789', [jsvat.countries.DE]);
   console.log(result.isValid); // true
 </script> -->
-<?php
-$legalForms = App\Company::$compay_legal_form;
-?>
+
 <script>
   const legalForms = @json($legalForms);
 
-  console.log(legalForms)
   const phone_input = document.querySelector("#mobile_phone");
 
   const availableCountries = ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "NO", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "CH", "GB"];
   // initialise plugin
-  const iti = window.intlTelInput(phone_input, {
-    initialCountry: "auto",
-    nationalMode: true,
-    geoIpLookup: function(callback) {
-      fetch("https://ipapi.co/json")
-        .then(function(res) {
-          return res.json();
-        })
-        .then(function(data) {
-          let code = data.country_code;
-          localStorage.setItem('country_code', data.country_code);
-          $('input[name=country_code]').val(code);
-          if (availableCountries.indexOf(code) === -1) {
-            code = 'GB';
-          }
 
-          let forms = legalForms[code]; // Get legal forms for the selected country
-
-          // Display the legal forms
-          const legalFormSelect = document.getElementById('legal_form');
-          legalFormSelect.innerHTML = '<option value="">Select a legal form</option>'; // Clear previous options
-
-          forms.forEach((form, index) => {
-            const option = document.createElement('option');
-            option.value = data.country_code + '_' + index; // Use index or any unique identifier
-            option.textContent = form; // Set the legal form text
-            legalFormSelect.appendChild(option);
-          });
-
-          callback(code);
-        })
-        .catch(function() {
-          // if the country is not the list
-          callback("GB");
-        });
-    },
-    onlyCountries: ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "NO", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "CH", "GB"],
-    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
-  });
 
   function togglePasswordVisibility(event) {
     var toggleIcon = event.target;
@@ -341,6 +354,53 @@ $legalForms = App\Company::$compay_legal_form;
   }
 
   $(document).ready(function() {
+
+    const iti = window.intlTelInput(phone_input, {
+      initialCountry: "auto",
+      nationalMode: true,
+      geoIpLookup: function(callback) {
+        fetch("https://ipapi.co/json")
+          .then(function(res) {
+            return res.json();
+          })
+          .then(function(data) {
+            let code = data.country_code;
+            localStorage.setItem('country_code', data.country_code);
+            $('input[name=country_code]').val(code);
+            if (availableCountries.indexOf(code) === -1) {
+              code = 'GB';
+            }
+
+            let forms = legalForms[code]; // Get legal forms for the selected country
+
+            // Display the legal forms
+            const legalFormSelect = document.getElementById('legal_form');
+            legalFormSelect.innerHTML = '<option value="">Select a legal form</option>'; // Clear previous options
+
+            forms.forEach((form, index) => {
+              const option = document.createElement('option');
+              option.value = data.country_code + '_' + index; // Use index or any unique identifier
+              option.textContent = form; // Set the legal form text
+
+              console.log('old value', $('input[name=old_legal_form]').val());
+
+              if (option.value == $('input[name=old_legal_form]').val()) {
+                option.setAttribute('selected', 'selected');
+              }
+              legalFormSelect.appendChild(option);
+            });
+
+            callback(code);
+          })
+          .catch(function() {
+            // if the country is not the list
+            callback("GB");
+          });
+      },
+      onlyCountries: availableCountries,
+      utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
+    });
+
 
     const vatPatterns = {
       AT: {
@@ -465,7 +525,14 @@ $legalForms = App\Company::$compay_legal_form;
       }, // United Kingdom
     };
 
-    $(document).on('blur', 'input[name=VAT]',function() {
+    $(document).on('change', 'input[name=VAT]', function() {
+      $('input[name=company_id]').val(0);
+      $('input[name=company_name]').val('');
+      $('input[name=legal_address]').val('');
+      $('input[name=vat_valid]').val(0);
+    })
+
+    $(document).on('blur', 'input[name=VAT]', function() {
       console.log('blur event triggered');
       const vatNumber = $(this).val(); // Get VAT number value
       const country = localStorage.getItem('country_code'); // Get selected country
@@ -475,13 +542,19 @@ $legalForms = App\Company::$compay_legal_form;
         return false;
       }
 
+      if ($('input[name=vat_valid]').val() == 1) {
+        return true;
+      }
+
+      $('#loader').removeClass('d-none');
+
       if (vatNumber) {
         // Send AJAX request to backend
         $.ajax({
           url: `{{route('autofill.company')}}`, // Replace with your API endpoint
           type: 'POST',
           data: {
-            _token:`{{csrf_token()}}`,
+            _token: `{{csrf_token()}}`,
             vat_number: vatNumber,
           },
           success: function(response) {
@@ -497,17 +570,39 @@ $legalForms = App\Company::$compay_legal_form;
               $('select[name=company_size]').val(response.data.company_size);
               $('input[name=contact_person_name]').val(response.data.contact_person_name);
               $('input[name=company_id]').val(response.data.id);
+              $('input[name=vat_valid]').val(1);
+            } else {
+              if (response.data.valid) {
+                $('input[name=company_id]').val(0);
+                $('input[name=vat_valid]').val(1);
+                $('input[name=company_name]').val(response.data.name);
+                $('input[name=legal_address]').val(response.data.address);
+              } else {
+                $('input[name=company_id]').val(0);
+                $('input[name=company_name]').val('');
+                $('input[name=legal_address]').val('');
+                $('input[name=vat_valid]').val(0);
+                $('#register_form').validate().showErrors({
+                  "VAT": "The VAT Number is wrong."
+                });
+              }
             }
           },
           error: function() {
             $('input[name=company_id]').val(0);
+            $('input[name=company_name]').val('');
+            $('input[name=legal_address]').val('');
+            $('input[name=vat_valid]').val(0);
+            $('#register_form').validate().showErrors({
+              "VAT": "The VAT Number is wrong."
+            });
           },
+          complete: function() {
+            $('#loader').addClass('d-none');
+          }
         });
       }
     });
-
-
-
 
     $.validator.addMethod(
       "vatPattern",
@@ -539,7 +634,6 @@ $legalForms = App\Company::$compay_legal_form;
       "<?php echo trans('Please enter a valid phone number.'); ?>"
     );
 
-    
     $('#register_form').validate({ // initialize the plugin
       rules: {
         mobile_phone: {

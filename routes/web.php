@@ -93,7 +93,7 @@ Route::get('/thanks', function() {
 })->name('thanks'); 
 
 Route::post('autofill-company', 'Admin\ProjectsController@getautofilldata')->name('autofill.company');
-
+Route::get('validate-vat', 'Admin\ProjectsController@validateVAT')->name('vat.check');
 
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth', 'check.session']], function () {

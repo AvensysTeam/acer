@@ -155,4 +155,87 @@ class Company extends Model
             'Public Limited Company (PLC): A company with limited liability and publicly traded shares.'
         ],
     ];
+
+    public static $sectors_of_activity = [
+        [
+            'name' => "Agriculture, forestry, and fishing",
+            'desc' => "Crop cultivation, Animal husbandry, Forestry and logging, Fishing and aquaculture"
+        ],
+        [
+            'name' => "Mining and quarrying",
+            'desc' => "Coal and lignite mining, Extraction of crude petroleum and natural gas, Mining of metal ores, Other mining activities"
+        ],
+        [
+            'name' => "Manufacturing",
+            'desc' => "Food and beverage manufacturing, Textile and clothing industry, Machinery and equipment manufacturing, Vehicle and transport equipment manufacturing, Chemical, pharmaceutical, and plastic production, Metal product manufacturing"
+        ],
+        [
+            'name' => "Electricity, gas, steam, and air conditioning supply",
+            'desc' => "Electricity generation and distribution, Natural gas distribution, Steam and air conditioning supply"
+        ],
+        [
+            'name' => "Water supply; sewerage, waste management, and remediation",
+            'desc' => "Water supply and sanitation, Waste treatment and recycling, Environmental remediation and cleanup activities"
+        ],
+        [
+            'name' => "Construction",
+            'desc' => "Building construction, Civil engineering, Specialized construction activities (e.g., installations)"
+        ],
+        [
+            'name' => "Wholesale and retail trade; repair of motor vehicles",
+            'desc' => "Wholesale trade and brokerage, Retail trade of various goods, Repair of motor vehicles and motorcycles"
+        ],
+        [
+            'name' => "Transportation and storage",
+            'desc' => "Land transportation, Sea transportation, Air transportation, Warehousing and logistics, Transportation support activities"
+        ],
+        [
+            'name' => "Accommodation and food service activities",
+            'desc' => "Hotels, campsites, and other accommodation, Food services and catering"
+        ],
+        [
+            'name' => "Information and communication",
+            'desc' => "Publishing and multimedia production, Telecommunications, Software development and programming, IT consultancy and services, Data processing, hosting, and related activities, Web portal operation, Computer systems design and integration"
+        ],
+        [
+            'name' => "Financial and insurance activities",
+            'desc' => "Banking and financial services, Insurance and pension funds, Asset management"
+        ],
+        [
+            'name' => "Real estate activities",
+            'desc' => "Real estate sales, Real estate rental, Property management"
+        ],
+        [
+            'name' => "Professional, scientific, and technical activities",
+            'desc' => "Legal services, Accounting services, Consulting services, Scientific research and development, Architectural services, Engineering services"
+        ],
+        [
+            'name' => "Public administration and defense; compulsory social security",
+            'desc' => "Government administration, National defense, Public security"
+        ],
+        [
+            'name' => "Education",
+            'desc' => "Primary education, Secondary education, Higher education, Vocational training"
+        ],
+        [
+            'name' => "Human health and social work activities",
+            'desc' => "Hospital services, Residential care activities, Outpatient healthcare services"
+        ],
+        [
+            'name' => "Arts, entertainment, and recreation",
+            'desc' => "Creative and artistic activities, Performance activities, Sports activities, Recreational activities, Museum management"
+        ],
+        [
+            'name' => "Other service activities",
+            'desc' => "Personal services (e.g., hairdressing, laundry), Membership organization activities, Repair of personal and household goods"
+        ],
+    ];    
+
+    public static $company_sizes = [
+        '1 ~ 9',
+        '10 ~ 50',
+        '51 ~ 100',
+        '101 ~ 500',
+        '+ 501'
+    ];
 }

@@ -7,9 +7,9 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 class Kernel extends HttpKernel
 {
     protected $middleware = [
-        \App\Http\Middleware\TrustProxies::class,
+        \Illuminate\Http\Middleware\TrustProxies::class,
         \App\Http\Middleware\CheckForMaintenanceMode::class,
-        \Fruitcake\Cors\HandleCors::class,
+        \Illuminate\Http\Middleware\HandleCors::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
@@ -20,10 +20,10 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
             \App\Http\Middleware\AuthGates::class,
-            \Fruitcake\Cors\HandleCors::class,
+            \Illuminate\Http\Middleware\HandleCors::class,
         ],
         'web' => [
-            \Fruitcake\Cors\HandleCors::class,
+            \Illuminate\Http\Middleware\HandleCors::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,

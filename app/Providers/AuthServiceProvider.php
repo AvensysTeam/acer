@@ -27,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         if (!app()->runningInConsole()) {
-            Passport::routes();
+            // Passport::routes(); // Passport::routes() is not supported in Laravel 11
         };
     }
 }

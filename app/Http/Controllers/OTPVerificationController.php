@@ -29,7 +29,7 @@ class OTPVerificationController extends Controller
 
         $user = User::where('email', $email)->first();
         $user->sms_code = mt_rand(100000, 999999);
-        $user->phone_time = Carbon::parse()->addMinutes(5);
+        $user->phone_time = Carbon::now()->addMinutes(5);
         $user->save();
 
         $this->sendSms($phone, 'Your Verification Code is ' . $user->sms_code);

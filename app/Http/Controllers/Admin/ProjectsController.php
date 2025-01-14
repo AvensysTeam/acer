@@ -16,11 +16,13 @@ use App\Accessories;
 use App\User;
 use App\DeliveryAddress;
 use App\DeliveryCondition;
-use Session;
+use App\Role;
 use Mail;
 use App\Services\ViesService;
-
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class ProjectsController extends Controller
 {    
@@ -67,6 +69,12 @@ class ProjectsController extends Controller
         
         Session::put('pid', $pid);
 
+        $roleObject = new Role();
+        $roles = $roleObject->getOtherRoles();
+        
+        $legalForms = Company::$compay_legal_form;
+        $servicesActivitys = Company::$sectors_of_activity;
+        $company_sizes = Company::$company_sizes;
        
         return view('admin.projects.profile',[
             '_page_title' => trans('global.project.project_profile_company_selection'), 
@@ -75,6 +83,10 @@ class ProjectsController extends Controller
             'pid' => $pid,
             'cid' => $cid,
             'uid' => $uid,
+            'roles' => $roles, 
+            'legalForms' => $legalForms,
+            'servicesActivitys' => $servicesActivitys, 
+            'company_sizes' => $company_sizes
         ]);
 
         
@@ -121,7 +133,8 @@ class ProjectsController extends Controller
             ->where('uid', auth()->user()->id)
             ->first();
         $company = Company::findOrFail($cid);
-        $contact = ContactPeople::findOrFail($uid);
+        $contact = User::findOrFail($uid);
+        // $contact = ContactPeople::findOrFail($uid);
         $project = null;
         $units = null;
         if($pid > 0) {
@@ -152,7 +165,8 @@ class ProjectsController extends Controller
         }
         $count_project = Project::withTrashed()->get();;
         $cp = $count_project->count();
-        $contact_email = ContactPeople::select('email')->Where('id',$uid)->get();
+        // $contact_email = ContactPeople::select('email')->Where('id',$uid)->get();
+        $contact_email = User::select('email')->Where('id',$uid)->get();
 
         //dump($contact_email);
         return view('admin.projects.detail',[
@@ -254,19 +268,42 @@ class ProjectsController extends Controller
 
     public function get_contact_list(Request $request) 
     {
-        $id = $request->id;
-        $list = DB::table('contact_people')
-            // ->where('user', auth()->user()->id)
-            ->where('company_id', $id)
-            ->get();
-
-        return response()->json(['result' => json_decode($list)]);
-        // return view('admin.projects.contactlist');
+        $customerController = new CustomerController();
+        return $customerController->get_contact_list($request);
     }
 
     public function store_contact(Request $req) {
-        //$input = $req->all();
-       // print_r($input); die();
+
+
+
+        $rules = [           
+            'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        ];
+
+        $validation = Validator::make($req->all(), $rules);
+        if ($validation->fails()) {
+            return response()->json(['errors' => $validation->errors()], 500);
+        }
+
+        $user = User::create([
+            'name'     => $req->first_name,
+            'email'    => $req->email,
+            'phone'    => $req->full_contact_mobile_no,
+            'pc_info' => 'required|string',
+            'position' => $req->job_position,
+            'password' => Hash::make('acer_default'),
+            'company_id' => $req->company_id,
+        ]);
+
+        $isDefaultRole = Role::with('permissions')->where('title', 'default')->first();
+        if($isDefaultRole){
+            $user->roles()->sync([$isDefaultRole->id]);
+        }
+
+        
+        return response()->json(['result' => $user]);
+
+
         $com_id = $req->company_id;
         $con_id = $req->contact_id;
         if(!isset($req->contact_id)){
@@ -594,9 +631,17 @@ class ProjectsController extends Controller
         $company->user = auth()->user()->id;
         $company->name = $req->company_name;
         $company->address = $req->company_address;
-        $company->phone = $req->company_phone;
+        $company->phone = $req->full_mobile_phone;
         $company->VAT = $req->company_VAT;
-        $company->description = $req->company_desc;
+        $company->legal_form = $req->legal_form;
+        $company->sector_activity = $req->sector_activity;
+        $company->company_size = $req->company_size;
+
+        // $company->operational_address = $data['operational_address'];
+        // $company->contact_person_name = $data['contact_person_name'];
+        // $company->country_code = $data['country_code'];
+       
+        $company->description = '';
         $company->save();
         if($com_id == 0 || $com_id == "") {
         $com_id = $company->id;

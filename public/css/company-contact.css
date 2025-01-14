@@ -1,0 +1,49 @@
+.iti__flag-container {
+    position: absolute;
+    top: 11px !important;
+    bottom: auto !important;
+}
+
+#loader {
+    position: absolute;
+    right: 7px;
+    top: 9px;
+}
+
+/** css spinner */
+#loader .lds-dual-ring {
+    color: #1c4c5b
+}
+
+#loader .lds-dual-ring,
+.lds-dual-ring:after {
+    box-sizing: border-box;
+}
+
+#loader .lds-dual-ring {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+}
+
+#loader .lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: 0px;
+    border-radius: 50%;
+    border: 3.4px solid currentColor;
+    border-color: currentColor transparent currentColor transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Company;
 use App\ContactPeople;
 use App\JobPosition;
+use App\User;
 
 class CustomerController extends Controller
 {
@@ -23,9 +24,16 @@ class CustomerController extends Controller
     public function get_contact_list(Request $request) 
     {
         $id = $request->id;
-        $list = ContactPeople::where('company_id', $id)
-            ->get();
+        $list = User::where('company_id', $id)
+                    ->whereNull('deleted_at')
+                    ->get();
+        // $list = DB::table('contact_people')
+        //     // ->where('user', auth()->user()->id)
+        //     ->where('company_id', $id)
+        //     ->get();
+
         return response()->json(['result' => json_decode($list)]);
+        // return view('admin.projects.contactlist');
     }
     public function save_company(Request $req ) {
 
